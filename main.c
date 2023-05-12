@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <readline/readline.h>
+#include "./minishell.h"
 
 int main()
 {
@@ -10,6 +6,7 @@ int main()
 	while (1)
 	{
 		str = readline("minishel>$ ");
+		system(str);
 	}
 	return (0);
 }
