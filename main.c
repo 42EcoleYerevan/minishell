@@ -101,10 +101,23 @@ void ft_free_2d_array_with_null(char **array)
 	/* free(array); */
 }
 
+char *ft_check_path(char *path, char *command, DIR *d)
+{
+	struct dirent *file;
+
+	file = readdir(d);
+	while (file)
+	{
+		if (ft_strncmp(command, file->d_name, ft_strlen(file->d_name)) == 0)
+			return (ft_strdup(path));
+		file = readdir(d);
+	}
+	return (NULL);
+}
+
 char *ft_find_path(char *command)
 {
 	DIR *d;
-	struct dirent *file;
 	char **paths;
 	char *out;
 
@@ -114,19 +127,14 @@ char *ft_find_path(char *command)
 	while (*paths)
 	{
 		d = opendir(*paths);
-		free(*paths);
-		file = readdir(d);
-		while (file)
+		out = ft_check_path(*paths, command, d);
+		if (out)
 		{
-			if (ft_strncmp(command, file->d_name, ft_strlen(file->d_name)) == 0)
-			{
-				out = ft_strdup(*paths);
-				ft_free_2d_array_with_null(paths);
-				closedir(d);
-				return (out);
-			}
-			file = readdir(d);
+			ft_free_2d_array_with_null(paths);
+			closedir(d);
+			return (out);
 		}
+		free(*paths);
 		paths++;
 	}
 	ft_free_2d_array_with_null(paths);
@@ -134,31 +142,48 @@ char *ft_find_path(char *command)
 	return (NULL);
 }
 
+int ft_is_valid_path(char *path)
+{
+	DIR *d;
+
+	d = opendir(path);
+	if (!d)
+		return (0);
+	closedir(d);
+	return (1);
+}
+
+char *ft_get_command(char *command)
+{
+	char *tmp;;
+
+	tmp = command;
+	while (*command)
+		command++;
+	while (command != tmp && *command != '/')
+		command--;
+	if (*command == '/')
+		return (++command);
+	return (command);
+}
+
+char *ft_get_command_path(char *command)
+{
+	char *tmp;
+
+	tmp = ft_get_command(command);
+	return (ft_substr(command, 0, tmp - command));
+}
+
 int main(int argc, char **argv, char **env)
 {
 	argc = 0;
 	(void) argv;
 
-	/* char *path; */
-
 	ENV = env;
-	/* path = ft_get_env("PATH"); */
-	/* puts(path); */
-	/* puts(ft_get_value("PATH")); */
-	/* path = ft_get_env("SHELL"); */
-	/* puts(path); */
-	/* puts(ft_get_value("SHELL")); */
-	/* path = ft_get_env("LOGNAME"); */
-	/* puts(path); */
-	/* puts(ft_get_value("LOGNAME")); */
 
-	/* while (*env) */
-	/* { */
-	/* 	printf("%s\n", *env); */
-	/* 	env++; */
-	/* } */
-
-	printf("%s\n", ft_find_path("ls"));
+	printf("%s\n", ft_get_command_path("/bin/ls"));
+	printf("%d\n", ft_is_valid_path(ft_get_command_path("/bin/ls")));
 
 	return (0);
 }
