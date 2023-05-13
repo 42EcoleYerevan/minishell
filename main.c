@@ -98,7 +98,7 @@ void ft_free_2d_array_with_null(char **array)
 		free(*array);
 		array++;
 	}
-	free(array);
+	/* free(array); */
 }
 
 char *ft_find_path(char *command)
@@ -114,6 +114,7 @@ char *ft_find_path(char *command)
 	while (*paths)
 	{
 		d = opendir(*paths);
+		free(*paths);
 		file = readdir(d);
 		while (file)
 		{
@@ -121,16 +122,16 @@ char *ft_find_path(char *command)
 			{
 				out = ft_strdup(*paths);
 				ft_free_2d_array_with_null(paths);
-				free(file);
 				closedir(d);
 				return (out);
 			}
-			free(file);
 			file = readdir(d);
 		}
-		free(*paths);
 		paths++;
 	}
+	ft_free_2d_array_with_null(paths);
+	closedir(d);
+	return (NULL);
 }
 
 int main(int argc, char **argv, char **env)
@@ -157,16 +158,7 @@ int main(int argc, char **argv, char **env)
 	/* 	env++; */
 	/* } */
 
-	DIR *d;
-	struct dirent *dir;
-
-	d = opendir("/usr/local/bin");
-	dir = readdir(d);
-	while (dir)
-	{
-		printf("%s\n", dir->d_name);
-		dir = readdir(d);
-	}
+	printf("%s\n", ft_find_path("ls"));
 
 	return (0);
 }
