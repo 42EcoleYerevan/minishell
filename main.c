@@ -182,8 +182,8 @@ int main(int argc, char **argv, char **env)
 
 	ENV = env;
 
-	printf("%s\n", ft_get_command_path("/bin/ls"));
-	printf("%d\n", ft_is_valid_path(ft_get_command_path("/bin/ls")));
-
+	/* printf("%s\n", ft_get_command_path("/bin/ls")); */
+	/* printf("%d\n", ft_is_valid_path(ft_get_command_path("/bin/ls"))); */
+	execve("/bin/ls", NULL, ENV);
 	return (0);
 }
