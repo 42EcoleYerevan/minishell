@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <dirent.h>
 #include <readline/readline.h>
+#include "libft/libft.h"
+
+char **ENV;
 
 #endif
