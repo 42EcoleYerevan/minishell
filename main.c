@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
+/*   Updated: 2023/05/15 15:36:04 by agladkov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./minishell.h"
 
 int ft_len_spaces(char *str)
@@ -30,34 +42,6 @@ int ft_len_quote(char *str, char quote)
 		str++;
 	str++;
 	return (str - tmp);
-}
-
-void main_loop(void)
-{
-	char *str;
-	char *tmp;
-	char *command;
-
-	while (1)
-	{
-		str = readline("minishel>$ ");
-		tmp = str;
-		while (*str)
-		{
-			str += ft_len_spaces(str);
-			if (*str == '\'')
-				command = ft_substr(str, 0, ft_len_quote(str, '\''));
-			else if (*str == '\"')
-				command = ft_substr(str, 0, ft_len_quote(str, '\"'));
-			else
-				command = ft_substr(str, 0, ft_len_word(str));
-			str += ft_strlen(command);
-			ft_putstr_fd(command, 1);
-			ft_putchar_fd('\n', 1);
-			free(command);
-		}
-		free(tmp);
-	}
 }
 
 char *ft_get_env(char *env)
@@ -175,6 +159,56 @@ char *ft_get_command_path(char *command)
 	return (ft_substr(command, 0, tmp - command));
 }
 
+int ft_len_commands(char *str)
+{
+	int n;
+
+	n = 0;
+	str += ft_len_spaces(str);
+	while (*str)
+	{
+		n++;
+		str += ft_len_spaces(str);
+		if (*str == '\'')
+			str += ft_len_quote(str, '\'');
+		else if (*str == '\"')
+			str += ft_len_quote(str, '\"');
+		else
+			str += ft_len_word(str);
+	}
+	return (n);
+}
+
+char **ft_parse_commands(char *str)
+{
+	char **out;
+	char **tmp;
+
+	out = (char **)malloc(sizeof(char *) * (ft_len_commands(str) + 1));
+	tmp = out;
+	if (!out)
+		return (NULL);
+	while (*str)
+	{
+		str += ft_len_spaces(str);
+		if (*str == '\'')
+			*out = ft_substr(str, 0, ft_len_quote(str, '\''));
+		else if (*str == '\"')
+			*out = ft_substr(str, 0, ft_len_quote(str, '\"'));
+		else
+			*out = ft_substr(str, 0, ft_len_word(str));
+		if (!*out)
+		{
+			ft_free_2d_array_with_null(out);
+			return (NULL);
+		}
+		str += ft_strlen(*out);
+		out++;
+	}
+	*out = NULL;
+	return (tmp);
+}
+
 int main(int argc, char **argv, char **env)
 {
 	argc = 0;
@@ -182,8 +216,15 @@ int main(int argc, char **argv, char **env)
 
 	ENV = env;
 
-	/* printf("%s\n", ft_get_command_path("/bin/ls")); */
-	/* printf("%d\n", ft_is_valid_path(ft_get_command_path("/bin/ls"))); */
-	execve("/bin/ls", NULL, ENV);
+
+	char *str;
+
+	str = readline("minishel>$ ");
+	char **out = ft_parse_commands(str);
+	while (*out)
+	{
+		printf("%s\n", *out);
+		out++;
+	}
 	return (0);
 }
