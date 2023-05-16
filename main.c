@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/16 17:30:49 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/16 17:48:50 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,6 +253,11 @@ int ft_len_construction(char *str)
 	int n;
 
 	n = 0;
+	while (*str == '|' || *str == '&' || *str == '>')
+	{
+		n++;
+		str++;
+	}
 	while (*str && *str != '|' && *str != '&' && *str != '>')
 	{
 		n++;
@@ -335,12 +340,23 @@ int main(int argc, char **argv, char **env)
 	str = readline("minishel>$ ");
 
 	char *tmp_str = ft_substr(str, 0, ft_len_construction(str));
-	printf("%d %sA\n", ft_len_commands(tmp_str), tmp_str);
 	char **out = ft_parse_construction(tmp_str);
+	free(tmp_str);
 	while (*out)
 	{
 		printf("%s\n", *out);
 		out++;
 	}
+	str += ft_len_construction(str);
+	printf("%s\n", str);
+	tmp_str = ft_substr(str, 0, ft_len_construction(str));
+	printf("%s\n", tmp_str);
+	/* out = ft_parse_construction(tmp_str); */
+	/* free(tmp_str); */
+	/* while (*out) */
+	/* { */
+	/* 	printf("%s\n", *out); */
+	/* 	out++; */
+	/* } */
 	return (0);
 }
