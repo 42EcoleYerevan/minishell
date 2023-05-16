@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/15 19:38:40 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/16 17:30:49 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int ft_len_word(char *str)
 	char *tmp;
 
 	tmp = str;
-	while (*str != ' ' && *str)
+	while (*str != ' ' && *str && *str != '|' && *str != '&' && *str != '>')
 		str++;
 	return (str - tmp);
 }
@@ -42,6 +42,16 @@ int ft_len_quote(char *str, char quote)
 		str++;
 	str++;
 	return (str - tmp);
+}
+
+int ft_len_separator(char *str)
+{
+	int n;
+
+	n = 0;
+	while (str[n] == '|' || str[n] == '&' || str[n] == '>')
+		n++;
+	return (n);
 }
 
 char *ft_get_env(char *env)
@@ -168,45 +178,17 @@ int ft_len_commands(char *str)
 	while (*str)
 	{
 		n++;
-		str += ft_len_spaces(str);
 		if (*str == '\'')
 			str += ft_len_quote(str, '\'');
 		else if (*str == '\"')
 			str += ft_len_quote(str, '\"');
+		else if (*str == '|' || *str == '&' || *str == '>')
+			str += ft_len_separator(str);
 		else
 			str += ft_len_word(str);
+		str += ft_len_spaces(str);
 	}
 	return (n);
-}
-
-char **ft_parse_commands(char *str)
-{
-	char **out;
-	char **tmp;
-
-	out = (char **)malloc(sizeof(char *) * (ft_len_commands(str) + 1));
-	tmp = out;
-	if (!out)
-		return (NULL);
-	while (*str)
-	{
-		str += ft_len_spaces(str);
-		if (*str == '\'')
-			*out = ft_substr(str, 0, ft_len_quote(str, '\''));
-		else if (*str == '\"')
-			*out = ft_substr(str, 0, ft_len_quote(str, '\"'));
-		else
-			*out = ft_substr(str, 0, ft_len_word(str));
-		if (!*out)
-		{
-			ft_free_2d_array_with_null(out);
-			return (NULL);
-		}
-		str += ft_strlen(*out);
-		out++;
-	}
-	*out = NULL;
-	return (tmp);
 }
 
 int ft_argc(char **arr)
@@ -279,7 +261,8 @@ int ft_len_construction(char *str)
 	return (n);
 }
 
-char *ft_set_command(char *str)
+
+char *ft_cut_command(char *str)
 {
 	char *arr;
 
@@ -287,6 +270,8 @@ char *ft_set_command(char *str)
 		arr = ft_substr(str, 0, ft_len_quote(str, '\''));
 	else if (*str == '\"')
 		arr = ft_substr(str, 0, ft_len_quote(str, '\"'));
+	else if (*str == '|' || *str == '&' || *str == '>')
+		arr = ft_substr(str, 0, ft_len_separator(str));
 	else
 		arr = ft_substr(str, 0, ft_len_word(str));
 	return (arr);
@@ -295,30 +280,50 @@ char *ft_set_command(char *str)
 char **ft_parse_construction(char *str)
 {
 	char **out;
-	char *tmp_str;
 	int n;
+	int len;
 
-	out = NULL;
-	tmp_str = ft_substr(str, 0, ft_len_construction(str));
-	out = (char **)malloc(sizeof(char *) * (ft_len_commands(tmp_str) + 1));
+	len = ft_len_commands(str) + 1;
+	out = (char **)malloc(sizeof(char *) * len);
 	if (!out)
 		return (NULL);
 	n = 0;
-	while (*tmp_str)
+	str += ft_len_spaces(str);
+	while (*str)
 	{
-		tmp_str += ft_len_spaces(tmp_str);
-		out[n] = ft_set_command(tmp_str);
+		out[n] = ft_cut_command(str);
 		if (!out[n])
 		{
 			ft_free_2d_array_with_null(out);
 			return (NULL);
 		}
-		tmp_str += ft_strlen(out[n]);
+		str += ft_strlen(out[n]);
+		str += ft_len_spaces(str);
 		n++;
 	}
 	out[n] = NULL;
 	return (out);
 }
+
+/* void ft_exec(char *str) */
+/* { */
+/* 	char **arr; */
+/* 	char *tmp_str; */
+
+/* 	while (*str) */
+/* 	{ */
+/* 		tmp_str = ft_substr(str, 0, ft_len_construction(str)); */
+/* 		arr = ft_parse_construction(tmp_str); */
+/* 		free(tmp_str); */
+/* 		if (*arr[0] == '|') */
+/* 		{ */
+/* 			free(*arr); */
+/* 			arr++; */
+/* 		} */
+/* 		ft_fork(arr); */
+/* 		str += ft_len_construction(str); */
+/* 	} */
+/* } */
 
 int main(int argc, char **argv, char **env)
 {
@@ -328,13 +333,14 @@ int main(int argc, char **argv, char **env)
 	(void) argv;
 	ENV = env;
 	str = readline("minishel>$ ");
-	char **out = ft_parse_construction(str);
+
+	char *tmp_str = ft_substr(str, 0, ft_len_construction(str));
+	printf("%d %sA\n", ft_len_commands(tmp_str), tmp_str);
+	char **out = ft_parse_construction(tmp_str);
 	while (*out)
 	{
 		printf("%s\n", *out);
 		out++;
 	}
-	str += ft_len_construction(str);
-	printf("%s\n", str);
 	return (0);
 }
