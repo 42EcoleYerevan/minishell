@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/16 17:48:50 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/17 17:01:34 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,8 @@ int ft_argc(char **arr)
 	int n;
 
 	n = 0;
+	if (*arr[0] == '|' || *arr[0] == '&' || *arr[0] == '>')
+		arr++;
 	while (*arr && *arr[0] != '|' && *arr[0] != '&' && *arr[0] != '>') 
 	{
 		n++;
@@ -213,6 +215,8 @@ char **ft_argv(char **arr)
 	tmp = argv;
 	if (!argv)
 		return (NULL);
+	if (*arr[0] == '|' || *arr[0] == '&' || *arr[0] == '>')
+		arr++;
 	while (*arr && *arr[0] != '|' && *arr[0] != '&' && *arr[0] != '>') 
 	{
 		*argv = *arr;
@@ -234,18 +238,15 @@ char *ft_pathjoin(const char *path1, const char *path2)
 	return (out);
 }
 
-void ft_fork(char **arr)
+char *ft_command_path_join(char *command)
 {
 	char *path;
 	char *tmp;
 
-	tmp = ft_find_path(*arr);
-	if (!tmp)
-		return ;
-	path = ft_pathjoin(tmp, *arr); 
+	tmp = ft_find_path(command);
+	path = ft_pathjoin(tmp, command); 
 	free(tmp);
-	if (fork() == 0)
-		execve(path, ft_argv(arr), ENV);
+	return (path);
 }
 
 int ft_len_construction(char *str)
@@ -310,53 +311,49 @@ char **ft_parse_construction(char *str)
 	return (out);
 }
 
-/* void ft_exec(char *str) */
-/* { */
-/* 	char **arr; */
-/* 	char *tmp_str; */
+void ft_exec(char *command_path, char **argv)
+{
+	int pid;
 
-/* 	while (*str) */
-/* 	{ */
-/* 		tmp_str = ft_substr(str, 0, ft_len_construction(str)); */
-/* 		arr = ft_parse_construction(tmp_str); */
-/* 		free(tmp_str); */
-/* 		if (*arr[0] == '|') */
-/* 		{ */
-/* 			free(*arr); */
-/* 			arr++; */
-/* 		} */
-/* 		ft_fork(arr); */
-/* 		str += ft_len_construction(str); */
-/* 	} */
-/* } */
+	pid = fork();
+	if (pid == 0)
+		execve(command_path, argv, ENV);
+	else
+		wait(&pid);
+}
+
+void ft_loop(void)
+{
+	char *str;
+	char **arr;
+	char **argv;
+	char *tmp_str;
+	char *path;
+
+	str = readline("minishel>$ ");
+	while (*str)
+	{
+		tmp_str = ft_substr(str, 0, ft_len_construction(str));
+		arr = ft_parse_construction(tmp_str);
+		if (arr[0][0] == '|' || \
+			arr[0][0] == '&' || \
+			arr[0][0] == '>')
+			arr++;
+		argv = ft_argv(arr);
+		path = ft_command_path_join(*arr);
+		ft_exec(path, argv);
+		str += ft_strlen(tmp_str);
+		free(tmp_str);
+		free(path);
+		ft_free_2d_array_with_null(arr);
+	}
+}
 
 int main(int argc, char **argv, char **env)
 {
-	char *str;
-
-	argc = 0;
 	(void) argv;
 	ENV = env;
-	str = readline("minishel>$ ");
-
-	char *tmp_str = ft_substr(str, 0, ft_len_construction(str));
-	char **out = ft_parse_construction(tmp_str);
-	free(tmp_str);
-	while (*out)
-	{
-		printf("%s\n", *out);
-		out++;
-	}
-	str += ft_len_construction(str);
-	printf("%s\n", str);
-	tmp_str = ft_substr(str, 0, ft_len_construction(str));
-	printf("%s\n", tmp_str);
-	/* out = ft_parse_construction(tmp_str); */
-	/* free(tmp_str); */
-	/* while (*out) */
-	/* { */
-	/* 	printf("%s\n", *out); */
-	/* 	out++; */
-	/* } */
+	if (argc == 1)
+		ft_loop();
 	return (0);
 }
