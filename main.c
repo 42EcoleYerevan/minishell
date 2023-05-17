@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/17 17:01:34 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/17 20:40:48 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,10 +349,31 @@ void ft_loop(void)
 	}
 }
 
+void ft_child(char *cmd_path, char **argv, int fd[2])
+{ 
+	dup2(fd[1], 1);
+	execve(cmd_path, argv, ENV);
+}
+
+void ft_parent(char *cmd_path, char **argv);
+
+void ft_pipe(char *cmd1_path, char **argv1, char *cmd2_path, char **argv2)
+{
+	int fd[2];
+	pid_t pid;
+
+	pipe(fd);
+	pid = fork();
+	if (!pid)
+		ft_child(cmd1_path, argv1, ENV);
+
+}
+
 int main(int argc, char **argv, char **env)
 {
 	(void) argv;
 	ENV = env;
+
 	if (argc == 1)
 		ft_loop();
 	return (0);
