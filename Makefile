@@ -1,5 +1,13 @@
 NAME = a.out
-SRCS = main.c
+SRCS = main.c \
+	   minishell_utils.c \
+	   minishell_env.c \
+	   minishell_argc_argv.c \
+	   minishell_path.c \
+	   minishell_command.c \
+	   minishell_construction.c \
+	   minishell_len_construction.c \
+	   minishell_len_utils.c
 OBJS = $(SRCS:%.c=%.o)
 CC = cc
 CFLAGS = -Wall -Werror -Wextra
@@ -9,6 +17,9 @@ LIBS = -lreadline -L$(LIBFT) -lft
 HEADER = minishell.h
 
 all: $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(HEADER) $(LIBFT_A)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
