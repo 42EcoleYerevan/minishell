@@ -6,72 +6,11 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/19 19:16:02 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/20 14:23:31 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/* void ft_loop(void) */
-/* { */
-/* 	char *str; */
-/* 	char **arr; */
-/* 	char **argv; */
-/* 	char *tmp_str; */
-/* 	char *path; */
-
-/* 	str = readline("minishel>$ "); */
-/* 	while (*str) */
-/* 	{ */
-/* 		tmp_str = ft_substr(str, 0, ft_len_construction(str)); */
-/* 		arr = ft_parse_construction(tmp_str); */
-/* 		if (arr[0][0] == '|' || \ */
-/* 			arr[0][0] == '&' || \ */
-/* 			arr[0][0] == '>') */
-/* 			arr++; */
-/* 		argv = ft_argv(arr); */
-/* 		path = ft_command_path_join(*arr); */
-/* 		ft_exec(path, argv); */
-/* 		str += ft_strlen(tmp_str); */
-/* 		free(tmp_str); */
-/* 		free(path); */
-/* 		ft_free_2d_array_with_null(arr); */
-/* 	} */
-/* } */
-
-/* int ft_pipe(char *str) */
-/* { */
-/* 	int pid; */
-/* 	int fd[2]; */
-
-/* 	pipe(fd); */
-/* 	pid = fork(); */
-/* 	if (pid == -1) */
-/* 		return (-1); */
-/* 	if(pid == 0) */
-/* 	{ */
-/* 		printf("first leha\n"); */
-/* 		ft_child(str, fd, 0); */	
-/* 	} */
-/* 	else */
-/* 	{ */
-/* 		printf("second leha\n"); */
-/* 		wait(&pid); */
-/* 		str += ft_len_construction(str); */
-/* 		pid = fork(); */
-/* 		if (pid == 0) */
-/* 		{ */
-/* 			printf("third leha\n"); */
-/* 			ft_child(str, fd, 1); */	
-/* 		} */
-/* 		else */
-/* 		{ */
-/* 			printf("fourth leha\n"); */
-/* 			/1* wait(&pid); *1/ */
-/* 		} */
-/* 	} */
-/* 	return (0); */
-/* } */
 
 void ft_child(char *str, int fd[2], int n)
 {
@@ -85,12 +24,15 @@ void ft_child(char *str, int fd[2], int n)
 	{
 		arr++;
 		dup2(fd[0], 0);
+		command = ft_command_path_join(*arr);
+		execve(command, arr, ENV);
 	}
 	else
+	{
 		dup2(fd[1], 1);
-	command = ft_command_path_join(*arr);
-	if (execve(command, arr, ENV) == -1)
-		exit(1);
+		command = ft_command_path_join(*arr);
+		execve(command, arr, ENV);
+	}
 }
 
 int ft_pipex(char *str)
@@ -112,6 +54,7 @@ int ft_pipex(char *str)
 			ft_child(str, fd, n);
 		str += ft_len_construction(str);
 		n++;
+		wait(NULL);
 	}
 	return (0);
 }
