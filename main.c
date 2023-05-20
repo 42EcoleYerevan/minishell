@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/20 15:59:55 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:41:01 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,31 @@ void ft_child(char *str, int fd[2], int n)
 	{
 		arr++;
 		dup2(fd[0], 0);
-		command = ft_command_path_join(*arr);
-		execve(command, arr, ENV);
+		close(fd[0]);
+		close(fd[1]);
 	}
 	else
 	{
 		dup2(fd[1], 1);
-		command = ft_command_path_join(*arr);
-		execve(command, arr, ENV);
-	}
+		close(fd[0]);
+		close(fd[1]);
+	} 
+	command = ft_command_path_join(*arr);
+	execve(command, arr, ENV);
 }
 
 int ft_pipex(char *str)
 {
-	int pid;
 	int fd[2];
+	int pid;
 	int n;
 	int len;
 
 	len = ft_count_construction(str);
 	n = 0;
+	pipe(fd);
 	while (n < len)
 	{
-		pipe(fd);
 		pid = fork();
 		if (pid == -1)
 			return (-1);
@@ -54,8 +56,9 @@ int ft_pipex(char *str)
 			ft_child(str, fd, n);
 		str += ft_len_construction(str);
 		n++;
-		wait(NULL);
 	}
+	close(fd[0]);
+	close(fd[1]);
 	return (0);
 }
 
@@ -70,5 +73,7 @@ int main(int argc, char **argv, char **env)
 		str = readline("minishel>$ ");
 		ft_pipex(str);
 	}
+	while (wait(NULL) != -1)
+		;
 	return (0);
 }
