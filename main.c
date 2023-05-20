@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/20 18:41:01 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/20 19:17:54 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ int ft_pipex(char *str)
 
 	len = ft_count_construction(str);
 	n = 0;
-	pipe(fd);
 	while (n < len)
 	{
+		if (n % 2 == 0)
+			pipe(fd);
 		pid = fork();
 		if (pid == -1)
 			return (-1);
@@ -56,9 +57,12 @@ int ft_pipex(char *str)
 			ft_child(str, fd, n);
 		str += ft_len_construction(str);
 		n++;
+		if (n % 2 == 0)
+		{
+			close(fd[0]);
+			close(fd[1]);
+		}
 	}
-	close(fd[0]);
-	close(fd[1]);
 	return (0);
 }
 
@@ -71,7 +75,8 @@ int main(int argc, char **argv, char **env)
 	if (argc == 1)
 	{
 		str = readline("minishel>$ ");
-		ft_pipex(str);
+		if (ft_count_construction(str) != 1)
+			ft_pipex(str);
 	}
 	while (wait(NULL) != -1)
 		;
