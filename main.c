@@ -5,80 +5,91 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/15 15:32:05 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/20 19:17:54 by agladkov         ###   ########.fr       */
-/*                                                                            */
+/*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
+/*   Updated: 2023/05/22 21:00:49 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_child(char *str, int fd[2], int n)
-{
-	char **arr;
-	char *command;
-	char *construction;
+/* void ft_close_pipe(int fd[2]) */
+/* { */
+/* 	close(fd[0]); */
+/* 	close(fd[1]); */
+/* } */
 
-	construction = ft_substr(str, 0, ft_len_construction(str));
-	arr = ft_parse_construction(construction);
-	if (n != 0)
-	{
-		arr++;
-		dup2(fd[0], 0);
-		close(fd[0]);
-		close(fd[1]);
-	}
-	else
-	{
-		dup2(fd[1], 1);
-		close(fd[0]);
-		close(fd[1]);
-	} 
-	command = ft_command_path_join(*arr);
-	execve(command, arr, ENV);
-}
+/* void ft_child(char **arr, int fd[2], int n) */
+/* { */
+/* 	char **arr; */
+/* 	char *command; */
 
-int ft_pipex(char *str)
-{
-	int fd[2];
-	int pid;
-	int n;
-	int len;
+/* 	if (n == 0) */
+/* 	{ */
+/* 		dup2(fd[1], 1); */
+/* 		ft_close_fd(fd); */
+/* 	} */
+/* 	else */
+/* 	{ */
+/* 		arr++; */
+/* 		dup2(fd[0], 0); */
+/* 		ft_close_fd(fd); */
+/* 	} */ 
+/* 	command = ft_command_path_join(*arr); */
+/* 	execve(command, arr, ENV); */
+/* } */
 
-	len = ft_count_construction(str);
-	n = 0;
-	while (n < len)
-	{
-		if (n % 2 == 0)
-			pipe(fd);
-		pid = fork();
-		if (pid == -1)
-			return (-1);
-		if (pid == 0)
-			ft_child(str, fd, n);
-		str += ft_len_construction(str);
-		n++;
-		if (n % 2 == 0)
-		{
-			close(fd[0]);
-			close(fd[1]);
-		}
-	}
-	return (0);
-}
+/* int ft_pipex(char *str) */
+/* { */
+/* 	int fd[2]; */
+/* 	int pid; */
+/* 	int n; */
+/* 	int len; */
+
+/* 	len = ft_count_construction(str); */
+/* 	n = 0; */
+/* 	while (n < len) */
+/* 	{ */
+/* 		if (n % 2 == 0) */
+/* 			pipe(fd); */
+/* 		pid = fork(); */
+/* 		if (pid == -1) */
+/* 			return (-1); */
+/* 		if (pid == 0) */
+/* 		{ */
+/* 			construction = ft_substr(str, 0, ft_len_construction(str)); */
+/* 			arr = ft_parse_construction(construction); */
+/* 			ft_child(arr, fd, n); */
+/* 		} */
+/* 		str += ft_len_construction(str); */
+/* 		n++; */
+/* 		if (n % 2 == 0) */
+/* 			ft_close_fd(fd); */
+/* 	} */
+/* 	return (0); */
+/* } */
 
 int main(int argc, char **argv, char **env)
 {
-	char *str;
 	(void) argv;
 	ENV = env;
+	argc = 0;
+	(void) argv;
 
-	if (argc == 1)
+	char *str;
+
+	str = readline("minishel>$ ");
+	t_mlist *list = ft_fill_list(str);
+	int n = 0;
+	while (list)
 	{
-		str = readline("minishel>$ ");
-		if (ft_count_construction(str) != 1)
-			ft_pipex(str);
+		puts("");
+		n = 0;
+		while(list->argv[n])
+		{
+			printf("%s\n", list->argv[n]);
+			n++;
+		}
+		printf("%s\n", list->command);
+		list = list->next;
 	}
-	while (wait(NULL) != -1)
-		;
 	return (0);
 }

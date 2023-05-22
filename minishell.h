@@ -9,6 +9,14 @@
 #include <readline/readline.h>
 #include "libft/libft.h"
 
+typedef struct s_mlist
+{
+	struct s_mlist *next;
+	struct s_mlist *prev;
+	char **argv;
+	char *command;
+} t_mlist;
+
 char **ENV;
 
 // len_utils
@@ -47,5 +55,15 @@ char	**ft_parse_construction(char *str);
 
 // utils
 void	ft_free_2d_array_with_null(char **array);
+
+// list utils
+t_mlist	*ft_list_new(char **argv, char *command);
+t_mlist	*ft_list_last(t_mlist *list);
+void	ft_list_add_front(t_mlist **list, t_mlist *new);
+void	ft_list_add_back(t_mlist **list, t_mlist *new);
+void	ft_list_clear(t_mlist **list);
+
+// fill list
+t_mlist *ft_fill_list(char *str);
 
 #endif
