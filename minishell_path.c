@@ -63,7 +63,7 @@ char *ft_pathjoin(const char *path1, const char *path2)
 	return (out);
 }
 
-char *ft_command_path_join(char *command)
+char *ft_get_path(char *command)
 {
 	char *path;
 	char *tmp;

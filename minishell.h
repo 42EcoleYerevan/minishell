@@ -13,6 +13,8 @@ typedef struct s_mlist
 {
 	struct s_mlist *next;
 	struct s_mlist *prev;
+	int	fd[2];
+	char *bin;
 	char **argv;
 	char *command;
 } t_mlist;
@@ -47,7 +49,7 @@ char	*ft_check_path(char *path, char *command, DIR *d);
 char	*ft_find_path(char *command);
 int		ft_is_valid_path(char *path);
 char	*ft_pathjoin(const char *path1, const char *path2);
-char	*ft_command_path_join(char *command);
+char	*ft_get_path(char *command);
 
 // construction
 int		ft_count_construction(char *str);
