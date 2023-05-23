@@ -20,6 +20,7 @@ char **ft_parse_construction(char *str)
 			ft_free_2d_array_with_null(out);
 			return (NULL);
 		}
+		/* ft_swap_env(out[n]); */
 		str += ft_strlen(out[n]);
 		str += ft_len_spaces(str);
 		n++;

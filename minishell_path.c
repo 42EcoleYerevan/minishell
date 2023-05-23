@@ -68,6 +68,8 @@ char *ft_get_path(char *command)
 	char *path;
 	char *tmp;
 
+	if (access(command, X_OK) == 0)
+		return (command);
 	tmp = ft_find_path(command);
 	path = ft_pathjoin(tmp, command); 
 	free(tmp);
