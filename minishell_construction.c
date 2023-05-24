@@ -1,5 +1,53 @@
 #include "minishell.h"
 
+void ft_str_copy(char *dst, char *str, char *value)
+{
+	while (*str)
+	{
+		if (*str == '$')
+		{
+			while (*value)
+			{
+				*dst = *value;
+				dst++;
+				value++;
+			}
+			str += ft_len_word(str);
+		}
+		else
+		{
+			*dst = *str;
+			str++;
+			dst++;
+		}
+	}
+}
+
+void ft_swap_env(char *str)
+{
+	int n;
+	int len;
+	char *value;
+	char *out;
+
+	n = 0;
+	while (str[n])
+	{
+		if (str[n] == '$')
+		{
+			len = ft_strlen(str);
+			len -= ft_len_word(&str[n]);
+			value = ft_substr(str,  n + 1, ft_len_word(&str[n + 1]));
+			len += ft_strlen(value) + 1;
+			out = (char *)malloc(sizeof(char) * len);
+			value = ft_get_value(value);
+			ft_str_copy(out, str, value);
+			puts(out);
+		}
+		n++;
+	}
+}
+
 char **ft_parse_construction(char *str)
 {
 	char **out;
@@ -20,7 +68,7 @@ char **ft_parse_construction(char *str)
 			ft_free_2d_array_with_null(out);
 			return (NULL);
 		}
-		/* ft_swap_env(out[n]); */
+		ft_swap_env(out[n]);
 		str += ft_strlen(out[n]);
 		str += ft_len_spaces(str);
 		n++;
