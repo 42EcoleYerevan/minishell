@@ -19,6 +19,13 @@ typedef struct s_mlist
 	char *command;
 } t_mlist;
 
+typedef struct s_env
+{
+	char *key;
+	char *value;
+	struct s_env *next;
+} t_env;
+
 char **ENV;
 
 // len_utils
@@ -67,5 +74,8 @@ void	ft_list_clear(t_mlist **list);
 
 // fill list
 t_mlist *ft_fill_list(char *str);
+
+// pipex
+void ft_pipex(t_mlist *list);
 
 #endif

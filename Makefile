@@ -9,7 +9,8 @@ SRCS = main.c \
 	   minishell_len_construction.c \
 	   minishell_len_utils.c \
 	   minishell_list_utils.c \
-	   minishell_fill_list.c
+	   minishell_fill_list.c \
+	   minishell_pipex.c
 OBJS = $(SRCS:%.c=%.o)
 CC = cc
 CFLAGS = -Wall -Werror -Wextra
