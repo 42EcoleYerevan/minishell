@@ -95,8 +95,7 @@ char **ft_parse_construction(char *str)
 	while (*str)
 	{
 		out[n] = ft_cut_command(str);
-		str += ft_strlen(out[n]);
-		/* str += ft_len_commands(str); */
+		str += ft_len_command(str);
 		out[n] = ft_set_env(out[n]);
 		if (!out[n])
 		{

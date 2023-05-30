@@ -47,3 +47,17 @@ int ft_len_separator(char *str)
 		n++;
 	return (n);
 }
+
+int ft_len_command(char *str)
+{
+	if (*str == '\'')
+		return (ft_len_quote(str, '\''));
+	else if (*str == '\"')
+		return (ft_len_quote(str, '\"'));
+	else if (*str == '|' || *str == '&' || *str == '>')
+		return (ft_len_separator(str));
+	else if (*str == '$')
+		return (ft_len_word(str + 1) + 1);
+	else
+		return (ft_len_word(str));
+}

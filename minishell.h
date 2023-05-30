@@ -33,6 +33,7 @@ int		ft_len_spaces(char *str);
 int		ft_len_word(char *str);
 int		ft_len_quote(char *str, char quote);
 int		ft_len_separator(char *str);
+int		ft_len_command(char *str);
 
 // argc argv
 int		ft_argc(char **arr);

@@ -27,9 +27,9 @@ char *ft_cut_command(char *str)
 	char *arr;
 
 	if (*str == '\'')
-		arr = ft_substr(str, 0, ft_len_quote(str, '\''));
+		arr = ft_substr(str, 1, ft_len_quote(str, '\'') - 2);
 	else if (*str == '\"')
-		arr = ft_substr(str, 0, ft_len_quote(str, '\"'));
+		arr = ft_substr(str, 1, ft_len_quote(str, '\"') - 2);
 	else if (*str == '|' || *str == '&' || *str == '>')
 		arr = ft_substr(str, 0, ft_len_separator(str));
 	else if (*str == '$')
