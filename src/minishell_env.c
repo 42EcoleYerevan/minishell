@@ -14,7 +14,7 @@ char *ft_get_env(char *var)
 	return ("");
 }
 
-char *ft_get_value(char *var)
+char *ft_get_env_value(char *var)
 {
 	char *env_var;
 	int n;

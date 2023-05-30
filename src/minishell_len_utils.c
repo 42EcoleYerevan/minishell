@@ -15,7 +15,13 @@ int ft_len_word(char *str)
 	char *tmp;
 
 	tmp = str;
-	while (*str != ' ' && *str && *str != '|' && *str != '&' && *str != '>')
+	while (*str != ' ' &&
+		   	*str &&
+		   	*str != '|' &&
+		   	*str != '&' &&
+		   	*str != '>' &&
+			*str != '<' &&
+			*str != '$')
 		str++;
 	return (str - tmp);
 }

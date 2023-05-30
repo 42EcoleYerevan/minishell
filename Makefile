@@ -1,28 +1,20 @@
-NAME = a.out
-SRCS = main.c \
-	   minishell_utils.c \
-	   minishell_env.c \
-	   minishell_argc_argv.c \
-	   minishell_path.c \
-	   minishell_command.c \
-	   minishell_construction.c \
-	   minishell_len_construction.c \
-	   minishell_len_utils.c \
-	   minishell_list_utils.c \
-	   minishell_fill_list.c \
-	   minishell_pipex.c
-OBJS = $(SRCS:%.c=%.o)
+NAME = minishell
+SRCDIR = ./src/
+OBJDIR = ./obj/
+SRCS = $(wildcard $(SRCDIR)*)
+OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
+HEADERDIR = ./
+HEADER = $(HEADERDIR)minishell.h
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -I$(HEADERDIR)
 LIBFT = ./libft
 LIBFT_A = $(LIBFT)/libft.a
 LIBS = -lreadline -L$(LIBFT) -lft
-HEADER = minishell.h
+
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(HEADER) $(LIBFT_A)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)

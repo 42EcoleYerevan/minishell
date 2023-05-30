@@ -31,6 +31,8 @@ void ft_pipex(t_mlist *list)
 {
 	int pid;
 
+	if (!list)
+		return ;
 	while (list)
 	{
 		if (list->command)

@@ -32,6 +32,8 @@ char *ft_cut_command(char *str)
 		arr = ft_substr(str, 0, ft_len_quote(str, '\"'));
 	else if (*str == '|' || *str == '&' || *str == '>')
 		arr = ft_substr(str, 0, ft_len_separator(str));
+	else if (*str == '$')
+		arr = ft_substr(str, 0, ft_len_word(str + 1) + 1);
 	else
 		arr = ft_substr(str, 0, ft_len_word(str));
 	return (arr);

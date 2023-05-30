@@ -45,7 +45,7 @@ char	*ft_cut_command(char *str);
 
 // env
 char	*ft_get_env(char *var);
-char	*ft_get_value(char *var);
+char	*ft_get_env_value(char *var);
 
 // len construction
 int		ft_len_commands(char *str);

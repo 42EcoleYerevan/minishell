@@ -20,7 +20,7 @@ char *ft_find_path(char *command)
 	char **paths;
 	char *out;
 
-	paths = ft_split(ft_get_value("PATH"), ':');
+	paths = ft_split(ft_get_env_value("PATH"), ':');
 	if (!paths)
 		return (NULL);
 	while (*paths)

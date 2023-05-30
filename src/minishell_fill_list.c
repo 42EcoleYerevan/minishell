@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 20:59:28 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/23 13:33:41 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/30 17:22:18 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ static void ft_set_list_command(t_mlist **list, char **argv, int n)
 		argv[n] = NULL;
 	}
 	else
+	{
 		ft_list_add_back(list, ft_list_new(argv, NULL));
+	}
 }
 
 t_mlist *ft_fill_list(char *str)

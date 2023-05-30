@@ -15,6 +15,8 @@ int ft_len_commands(char *str)
 			str += ft_len_quote(str, '\"');
 		else if (*str == '|' || *str == '&' || *str == '>')
 			str += ft_len_separator(str);
+		else if (*str == '$')
+			str += ft_len_word(str + 1) + 1;
 		else
 			str += ft_len_word(str);
 		str += ft_len_spaces(str);
@@ -39,3 +41,15 @@ int ft_len_construction(char *str)
 	return (n);
 }
 
+int ft_count_construction(char *str)
+{
+	int n;
+
+	n = 0;
+	while (*str)
+	{
+		n++;
+		str += ft_len_construction(str);
+	}
+	return (n);
+}
