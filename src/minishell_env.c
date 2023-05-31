@@ -11,7 +11,7 @@ char *ft_get_env_string(char *var)
 			return (*tmp);
 		tmp++;
 	}
-	return ("");
+	return (NULL);
 }
 
 char *ft_get_env_value(char *var)
@@ -20,6 +20,8 @@ char *ft_get_env_value(char *var)
 	int n;
 
 	env_var = ft_get_env_string(var);
+	if (!env_var)
+		return (NULL);
 	n = 0;
 	while (env_var[n] != '=')
 		n++;

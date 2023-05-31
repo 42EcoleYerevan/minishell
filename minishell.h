@@ -54,8 +54,14 @@ int		ft_amount_constructions(char *str);
 int		ft_len_construction(char *str);
 
 // path
-char	*ft_find_path(char *command);
 char	*ft_get_absolute_path(char *command);
+
+// path utils
+char	*ft_pathjoin(const char *path1, const char *path2);
+char	*ft_find_path(char *command);
+int		ft_check_file_in_directory(char *dir_path, char *filename);
+int		ft_check_file_in_directory(char *dir_path, char *filename);
+char	*ft_check_file_in_current_directory(char *filename);
 
 // construction
 int		ft_count_construction(char *str);

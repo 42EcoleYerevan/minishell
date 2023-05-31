@@ -6,12 +6,12 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/31 14:48:18 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/31 19:04:01 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void printList(t_mlist *list)
+static void print_list(t_mlist *list)
 {
 	int n;
 	while (list)
@@ -40,9 +40,8 @@ int main(int argc, char **argv, char **env)
 	char *str;
 	str = readline("minishel>$ ");
 	t_mlist *list = ft_fill_list(str);
-	(void) list;
-	printList(list);
-	/* puts(list->bin); */
-	/* ft_pipex(list); */
+	print_list(list);
+	ft_pipex(list);
+
 	return (0);
 }
