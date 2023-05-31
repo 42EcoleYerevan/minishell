@@ -15,13 +15,15 @@ int ft_len_word(char *str)
 	char *tmp;
 
 	tmp = str;
-	while (*str != ' ' &&
-		   	*str &&
+	while (*str &&
+			*str != ' ' &&
 		   	*str != '|' &&
 		   	*str != '&' &&
 		   	*str != '>' &&
 			*str != '<' &&
-			*str != '$')
+			*str != '$' &&
+			*str != '\'' &&
+			*str != '\"')
 		str++;
 	return (str - tmp);
 }
@@ -43,7 +45,10 @@ int ft_len_separator(char *str)
 	int n;
 
 	n = 0;
-	while (str[n] == '|' || str[n] == '&' || str[n] == '>')
+	while (str[n] == '|' ||
+		   	str[n] == '&' ||
+		   	str[n] == '>' ||
+			str[n] == '<')
 		n++;
 	return (n);
 }
@@ -54,7 +59,7 @@ int ft_len_command(char *str)
 		return (ft_len_quote(str, '\''));
 	else if (*str == '\"')
 		return (ft_len_quote(str, '\"'));
-	else if (*str == '|' || *str == '&' || *str == '>')
+	else if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
 		return (ft_len_separator(str));
 	else if (*str == '$')
 		return (ft_len_word(str + 1) + 1);

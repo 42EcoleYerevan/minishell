@@ -1,6 +1,30 @@
 #include "minishell.h"
 
-char *ft_get_command(char *command)
+int ft_amount_commands(char *str)
+{
+	int n;
+
+	n = 0;
+	str += ft_len_spaces(str);
+	while (*str)
+	{
+		n++;
+		if (*str == '\'')
+			str += ft_len_quote(str, '\'');
+		else if (*str == '\"')
+			str += ft_len_quote(str, '\"');
+		else if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
+			str += ft_len_separator(str);
+		else if (*str == '$')
+			str += ft_len_word(str + 1) + 1;
+		else
+			str += ft_len_word(str);
+		str += ft_len_spaces(str);
+	}
+	return (n);
+}
+
+char *ft_get_command_from_path(char *command)
 {
 	char *tmp;;
 
@@ -18,7 +42,7 @@ char *ft_get_command_path(char *command)
 {
 	char *tmp;
 
-	tmp = ft_get_command(command);
+	tmp = ft_get_command_from_path(command);
 	return (ft_substr(command, 0, tmp - command));
 }
 
@@ -30,7 +54,7 @@ char *ft_cut_command(char *str)
 		arr = ft_substr(str, 1, ft_len_quote(str, '\'') - 2);
 	else if (*str == '\"')
 		arr = ft_substr(str, 1, ft_len_quote(str, '\"') - 2);
-	else if (*str == '|' || *str == '&' || *str == '>')
+	else if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
 		arr = ft_substr(str, 0, ft_len_separator(str));
 	else if (*str == '$')
 		arr = ft_substr(str, 0, ft_len_word(str + 1) + 1);

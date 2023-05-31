@@ -1,16 +1,5 @@
 #include "minishell.h"
 
-static char *ft_get_value(char *str)
-{
-	char *tmp;
-	char *out;
-
-	tmp = ft_substr(str,  0, ft_len_word(str));
-	out = ft_get_env_value(tmp);
-	free(tmp);
-	return (out);
-}
-
 static int ft_len_env(char *str)
 {
 	int len;
@@ -21,7 +10,7 @@ static int ft_len_env(char *str)
 	{
 		if (*str == '$')
 		{
-			value = ft_get_value(str + 1);
+			value = ft_get_env_value_by_name(str + 1);
 			len += ft_strlen(value);
 			str += ft_len_word(str + 1) + 1;
 			free(value);
@@ -43,7 +32,7 @@ static void ft_insert_str(char *dst, char *src)
 	{
 		if (*src == '$')
 		{
-			value = ft_get_value(src + 1);
+			value = ft_get_env_value_by_name(src + 1);
 			ft_strlcpy(dst, value, ft_strlen(value) + 1);
 			dst += ft_strlen(value);
 			src += ft_len_word(src + 1) + 1;
@@ -80,14 +69,10 @@ static char *ft_set_env(char *str)
 	return (out);
 }
 
-char **ft_parse_construction(char *str)
+static char **ft_set_commands(char *str, char **out)
 {
-	char **out;
 	int n;
-	int len;
 
-	len = ft_len_commands(str) + 1;
-	out = (char **)malloc(sizeof(char *) * len);
 	if (!out)
 		return (NULL);
 	n = 0;
@@ -95,8 +80,9 @@ char **ft_parse_construction(char *str)
 	while (*str)
 	{
 		out[n] = ft_cut_command(str);
+		if (*str != '\'')
+			out[n] = ft_set_env(out[n]);
 		str += ft_len_command(str);
-		out[n] = ft_set_env(out[n]);
 		if (!out[n])
 		{
 			ft_free_2d_array_with_null(out);
@@ -106,5 +92,19 @@ char **ft_parse_construction(char *str)
 		n++;
 	}
 	out[n] = NULL;
+	return (out);
+}
+
+char **ft_parse_construction(char *str)
+{
+	char **out;
+	int len;
+
+	len = ft_amount_commands(str) + 1;
+	out = (char **)malloc(sizeof(char *) * len);
+	out = ft_set_commands(str, out);
+	/* puts(str); */
+	if (!out)
+		return (NULL);
 	return (out);
 }

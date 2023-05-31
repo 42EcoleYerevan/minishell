@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char *ft_get_env(char *var)
+char *ft_get_env_string(char *var)
 {
 	char **tmp;
 
@@ -19,7 +19,7 @@ char *ft_get_env_value(char *var)
 	char *env_var;
 	int n;
 
-	env_var = ft_get_env(var);
+	env_var = ft_get_env_string(var);
 	n = 0;
 	while (env_var[n] != '=')
 		n++;

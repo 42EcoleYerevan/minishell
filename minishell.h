@@ -40,24 +40,22 @@ int		ft_argc(char **arr);
 char	**ft_argv(char **arr);
 
 // command
-char	*ft_get_command(char *command);
+int		ft_amount_commands(char *str);
+char	*ft_get_command_from_path(char *command);
 char	*ft_get_command_path(char *command);
 char	*ft_cut_command(char *str);
 
 // env
-char	*ft_get_env(char *var);
+char	*ft_get_env_string(char *var);
 char	*ft_get_env_value(char *var);
 
 // len construction
-int		ft_len_commands(char *str);
+int		ft_amount_constructions(char *str);
 int		ft_len_construction(char *str);
 
 // path
-char	*ft_check_path(char *path, char *command, DIR *d);
 char	*ft_find_path(char *command);
-int		ft_is_valid_path(char *path);
-char	*ft_pathjoin(const char *path1, const char *path2);
-char	*ft_get_path(char *command);
+char	*ft_get_absolute_path(char *command);
 
 // construction
 int		ft_count_construction(char *str);
@@ -65,6 +63,7 @@ char	**ft_parse_construction(char *str);
 
 // utils
 void	ft_free_2d_array_with_null(char **array);
+char	*ft_get_env_value_by_name(char *str);
 
 // list utils
 t_mlist	*ft_list_new(char **argv, char *command);

@@ -24,7 +24,7 @@ char **ft_argv(char **arr)
 	tmp = argv;
 	if (!argv)
 		return (NULL);
-	if (*arr[0] == '|' || *arr[0] == '&' || *arr[0] == '>')
+	if (*arr[0] == '|' || *arr[0] == '&' || *arr[0] == '>' || *arr[0] == '<')
 		arr++;
 	while (*arr && *arr[0] != '|' && *arr[0] != '&' && *arr[0] != '>') 
 	{

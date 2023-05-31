@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:44:39 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/30 17:24:29 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/31 13:32:47 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_mlist *ft_list_new(char **argv, char *command)
 	t_mlist *new;
 
 	new = (t_mlist *)malloc(sizeof(t_mlist));
-	new->bin = ft_get_path(argv[0]);
+	new->bin = ft_get_absolute_path(argv[0]);
 	new->argv = argv;
 	new->command = command;
 	new->next = NULL;

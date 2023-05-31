@@ -6,10 +6,29 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/30 17:37:44 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/05/31 14:48:18 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void printList(t_mlist *list)
+{
+	int n;
+	while (list)
+	{
+		printf("bin \t: %s\n", (list->bin));
+		n = 0;
+		while (list->argv[n])
+		{
+			printf("argv \t: %s\n", (list->argv[n]));
+			n++;
+		}
+		if (list->argv[0] == NULL)
+			printf("argv \t: %s\n", NULL);
+		printf("command\t: %s\n\n", (list->command));
+		list = list->next;
+	}
+}
 
 int main(int argc, char **argv, char **env)
 {
@@ -21,18 +40,9 @@ int main(int argc, char **argv, char **env)
 	char *str;
 	str = readline("minishel>$ ");
 	t_mlist *list = ft_fill_list(str);
-
-	int n;
-	while (list)
-	{
-		n = 0;
-		while (list->argv[n])
-		{
-			puts(list->argv[n]);
-			n++;
-		}
-		list = list->next;
-	}
+	(void) list;
+	printList(list);
+	/* puts(list->bin); */
 	/* ft_pipex(list); */
 	return (0);
 }

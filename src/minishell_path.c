@@ -1,13 +1,13 @@
 #include "minishell.h"
 
-char *ft_check_path(char *path, char *command, DIR *d)
+static char *ft_check_path(char *path, char *command, DIR *d)
 {
 	struct dirent *file;
 
 	file = readdir(d);
 	while (file)
 	{
-		if (ft_strncmp(command, file->d_name, ft_strlen(file->d_name)) == 0)
+		if (ft_strncmp(command, file->d_name, ft_strlen(file->d_name) + 1) == 0)
 			return (ft_strdup(path));
 		file = readdir(d);
 	}
@@ -41,7 +41,7 @@ char *ft_find_path(char *command)
 	return (NULL);
 }
 
-int ft_is_valid_path(char *path)
+static int ft_is_valid_path(char *path)
 {
 	DIR *d;
 
@@ -52,7 +52,7 @@ int ft_is_valid_path(char *path)
 	return (1);
 }
 
-char *ft_pathjoin(const char *path1, const char *path2)
+static char *ft_pathjoin(const char *path1, const char *path2)
 {
 	char *out;
 	char *tmp;
@@ -63,15 +63,24 @@ char *ft_pathjoin(const char *path1, const char *path2)
 	return (out);
 }
 
-char *ft_get_path(char *command)
+char *ft_get_absolute_path(char *command)
 {
 	char *path;
 	char *tmp;
 
-	if (access(command, X_OK) == 0)
-		return (command);
 	tmp = ft_find_path(command);
 	path = ft_pathjoin(tmp, command); 
+	if (access(path, X_OK) == -1)
+	{
+		free(tmp);
+		free(path);
+		return (NULL);
+	}
+	if (ft_is_valid_path(tmp) == 0)
+	{
+		free(tmp);
+		return (NULL);
+	}
 	free(tmp);
 	return (path);
 }
