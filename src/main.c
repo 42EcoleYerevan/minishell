@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/02 18:12:12 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:27:01 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -64,15 +64,15 @@ void ft_free_2_linked_list(t_mlist **list)
 	}
 }
 
-void	ft_action(int signum)
+void	ft_action(int sig, siginfo_t *info, void *context)
 {
-	signum = 0;
-	puts("");
-	int n = getpid();
-	rl_line_buffer = "";
+	sig = 0;
+	(void) context;
+	puts("\b\b  ");
+	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-	kill(n, 19);
+	kill(info->si_pid, 19);
 }
 
 int main(int argc, char **argv, char **env)
@@ -83,8 +83,12 @@ int main(int argc, char **argv, char **env)
 
 
 	char *str;
+	struct sigaction sa;
 
-	signal(SIGINT, ft_action);
+	sa.sa_sigaction = ft_action;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_SIGINFO;
+	sigaction(SIGINT, &sa, 0);
 	using_history();
 	while (1)
 	{

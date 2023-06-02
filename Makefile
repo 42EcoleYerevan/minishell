@@ -6,21 +6,29 @@ OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
 HEADERDIR = ./
 HEADER = $(HEADERDIR)minishell.h
 CC = cc
+
 LIBFT = ./libft
 LIBFT_A = $(LIBFT)/libft.a
-CFLAGS = -Wall -Werror -Wextra  -fsanitize=address -I$(HEADERDIR)
-LIBS = -lreadline -L$(LIBFT) -lft
+RLDIR = ./readline
+RL_A = $(RLDIR)/libreadline.a
+
+CFLAGS = -Wall -Werror -Wextra -I$(RLDIR) -fsanitize=address -I$(HEADERDIR)
+LIBS = -L$(RLDIR) -lreadline -L$(LIBFT) -lft -lncurses
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(HEADER) $(LIBFT_A)
+$(NAME): $(OBJS) $(HEADER) $(LIBFT_A) $(RL_A)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 $(LIBFT_A):
 	@make -C $(LIBFT) bonus
+
+$(RL_A):
+	@cd $(RLDIR) && exec ./configure
+	@make -C $(RLDIR)
 
 clean:
 	rm -f $(OBJS)
