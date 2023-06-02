@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/02 20:27:01 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/06/02 20:41:15 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -68,9 +68,11 @@ void	ft_action(int sig, siginfo_t *info, void *context)
 {
 	sig = 0;
 	(void) context;
-	puts("\b\b  ");
-	rl_replace_line("", 0);
+	(void) info;
+
+	printf("\033[0Kminishell>$ \n");
 	rl_on_new_line();
+	rl_replace_line("", 1);
 	rl_redisplay();
 	kill(info->si_pid, 19);
 }
