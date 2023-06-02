@@ -23,15 +23,12 @@ void    ft_pwd()
     }
 }
 
-void	ft_echo(int fd, char **args, int count, int n)
+void	ft_echo(char **args, int count, int n)
 {
-	int	i;
-
-	i = 0;
-	while (i < count)
+	while (*args)
 	{
-		ft_putstr_fd(args[i], fd);
-		i++;
+		ft_putstr_fd(*args, 1);
+		args++;
 	}
 	if (!n)
 		write(fd, "\n", 1);
