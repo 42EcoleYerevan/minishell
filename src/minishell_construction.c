@@ -103,7 +103,6 @@ char **ft_parse_construction(char *str)
 	len = ft_amount_commands(str) + 1;
 	out = (char **)malloc(sizeof(char *) * len);
 	out = ft_set_commands(str, out);
-	/* puts(str); */
 	if (!out)
 		return (NULL);
 	return (out);

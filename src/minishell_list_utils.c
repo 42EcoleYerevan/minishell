@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:44:39 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/31 13:32:47 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/06/02 16:31:02 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,22 +71,4 @@ void ft_list_add_back(t_mlist **list, t_mlist *new)
 		new->prev = tmp;
 		tmp->next = new;
 	}
-}
-
-void ft_list_clear(t_mlist **list)
-{
-	int n;
-
-	if (!list || !*list)
-		return ;
-	n = 0;
-	while ((*list)->argv[n])
-	{
-		free((*list)->argv[n]);
-		n++;
-	}
-	free((*list)->argv);
-	free((*list)->command);
-	free(list);
-	*list = NULL;
 }

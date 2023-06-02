@@ -6,8 +6,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
-#include <readline/readline.h>
+#include <signal.h>
 #include "libft/libft.h"
+#include <readline/readline.h>
+#include <readline/history.h>
 
 typedef struct s_mlist
 {
@@ -18,13 +20,6 @@ typedef struct s_mlist
 	char **argv;
 	char *command;
 } t_mlist;
-
-typedef struct s_env
-{
-	char *key;
-	char *value;
-	struct s_env *next;
-} t_env;
 
 char **ENV;
 

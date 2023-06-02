@@ -6,9 +6,9 @@ OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
 HEADERDIR = ./
 HEADER = $(HEADERDIR)minishell.h
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -I$(HEADERDIR)
 LIBFT = ./libft
 LIBFT_A = $(LIBFT)/libft.a
+CFLAGS = -Wall -Werror -Wextra  -fsanitize=address -I$(HEADERDIR)
 LIBS = -lreadline -L$(LIBFT) -lft
 
 $(OBJDIR)%.o: $(SRCDIR)%.c

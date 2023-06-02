@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_pipex.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/01 13:35:17 by agladkov          #+#    #+#             */
+/*   Updated: 2023/06/02 16:45:34 by agladkov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static void ft_close_pipe(int fd[2])
+static void	ft_close_pipe(int fd[2])
 {
 	close(fd[0]);
 	close(fd[1]);
 }
 
-static void ft_child(t_mlist *list)
+static void	ft_child(t_mlist *list)
 {
 	if (list->command && list->prev == NULL)
 	{
@@ -27,9 +39,9 @@ static void ft_child(t_mlist *list)
 	execve(list->bin, list->argv, ENV);
 }
 
-void ft_pipex(t_mlist *list)
+void	ft_pipex(t_mlist *list)
 {
-	int pid;
+	int	pid;
 
 	if (!list)
 		return ;
@@ -40,7 +52,7 @@ void ft_pipex(t_mlist *list)
 		pid = fork();
 		if (pid == 0)
 		{
-			if (list->next == NULL && list->prev == NULL)
+			if (list->next == NULL && list->prev == NULL && list->bin == NULL)
 				execve(list->bin, list->argv, ENV);
 			else
 				ft_child(list);
@@ -49,5 +61,6 @@ void ft_pipex(t_mlist *list)
 			ft_close_pipe(list->prev->fd);
 		list = list->next;
 	}
-	wait(NULL);
+	while (wait(NULL) != -1)
+		;
 }

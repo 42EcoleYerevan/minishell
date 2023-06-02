@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 20:59:28 by agladkov          #+#    #+#             */
-/*   Updated: 2023/05/31 14:33:16 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/06/02 16:10:19 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,14 @@ t_mlist *ft_fill_list(char *str)
 	char *construction;
 	char **argv;
 	int n;
+	int a;
 
+	a = 0;
+	list = NULL;
 	while (*str)
 	{
 		construction = ft_substr(str, 0, ft_len_construction(str));
 		argv = ft_parse_construction(construction);
-		/* puts(construction); */
 		n = ft_amount_commands(construction) - 1;
 		ft_set_list_command(&list, argv, n);
 		str += ft_len_construction(str);
