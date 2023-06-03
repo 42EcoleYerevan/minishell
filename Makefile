@@ -13,14 +13,15 @@ RLDIR = ./readline
 RL_A = $(RLDIR)/libreadline.a
 
 CFLAGS = -Wall -Werror -Wextra -I$(RLDIR) -fsanitize=address -I$(HEADERDIR)
-LIBS = -L$(RLDIR) -lreadline -L$(LIBFT) -lft -lncurses
+LIBS = -lreadline -L$(LIBFT) -lft -lncurses
+LIBS += -L$(RLDIR) 
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(HEADER) $(LIBFT_A) $(RL_A)
+$(NAME): $(OBJS) $(HEADER) $(LIBFT_A)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 $(LIBFT_A):
