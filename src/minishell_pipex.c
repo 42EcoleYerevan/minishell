@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 13:35:17 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/02 16:45:34 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/06/03 17:50:50 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,15 @@ void	ft_pipex(t_mlist *list)
 		pid = fork();
 		if (pid == 0)
 		{
-			if (list->next == NULL && list->prev == NULL && list->bin == NULL)
+			if (list->next == NULL && list->prev == NULL && list->bin != NULL)
 				execve(list->bin, list->argv, ENV);
-			else
+			else if (list->bin != NULL && ft_strncmp(list->command, "|", 2) == 0)
 				ft_child(list);
+			else
+			{
+				printf("minishell: command not found\n");
+				exit(0);
+			}
 		}
 		if (list->prev && list->prev->command)
 			ft_close_pipe(list->prev->fd);

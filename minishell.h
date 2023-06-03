@@ -62,6 +62,10 @@ char	*ft_check_file_in_current_directory(char *filename);
 int		ft_count_construction(char *str);
 char	**ft_parse_construction(char *str);
 
+// construction utils
+int		ft_num_quotes(char *str);
+char	*ft_delete_quotes(char *str);
+
 // utils
 void	ft_free_2d_array_with_null(char **array);
 char	*ft_get_env_value_by_name(char *str);
