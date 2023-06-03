@@ -69,6 +69,47 @@ static char *ft_set_env(char *str)
 	return (out);
 }
 
+int ft_num_quotes(char *str)
+{
+	int num;
+
+	num = 0;
+	while (*str)
+	{
+		if (*str == '\'' || *str == '\"')
+			num++;
+		str++;
+	}
+	return (num);
+}
+
+char *ft_delete_quotes(char *str)
+{
+	char *tmp;
+	char *out;
+	int indx;
+	int len;
+
+	len = ft_strlen(str) - ft_num_quotes(str) + 1;
+	out = (char *)malloc(sizeof(char) * len);
+	if (!out)
+	{
+		free(str);
+		return NULL;
+	}
+	indx = 0;
+	tmp = str;
+	while (*str)
+	{
+		if (*str != '\'' && *str != '\"')
+			out[indx++] = *str;
+		str++;
+	}
+	out[indx] = 0;
+	free(tmp);
+	return (out);
+}
+
 static char **ft_set_commands(char *str, char **out)
 {
 	int n;
@@ -82,6 +123,7 @@ static char **ft_set_commands(char *str, char **out)
 		out[n] = ft_cut_command(str);
 		if (*str != '\'')
 			out[n] = ft_set_env(out[n]);
+		out[n] = ft_delete_quotes(out[n]);
 		str += ft_len_command(str);
 		if (!out[n])
 		{

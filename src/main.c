@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/03 13:59:25 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/06/03 14:07:46 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -24,7 +24,7 @@ static void print_list(t_mlist *list)
 			n++;
 		}
 		if (list->argv[0] == NULL)
-			printf("argv[0] \t: %s\n", NULL);
+			printf("argv[0]\t: %s\n", NULL);
 		printf("command\t: %s\n", (list->command));
 		printf("next\t: %p\n", list->next);
 		printf("prev\t: %p\n\n", list->prev);
@@ -32,53 +32,12 @@ static void print_list(t_mlist *list)
 	}
 }
 
-void ft_list_clear(t_mlist **list)
-{
-	int n;
-
-	if (!list || !*list)
-		return ;
-	n = 0;
-	while ((*list)->argv[n])
-	{
-		free((*list)->argv[n]);
-		n++;
-	}
-	free((*list)->argv);
-	free((*list)->command);
-	free((*list)->bin);
-	*list = NULL;
-}
-
-void ft_free_2_linked_list(t_mlist **list)
-{
-	while (*list)
-	{
-		if ((*list)->next)
-		{
-			*list = (*list)->next;
-			ft_list_clear(&(*list)->prev);
-		}
-		else
-			ft_list_clear(list);
-	}
-}
-
-void	ft_action(int sig)
-{
-	sig = 0;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
 
 int main(int argc, char **argv, char **env)
 {
 	(void) argv;
 	argc = 0;
 	ENV = env;
-
 
 	char *str;
 	signal(SIGINT, ft_action);

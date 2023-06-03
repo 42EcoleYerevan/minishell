@@ -65,6 +65,8 @@ char	**ft_parse_construction(char *str);
 // utils
 void	ft_free_2d_array_with_null(char **array);
 char	*ft_get_env_value_by_name(char *str);
+void	ft_list_clear(t_mlist **list);
+void	ft_free_2_linked_list(t_mlist **list);
 
 // list utils
 t_mlist	*ft_list_new(char **argv, char *command);
@@ -75,8 +77,11 @@ void	ft_list_clear(t_mlist **list);
 
 // fill list
 t_mlist *ft_fill_list(char *str);
-
+	
 // pipex
-void ft_pipex(t_mlist *list);
+void	ft_pipex(t_mlist *list);
+
+// action
+void	ft_action(int sig);
 
 #endif
