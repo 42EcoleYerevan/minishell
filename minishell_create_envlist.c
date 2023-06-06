@@ -1,11 +1,4 @@
-#include "libft/libft.h"
-
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
+#include "minishell.h"
 
 t_env	*ft_add_env(char *str)
 {
@@ -50,4 +43,6 @@ int main(int argc, char **argv, char **env)
 	t_env	*sss;
 
 	sss = ft_create_envlist(env);
+	ft_env(sss);
+    return (0);
 }
