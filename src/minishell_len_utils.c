@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 int ft_len_spaces(char *str)
 {
@@ -46,12 +46,16 @@ int ft_len_quote(char *str, char quote)
 int ft_len_separator(char *str)
 {
 	int n;
+	char sep;
 
 	n = 0;
-	while (str[n] == '|' ||
-		   	str[n] == '&' ||
-		   	str[n] == '>' ||
-			str[n] == '<')
+	sep = 0;
+	if (str[n] == '|' ||
+		str[n] == '&' ||
+		str[n] == '>' ||
+		str[n] == '<')
+		sep = str[n];
+	while (str[n] && str[n] == sep)
 		n++;
 	return (n);
 }

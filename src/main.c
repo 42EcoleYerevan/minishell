@@ -9,7 +9,7 @@
 /*   Updated: 2023/06/03 17:52:23 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static void print_list(t_mlist *list)
 {

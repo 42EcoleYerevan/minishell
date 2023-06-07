@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 static char *ft_check_path(char *path, char *command, DIR *d)
 {
