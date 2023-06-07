@@ -39,3 +39,22 @@ int     ft_env(t_env *env)
     }
     return (0);
 }
+
+int     ft_exit(t_env *env, char **args)
+{
+    if (ft_num_check(args[0]))
+    {
+        ft_putendl_fd("exit", 2);
+        ft_putstr_fd("minishell: exit: ", 2);
+        ft_putstr_fd(args[0], 2);
+        ft_putendl_fd(": numeric argument required", 2);
+        exit(1);
+    }
+    else if (args[1])
+    {
+        ft_putendl_fd("exit", 2);
+        ft_putendl_fd("minishell: exit: too many arguments", 2);
+    }
+    ft_putendl_fd("exit", 2);
+    exit(ft_atoi(args[0]));
+}
