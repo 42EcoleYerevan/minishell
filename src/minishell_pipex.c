@@ -58,7 +58,7 @@ void	ft_pipex(t_mlist *list)
 				ft_child(list);
 			else
 			{
-				printf("minishell: command not found\n");
+				printf("minishell: %s command not found\n", list->argv[0]);
 				exit(0);
 			}
 		}
