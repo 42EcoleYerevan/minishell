@@ -38,11 +38,11 @@ t_env	*ft_create_envlist(char	**arr)
 	return (start);
 }
 
-int main(int argc, char **argv, char **env)
-{
-	t_env	*sss;
+/* int main(int argc, char **argv, char **env) */
+/* { */
+/* 	t_env	*sss; */
 
-	sss = ft_create_envlist(env);
-	ft_env(sss);
-    return (0);
-}
+/* 	sss = ft_create_envlist(env); */
+/* 	ft_env(sss); */
+/*     return (0); */
+/* } */

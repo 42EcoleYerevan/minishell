@@ -11,6 +11,8 @@ static int ft_len_env(char *str)
 		if (*str == '$')
 		{
 			value = ft_get_env_value_by_name(str + 1);
+			if (!value)
+				value = ft_strdup("");
 			len += ft_strlen(value);
 			str += ft_len_word(str + 1) + 1;
 			free(value);
@@ -33,6 +35,8 @@ static void ft_insert_str(char *dst, char *src)
 		if (*src == '$')
 		{
 			value = ft_get_env_value_by_name(src + 1);
+			if (!value)
+				value = ft_strdup("");
 			ft_strlcpy(dst, value, ft_strlen(value) + 1);
 			dst += ft_strlen(value);
 			src += ft_len_word(src + 1) + 1;
