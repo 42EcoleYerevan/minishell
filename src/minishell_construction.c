@@ -1,6 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
 
-static int ft_len_env(char *str)
+static int ft_len_str_with_env_value(char *str)
 {
 	int len;
 	char *value;
@@ -11,6 +11,8 @@ static int ft_len_env(char *str)
 		if (*str == '$')
 		{
 			value = ft_get_env_value_by_name(str + 1);
+			if (!value)
+				value = ft_substr(str, 0, ft_len_word(str));
 			len += ft_strlen(value);
 			str += ft_len_word(str + 1) + 1;
 			free(value);
@@ -59,7 +61,7 @@ static char *ft_set_env(char *str)
 		out = ft_strdup(str);
 	else
 	{
-		len = ft_len_env(str);
+		len = ft_len_str_with_env_value(str);
 		out = (char *)malloc(sizeof(char) * (len + 1));
 		if (!out)
 			return (NULL);
