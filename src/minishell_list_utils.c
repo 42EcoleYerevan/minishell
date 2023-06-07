@@ -12,12 +12,12 @@
 
 #include "../minishell.h"
 
-t_mlist *ft_list_new(char **argv, char *command)
+t_mlist *ft_list_new(t_shell *shell, char **argv, char *command)
 {
 	t_mlist *new;
 
 	new = (t_mlist *)malloc(sizeof(t_mlist));
-	new->bin = ft_get_absolute_path(argv[0]);
+	new->bin = ft_get_absolute_path(shell, argv[0]);
 	new->argv = argv;
 	new->command = command;
 	new->next = NULL;

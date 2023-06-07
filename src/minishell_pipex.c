@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static void	ft_close_pipe(int fd[2])
 {
@@ -36,7 +36,7 @@ static void	ft_child(t_mlist *list)
 		dup2(list->prev->fd[0], 0);
 		ft_close_pipe(list->prev->fd);
 	}
-	execve(list->bin, list->argv, ENV);
+	execve(list->bin, list->argv, NULL);
 }
 
 void	ft_pipex(t_mlist *list)
@@ -53,7 +53,7 @@ void	ft_pipex(t_mlist *list)
 		if (pid == 0)
 		{
 			if (list->next == NULL && list->prev == NULL && list->bin != NULL)
-				execve(list->bin, list->argv, ENV);
+				execve(list->bin, list->argv, NULL);
 			else if (list->bin != NULL && ft_strncmp(list->command, "|", 2) == 0)
 				ft_child(list);
 			else

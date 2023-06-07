@@ -44,9 +44,14 @@ static void print_list(t_mlist *list)
 
 int main(int argc, char **argv, char **menv)
 {
+	t_shell *shell;
+	t_mlist *list;
+
 	(void) argv;
 	argc = 0;
-	env = ft_create_envlist(menv);
+
+	shell = (t_shell *)malloc(sizeof(t_shell));
+	shell->env = ft_create_envlist(menv);
 
 	char *str;
 	signal(SIGINT, ft_action);
@@ -62,12 +67,13 @@ int main(int argc, char **argv, char **menv)
 			printf("exit\n");
 			exit(0);
 		}
-		t_mlist *list = ft_fill_list(str);
+		list = ft_fill_list(shell, str);
+		shell->list = &list;
 		add_history(str);
 		print_list(list);
 		free(str);
-		ft_pipex(list);
-		ft_free_2_linked_list(&list);
+		ft_pipex(*shell->list);
+		ft_free_2_linked_list(shell->list);
 	}
 	return (0);
 }

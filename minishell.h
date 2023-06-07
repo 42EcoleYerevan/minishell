@@ -32,7 +32,12 @@ typedef struct s_env
     struct s_env	*next;
 }	t_env;
 
-t_env *env;
+typedef struct s_shell
+{
+	struct s_mlist	**list;
+	struct s_env	*env;
+	int 			err_status;
+} t_shell;
 
 // len_utils
 int		ft_len_spaces(char *str);
@@ -52,25 +57,24 @@ char	*ft_get_command_path(char *command);
 char	*ft_cut_command(char *str);
 
 // env
-char	*ft_get_env_value(char *var);
-char	*ft_get_env_value_by_name(char *str);
+char	*ft_get_env_value(t_shell *shell, char *var);
+char	*ft_get_env_value_by_name(t_shell *shell, char *str);
 
 // len construction
 int		ft_amount_constructions(char *str);
 int		ft_len_construction(char *str);
 
 // path
-char	*ft_get_absolute_path(char *command);
+char	*ft_get_absolute_path(t_shell *shell, char *command);
 
 // path utils
 char	*ft_pathjoin(const char *path1, const char *path2);
-char	*ft_find_path(char *command);
-int		ft_check_file_in_directory(char *dir_path, char *filename);
-char	*ft_check_file_in_current_directory(char *filename);
+char	*ft_find_path(t_shell *shell, char *command);
+char	*ft_check_file_in_current_directory(t_shell *shell, char *filename);
 
 // construction
 int		ft_count_construction(char *str);
-char	**ft_parse_construction(char *str);
+char	**ft_parse_construction(t_shell *shell, char *str);
 
 // construction utils
 int		ft_num_quotes(char *str);
@@ -82,14 +86,14 @@ void	ft_list_clear(t_mlist **list);
 void	ft_free_2_linked_list(t_mlist **list);
 
 // list utils
-t_mlist	*ft_list_new(char **argv, char *command);
+t_mlist *ft_list_new(t_shell *shell, char **argv, char *command);
 t_mlist	*ft_list_last(t_mlist *list);
 void	ft_list_add_front(t_mlist **list, t_mlist *new);
 void	ft_list_add_back(t_mlist **list, t_mlist *new);
 void	ft_list_clear(t_mlist **list);
 
 // fill list
-t_mlist *ft_fill_list(char *str);
+t_mlist *ft_fill_list(t_shell *shell, char *str);
 	
 // pipex
 void	ft_pipex(t_mlist *list);
