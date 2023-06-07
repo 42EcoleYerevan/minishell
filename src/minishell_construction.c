@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 static int ft_len_env(char *str)
 {
