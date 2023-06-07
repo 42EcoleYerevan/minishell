@@ -32,32 +32,32 @@ typedef struct s_env
     struct s_env	*next;
 }	t_env;
 
-char **ENV;
+t_env *env;
 
 // len_utils
-int	ft_len_spaces(char *str);
-int	ft_len_word(char *str);
-int	ft_len_quote(char *str, char quote);
-int	ft_len_separator(char *str);
-int	ft_len_command(char *str);
+int		ft_len_spaces(char *str);
+int		ft_len_word(char *str);
+int		ft_len_quote(char *str, char quote);
+int		ft_len_separator(char *str);
+int		ft_len_command(char *str);
 
 // argc argv
-int	ft_argc(char **arr);
+int		ft_argc(char **arr);
 char	**ft_argv(char **arr);
 
 // command
-int	ft_amount_commands(char *str);
+int		ft_amount_commands(char *str);
 char	*ft_get_command_from_path(char *command);
 char	*ft_get_command_path(char *command);
 char	*ft_cut_command(char *str);
 
 // env
-char	*ft_get_env_string(char *var);
 char	*ft_get_env_value(char *var);
+char	*ft_get_env_value_by_name(char *str);
 
 // len construction
-int	ft_amount_constructions(char *str);
-int	ft_len_construction(char *str);
+int		ft_amount_constructions(char *str);
+int		ft_len_construction(char *str);
 
 // path
 char	*ft_get_absolute_path(char *command);
@@ -65,21 +65,19 @@ char	*ft_get_absolute_path(char *command);
 // path utils
 char	*ft_pathjoin(const char *path1, const char *path2);
 char	*ft_find_path(char *command);
-int	ft_check_file_in_directory(char *dir_path, char *filename);
-int	ft_check_file_in_directory(char *dir_path, char *filename);
+int		ft_check_file_in_directory(char *dir_path, char *filename);
 char	*ft_check_file_in_current_directory(char *filename);
 
 // construction
-int	ft_count_construction(char *str);
+int		ft_count_construction(char *str);
 char	**ft_parse_construction(char *str);
 
 // construction utils
-int	ft_num_quotes(char *str);
+int		ft_num_quotes(char *str);
 char	*ft_delete_quotes(char *str);
 
 // utils
 void	ft_free_2d_array_with_null(char **array);
-char	*ft_get_env_value_by_name(char *str);
 void	ft_list_clear(t_mlist **list);
 void	ft_free_2_linked_list(t_mlist **list);
 

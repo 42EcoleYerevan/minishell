@@ -5,8 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/03 17:52:23 by agladkov         ###   ########.fr       */
+/*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */ /*   Updated: 2023/06/03 17:52:23 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "../minishell.h"
@@ -43,11 +42,11 @@ static void print_list(t_mlist *list)
 }
 
 
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **menv)
 {
 	(void) argv;
 	argc = 0;
-	ENV = env;
+	env = ft_create_envlist(menv);
 
 	char *str;
 	signal(SIGINT, ft_action);
