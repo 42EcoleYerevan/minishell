@@ -75,10 +75,14 @@ char	*ft_check_file_in_current_directory(t_shell *shell, char *filename);
 // construction
 int		ft_count_construction(char *str);
 char	**ft_parse_construction(t_shell *shell, char *str);
+char	*ft_set_env(t_shell *shell, char *str);
 
 // construction utils
 int		ft_num_quotes(char *str);
 char	*ft_delete_quotes(char *str);
+
+// parse utils
+char	*ft_parse_quotes(t_shell *shell, char *str);
 
 // utils
 void	ft_free_2d_array_with_null(char **array);

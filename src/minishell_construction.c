@@ -52,7 +52,7 @@ static void ft_insert_str(t_shell *shell, char *dst, char *src)
 	*dst = '\0';
 }
 
-static char *ft_set_env(t_shell *shell, char *str)
+char *ft_set_env(t_shell *shell, char *str)
 {
 	int len;
 	char *out;
@@ -70,47 +70,6 @@ static char *ft_set_env(t_shell *shell, char *str)
 		ft_insert_str(shell, out, str);
 	}
 	free(str);
-	return (out);
-}
-
-int ft_len_before_quote(char *str)
-{
-	char *tmp;
-
-	tmp = str;
-	while (*str && *str != '\'' && *str != '\"')
-		str++;
-	return (str - tmp);
-}
-
-char *ft_parse_quotes(t_shell *shell, char *str)
-{
-	char *out;
-	char *tmp;
-
-	out = "";
-	while (*str)
-	{
-		if (*str != '\'' && *str != '\"')
-		{
-			tmp = ft_substr(str, 0, ft_len_before_quote(str));
-			str += ft_strlen(tmp);
-		}
-		else
-		{
-			tmp = ft_substr(str, 0, ft_len_quote(str, *str));
-			if (*str == '\"')
-			{
-				tmp = ft_set_env(shell, tmp);
-				tmp = ft_strtrim(tmp, "\"");
-			}
-			else
-				tmp = ft_strtrim(tmp, "\'");
-			str += ft_len_quote(str, *str);
-		}
-		out = ft_strjoin(out, tmp);
-	}
-	puts(out);
 	return (out);
 }
 
