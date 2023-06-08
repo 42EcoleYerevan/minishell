@@ -5,6 +5,8 @@
 # include <unistd.h>
 # include <limits.h>
 # include "libft/libft.h"
+# include <stdio.h>
+
 
 //Types
 typedef struct s_env
@@ -28,6 +30,6 @@ int 	ft_export(char **args, t_env **env);
 //minishell_builtin_utils
 int		ft_num_check(char *arg);
 int		ft_export_print(t_env *env);
-t_env	*ft_export_add(char *str)
+t_env	*ft_export_add(char *str);
 
 #endif

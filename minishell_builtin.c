@@ -91,9 +91,13 @@ int	ft_export_print(t_env *env)
 		}
 		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(env->key, 1);
-        ft_putstr_fd("=\"", 1);
-        ft_putstr_fd(env->value, 1);
-        ft_putendl_fd("\"", 1);
+		if (env->value)
+		{
+			ft_putstr_fd("=\"", 1);
+			ft_putstr_fd(env->value, 1);
+			ft_putstr_fd("\"", 1);
+		}
+		ft_putstr_fd("\n", 1);
         env = env->next;
 	}
 	return (0);
@@ -107,9 +111,15 @@ t_env	*ft_export_add(char *str)
 	newenv = (t_env *)malloc(sizeof(t_env));
 	if (!newenv)
 		return (NULL);
-	len = ft_strlen(ft_strchr(str, '=') + 1);
-	newenv->value = ft_substr(str, ft_strlen(str) - len, len);
-	len = ft_strlen(str) - len - 1;
+	len = ft_strlen(str);
+	if (ft_strchr(str, '='))
+	{
+		len = ft_strlen(ft_strchr(str, '=') + 1);
+		newenv->value = ft_substr(str, ft_strlen(str) - len, len);
+		len = ft_strlen(str) - len - 1;
+	}
+	else
+		newenv->value = NULL;
 	newenv->key = malloc(len + 1);
 	newenv->key[len] = '\0';
 	while (len-- > 0)
@@ -120,21 +130,27 @@ t_env	*ft_export_add(char *str)
 
 int ft_export(char **args, t_env **env)
 {
-    int	i;
-	int	res;
+	int		res;
+	t_env	*last;
 
-	i = 0;
 	res = 0;
     if (args[0] == NULL)
 	{
 		res = ft_export_print(*env);
 		return (res);
 	}
-	while (args[i])
+	last = *env;
+	while (last->next)
+		last = last->next;
+	while (*args)
 	{
-		if (ft_export_add(args[i]))
+		last->next = ft_export_add(*args);
+		if (last->next)
+			last = last->next;
+		if (!last)
 			res = 1;
-		i++;
+		args++;
 	}
+	ft_export_print(*env);
 	return (res);
 }
