@@ -41,7 +41,6 @@ static void print_list(t_mlist *list)
 	}
 }
 
-
 int main(int argc, char **argv, char **menv)
 {
 	t_shell *shell;
@@ -61,7 +60,10 @@ int main(int argc, char **argv, char **menv)
 	{
 		str = readline("minishell>$ ");
 		if (!str)
+		{
+			printf("\033[1A\033[12Cexit\n");
 			return (1);
+		}
 		else if (ft_strncmp("exit", str, 5) == 0)
 		{
 			printf("exit\n");

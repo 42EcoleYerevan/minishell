@@ -73,6 +73,47 @@ static char *ft_set_env(t_shell *shell, char *str)
 	return (out);
 }
 
+int ft_len_before_quote(char *str)
+{
+	char *tmp;
+
+	tmp = str;
+	while (*str && *str != '\'' && *str != '\"')
+		str++;
+	return (str - tmp);
+}
+
+char *ft_parse_quotes(t_shell *shell, char *str)
+{
+	char *out;
+	char *tmp;
+
+	out = "";
+	while (*str)
+	{
+		if (*str != '\'' && *str != '\"')
+		{
+			tmp = ft_substr(str, 0, ft_len_before_quote(str));
+			str += ft_strlen(tmp);
+		}
+		else
+		{
+			tmp = ft_substr(str, 0, ft_len_quote(str, *str));
+			if (*str == '\"')
+			{
+				tmp = ft_set_env(shell, tmp);
+				tmp = ft_strtrim(tmp, "\"");
+			}
+			else
+				tmp = ft_strtrim(tmp, "\'");
+			str += ft_len_quote(str, *str);
+		}
+		out = ft_strjoin(out, tmp);
+	}
+	puts(out);
+	return (out);
+}
+
 static char **ft_set_commands(t_shell *shell, char *str, char **out)
 {
 	int n;
@@ -84,9 +125,7 @@ static char **ft_set_commands(t_shell *shell, char *str, char **out)
 	while (*str)
 	{
 		out[n] = ft_cut_command(str);
-		if (*str != '\'')
-			out[n] = ft_set_env(shell, out[n]);
-		out[n] = ft_delete_quotes(out[n]);
+		out[n] = ft_parse_quotes(shell, out[n]);
 		str += ft_len_command(str);
 		if (!out[n])
 		{

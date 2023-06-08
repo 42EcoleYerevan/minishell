@@ -9,11 +9,7 @@ int ft_amount_commands(char *str)
 	while (*str)
 	{
 		n++;
-		if (*str == '\'')
-			str += ft_len_quote(str, '\'');
-		else if (*str == '\"')
-			str += ft_len_quote(str, '\"');
-		else if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
+		if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
 			str += ft_len_separator(str);
 		else if (*str == '$')
 			str += ft_len_word(str + 1) + 1;
@@ -50,11 +46,7 @@ char *ft_cut_command(char *str)
 {
 	char *arr;
 
-	if (*str == '\'')
-		arr = ft_substr(str, 1, ft_len_quote(str, '\'') - 2);
-	else if (*str == '\"')
-		arr = ft_substr(str, 1, ft_len_quote(str, '\"') - 2);
-	else if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
+	if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
 		arr = ft_substr(str, 0, ft_len_separator(str));
 	else if (*str == '$')
 		arr = ft_substr(str, 0, ft_len_word(str + 1) + 1);
