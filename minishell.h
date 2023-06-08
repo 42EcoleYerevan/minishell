@@ -26,10 +26,12 @@ int		ft_echo(char **args, int n);
 int		ft_env(t_env *env);
 int		ft_exit(char **args);
 int 	ft_export(char **args, t_env **env);
+int		ft_unset(char **args, t_env **env);
 
 //minishell_builtin_utils
 int		ft_num_check(char *arg);
 int		ft_export_print(t_env *env);
 t_env	*ft_export_add(char *str);
+void	ft_node_del(t_env **node);
 
 #endif

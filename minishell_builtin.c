@@ -103,6 +103,7 @@ int	ft_export_print(t_env *env)
 	return (0);
 }
 
+// Check the multiple "" and '' symbols
 t_env	*ft_export_add(char *str)
 {
 	int		len;
@@ -134,6 +135,7 @@ int ft_export(char **args, t_env **env)
 	t_env	*last;
 
 	res = 0;
+	printf("EXPORT CHECK \n");
     if (args[0] == NULL)
 	{
 		res = ft_export_print(*env);
@@ -151,6 +153,48 @@ int ft_export(char **args, t_env **env)
 			res = 1;
 		args++;
 	}
-	ft_export_print(*env);
 	return (res);
+}
+
+void ft_node_del(t_env **node)
+{
+	if (!(*node))
+		return ;
+	if ((*node)->key)
+		free((*node)->key);
+	(*node)->key = NULL;
+	if ((*node)->value)
+		free((*node)->value);
+	(*node)->value = NULL;
+	free(*node);
+	node = NULL;
+}
+
+int ft_unset(char **args, t_env **env)
+{
+	t_env	*tmp;
+	t_env	*node;
+
+	if (!(*args))
+		return (0);
+	node = *env;
+	while (*args)
+	{
+		printf("HERE\n");
+		while (node->next)
+		{
+			if (!ft_strncmp(node->next->key, *args, ft_strlen(*args)))
+			{
+				printf("FIND\n");
+				tmp = node->next;
+				node->next = tmp->next;
+				ft_node_del(&tmp);
+				break ;
+			}
+			node = node->next;
+		}
+		args++;
+		node = *env;
+	}
+	return (0);
 }

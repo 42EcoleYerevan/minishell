@@ -44,12 +44,15 @@ t_env	*ft_create_envlist(char	**arr)
 //	t_env	*sss;
 //	char	*d[4];
 //
-//	d[0] = "abcde=EEWQ";
-//	d[1] = "ALBERTO";
-//	d[2] = "JONY=";
+//	d[0] = "ZZZZZZZZZZZZZZZZ";
+//	d[1] = "ZZZZZZZZZZZZZZZZZZW";
+//	d[2] = "ZZZZZZZZZZZZZZZZZZZQ";
 //	d[3] = NULL;
 //
 //	sss = ft_create_envlist(env);
 //	ft_export(d, &sss);
-//    return (0);
+//	ft_export_print(sss);
+//	ft_unset(d+1,&sss);
+//	ft_export_print(sss);
+//	return (0);
 //}
