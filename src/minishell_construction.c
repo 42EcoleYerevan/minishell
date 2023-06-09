@@ -14,7 +14,7 @@ static int ft_len_env(t_shell *shell, char *str)
 			if (!value)
 				value = ft_strdup("");
 			len += ft_strlen(value);
-			str += ft_len_word(str + 1) + 1;
+			str += ft_len_before_quote(str);
 			free(value);
 		}
 		else
@@ -39,7 +39,7 @@ static void ft_insert_str(t_shell *shell, char *dst, char *src)
 				value = ft_strdup("");
 			ft_strlcpy(dst, value, ft_strlen(value) + 1);
 			dst += ft_strlen(value);
-			src += ft_len_word(src + 1) + 1;
+			src += ft_len_before_quote(src);
 			free(value);
 		}
 		else
@@ -83,8 +83,11 @@ static char **ft_set_commands(t_shell *shell, char *str, char **out)
 	str += ft_len_spaces(str);
 	while (*str)
 	{
-		out[n] = ft_cut_command(str);
-		out[n] = ft_parse_quotes(shell, out[n]);
+		out[n] = ft_substr(str, 0, ft_len_command(str));
+		if (ft_strchr(out[n], '\'') || ft_strchr(out[n], '\"'))
+			out[n] = ft_parse_quotes(shell, out[n]);
+		else
+			out[n] = ft_set_env(shell, out[n]);
 		str += ft_len_command(str);
 		if (!out[n])
 		{

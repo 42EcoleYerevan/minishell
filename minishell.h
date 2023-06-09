@@ -54,7 +54,6 @@ char	**ft_argv(char **arr);
 int		ft_amount_commands(char *str);
 char	*ft_get_command_from_path(char *command);
 char	*ft_get_command_path(char *command);
-char	*ft_cut_command(char *str);
 
 // env
 char	*ft_get_env_value(t_shell *shell, char *var);
@@ -82,6 +81,7 @@ int		ft_num_quotes(char *str);
 char	*ft_delete_quotes(char *str);
 
 // parse utils
+int		ft_len_before_quote(char *str);
 char	*ft_parse_quotes(t_shell *shell, char *str);
 
 // utils

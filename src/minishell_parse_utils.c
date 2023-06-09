@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static int	ft_len_before_quote(char *str)
+int	ft_len_before_quote(char *str)
 {
 	char *tmp;
 
@@ -17,8 +17,8 @@ static char *ft_process_quote(t_shell *shell, char *str)
 	out = ft_substr(str, 0, ft_len_quote(str, *str));
 	if (*str == '\"')
 	{
-		out = ft_set_env(shell, out);
 		out = ft_strtrim(out, "\"");
+		out = ft_set_env(shell, out);
 	}
 	else
 		out = ft_strtrim(out, "\'");
@@ -47,6 +47,5 @@ char	*ft_parse_quotes(t_shell *shell, char *str)
 		free(tmp);
 		tmp = NULL;
 	}
-	puts(out);
 	return (out);
 }

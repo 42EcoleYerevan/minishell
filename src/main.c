@@ -53,6 +53,7 @@ int main(int argc, char **argv, char **menv)
 	shell->env = ft_create_envlist(menv);
 
 	char *str;
+
 	signal(SIGINT, ft_action);
 	rl_catch_signals = 0;
 	using_history();
@@ -74,7 +75,7 @@ int main(int argc, char **argv, char **menv)
 		add_history(str);
 		print_list(list);
 		free(str);
-		ft_pipex(*shell->list);
+		/* ft_pipex(*shell->list); */
 		ft_free_2_linked_list(shell->list);
 	}
 	return (0);

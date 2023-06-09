@@ -1,11 +1,11 @@
 #include "../minishell.h"
 
-char *ft_get_env_value_by_name(t_shell *shell, char *str)
+char *ft_get_env_value_by_name(t_shell *shell, char *name)
 {
 	char *tmp;
 	char *out;
 
-	tmp = ft_substr(str,  0, ft_len_word(str));
+	tmp = ft_substr(name,  0, ft_len_before_quote(name));
 	out = ft_get_env_value(shell, tmp);
 	free(tmp);
 	return (out);

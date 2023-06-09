@@ -20,8 +20,7 @@ int ft_len_word(char *str)
 		   	*str != '|' &&
 		   	*str != '&' &&
 		   	*str != '>' &&
-			*str != '<' &&
-			*str != '$')
+			*str != '<')
 	{
 		if (*str == '\"' || *str == '\'')
 			str += ft_len_quote(str, *str);

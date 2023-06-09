@@ -26,15 +26,7 @@ static void ft_set_list_command(t_shell *shell,
 		argv[n] = NULL;
 	}
 	else
-	{
 		ft_list_add_back(list, ft_list_new(shell, argv, NULL));
-	}
-}
-
-void printfargv(char **argv)
-{
-	while (argv)
-		puts(*argv++);
 }
 
 t_mlist *ft_fill_list(t_shell *shell, char *str)
@@ -43,18 +35,13 @@ t_mlist *ft_fill_list(t_shell *shell, char *str)
 	char *construction;
 	char **argv;
 	int n;
-	int a;
 
-	a = 0;
 	list = NULL;
 	while (*str)
 	{
 		construction = ft_substr(str, 0, ft_len_construction(str));
-		/* puts(construction); */
 		argv = ft_parse_construction(shell, construction);
 		n = ft_amount_commands(construction) - 1;
-		/* printf("%d\n", n); */
-		/* printfargv(argv); */
 		ft_set_list_command(shell, &list, argv, n);
 		str += ft_len_construction(str);
 	}
