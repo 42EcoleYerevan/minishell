@@ -39,20 +39,12 @@ t_env	*ft_create_envlist(char	**arr)
 	return (start);
 }
 
-//int main(int argc, char **argv, char **env)
-//{
-//	t_env	*sss;
-//	char	*d[4];
-//
-//	d[0] = "ZZZZZZZZZZZZZZZZ";
-//	d[1] = "ZZZZZZZZZZZZZZZZZZW";
-//	d[2] = "ZZZZZZZZZZZZZZZZZZZQ";
-//	d[3] = NULL;
-//
-//	sss = ft_create_envlist(env);
-//	ft_export(d, &sss);
-//	ft_export_print(sss);
-//	ft_unset(d+1,&sss);
-//	ft_export_print(sss);
-//	return (0);
-//}
+int main(int argc, char **argv, char **env)
+{
+	t_env	*sss;
+	char	*d[4];
+
+	ft_cd(argv + 1);
+	ft_pwd();
+	return (0);
+}

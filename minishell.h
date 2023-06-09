@@ -6,6 +6,8 @@
 # include <limits.h>
 # include "libft/libft.h"
 # include <stdio.h>
+# include <errno.h>
+# include <dirent.h>
 
 
 //Types
@@ -27,6 +29,7 @@ int		ft_env(t_env *env);
 int		ft_exit(char **args);
 int 	ft_export(char **args, t_env **env);
 int		ft_unset(char **args, t_env **env);
+int	    ft_cd(char	**args);
 
 //minishell_builtin_utils
 int		ft_num_check(char *arg);
