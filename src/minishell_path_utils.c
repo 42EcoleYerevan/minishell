@@ -14,13 +14,13 @@ static char *ft_check_path(char *path, char *command, DIR *d)
 	return (NULL);
 }
 
-char *ft_find_path(char *command)
+char *ft_find_path(t_shell *shell, char *command)
 {
 	DIR *d;
 	char **paths;
 	char *out;
 
-	paths = ft_split(ft_get_env_value("PATH"), ':');
+	paths = ft_split(ft_get_env_value(shell, "PATH"), ':');
 	if (!paths)
 		return (NULL);
 	while (*paths)
@@ -76,12 +76,12 @@ int	ft_check_file_in_directory(char *dir_path, char *filename)
 	return (1);
 }
 
-char *ft_check_file_in_current_directory(char *filename)
+char *ft_check_file_in_current_directory(t_shell *shell, char *filename)
 {
 	char *pwd;
 	char *out;
 
-	pwd = ft_get_env_value("PWD");
+	pwd = ft_get_env_value(shell, "PWD");
 	if (ft_check_file_in_directory(pwd, filename) == 0)
 	{
 		out = ft_pathjoin(pwd, filename);

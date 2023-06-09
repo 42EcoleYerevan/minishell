@@ -20,11 +20,10 @@ int ft_len_word(char *str)
 		   	*str != '|' &&
 		   	*str != '&' &&
 		   	*str != '>' &&
-			*str != '<' &&
-			*str != '$')
+			*str != '<')
 	{
 		if (*str == '\"' || *str == '\'')
-			str += ft_len_command(str);
+			str += ft_len_quote(str, *str);
 		else
 			str++;
 	}
@@ -39,6 +38,11 @@ int ft_len_quote(char *str, char quote)
 	str++;
 	while (*str && *str != quote)
 		str++;
+	if (*str == '\0')
+	{
+		printf("Error\n");
+		exit(1);
+	}
 	str++;
 	return (str - tmp);
 }
@@ -62,14 +66,10 @@ int ft_len_separator(char *str)
 
 int ft_len_command(char *str)
 {
-	if (*str == '\'')
-		return (ft_len_quote(str, '\''));
-	else if (*str == '\"')
-		return (ft_len_quote(str, '\"'));
-	else if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
+	if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
 		return (ft_len_separator(str));
 	else if (*str == '$')
-	return (ft_len_word(str + 1) + 1);
+		return (ft_len_word(str + 1) + 1);
 	else
 		return (ft_len_word(str));
 }

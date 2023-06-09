@@ -1,37 +1,25 @@
 #include "../minishell.h"
 
-char *ft_get_env_key(char *var)
+char *ft_get_env_value_by_name(t_shell *shell, char *name)
 {
-	char **tmp;
-	int	len;
+	char *tmp;
+	char *out;
 
-	len = ft_strlen(var);
-	tmp = ENV;
-	while (*tmp)
-	{
-		if (ft_strncmp(*tmp, var, len)  == 0)
-			return (*tmp);
-		tmp++;
-	}
-	return (NULL);
+	tmp = ft_substr(name,  0, ft_len_before_quote(name));
+	out = ft_get_env_value(shell, tmp);
+	free(tmp);
+	return (out);
 }
 
-/* int ft_check_env_key(char *key) */
-/* { */
 
-/* } */
-
-char *ft_get_env_value(char *var)
+char *ft_get_env_value(t_shell *shell, char *var)
 {
-	char *env_var;
-	int n;
+	t_env *tmp;
 
-	env_var = ft_get_env_key(var);
-	if (!env_var)
-		return (NULL);
-	n = 0;
-	while (env_var[n] != '=')
-		n++;
-	n++;
-	return (ft_substr(env_var, n, ft_strlen(env_var) - n));
+	tmp = shell->env;
+	while (tmp && ft_strncmp(tmp->key, var, ft_strlen(var) + 1) != 0)
+		tmp = tmp->next;
+	if (!tmp)
+		return(ft_strdup(""));
+	return (ft_strdup(tmp->value));
 }

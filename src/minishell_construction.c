@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static int ft_len_str_with_env_value(char *str)
+static int ft_len_env(t_shell *shell, char *str)
 {
 	int len;
 	char *value;
@@ -10,11 +10,11 @@ static int ft_len_str_with_env_value(char *str)
 	{
 		if (*str == '$')
 		{
-			value = ft_get_env_value_by_name(str + 1);
+			value = ft_get_env_value_by_name(shell, str + 1);
 			if (!value)
-				value = ft_substr(str, 0, ft_len_word(str));
+				value = ft_strdup("");
 			len += ft_strlen(value);
-			str += ft_len_word(str + 1) + 1;
+			str += ft_len_before_quote(str);
 			free(value);
 		}
 		else
@@ -26,7 +26,7 @@ static int ft_len_str_with_env_value(char *str)
 	return (len);
 }
 
-static void ft_insert_str(char *dst, char *src)
+static void ft_insert_str(t_shell *shell, char *dst, char *src)
 {
 	char *value;
 
@@ -34,10 +34,12 @@ static void ft_insert_str(char *dst, char *src)
 	{
 		if (*src == '$')
 		{
-			value = ft_get_env_value_by_name(src + 1);
+			value = ft_get_env_value_by_name(shell, src + 1);
+			if (!value)
+				value = ft_strdup("");
 			ft_strlcpy(dst, value, ft_strlen(value) + 1);
 			dst += ft_strlen(value);
-			src += ft_len_word(src + 1) + 1;
+			src += ft_len_before_quote(src);
 			free(value);
 		}
 		else
@@ -50,7 +52,7 @@ static void ft_insert_str(char *dst, char *src)
 	*dst = '\0';
 }
 
-static char *ft_set_env(char *str)
+char *ft_set_env(t_shell *shell, char *str)
 {
 	int len;
 	char *out;
@@ -61,17 +63,17 @@ static char *ft_set_env(char *str)
 		out = ft_strdup(str);
 	else
 	{
-		len = ft_len_str_with_env_value(str);
+		len = ft_len_env(shell, str);
 		out = (char *)malloc(sizeof(char) * (len + 1));
 		if (!out)
 			return (NULL);
-		ft_insert_str(out, str);
+		ft_insert_str(shell, out, str);
 	}
 	free(str);
 	return (out);
 }
 
-static char **ft_set_commands(char *str, char **out)
+static char **ft_set_commands(t_shell *shell, char *str, char **out)
 {
 	int n;
 
@@ -81,10 +83,11 @@ static char **ft_set_commands(char *str, char **out)
 	str += ft_len_spaces(str);
 	while (*str)
 	{
-		out[n] = ft_cut_command(str);
-		if (*str != '\'')
-			out[n] = ft_set_env(out[n]);
-		out[n] = ft_delete_quotes(out[n]);
+		out[n] = ft_substr(str, 0, ft_len_command(str));
+		if (ft_strchr(out[n], '\'') || ft_strchr(out[n], '\"'))
+			out[n] = ft_parse_quotes(shell, out[n]);
+		else
+			out[n] = ft_set_env(shell, out[n]);
 		str += ft_len_command(str);
 		if (!out[n])
 		{
@@ -98,14 +101,14 @@ static char **ft_set_commands(char *str, char **out)
 	return (out);
 }
 
-char **ft_parse_construction(char *str)
+char **ft_parse_construction(t_shell *shell, char *str)
 {
 	char **out;
 	int len;
 
 	len = ft_amount_commands(str) + 1;
 	out = (char **)malloc(sizeof(char *) * len);
-	out = ft_set_commands(str, out);
+	out = ft_set_commands(shell, str, out);
 	if (!out)
 		return (NULL);
 	return (out);

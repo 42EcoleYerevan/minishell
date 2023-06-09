@@ -5,8 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/03 17:52:23 by agladkov         ###   ########.fr       */
+/*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */ /*   Updated: 2023/06/03 17:52:23 by agladkov         ###   ########.fr       */
 /* ************************************************************************** */
 
 #include "../minishell.h"
@@ -42,14 +41,19 @@ static void print_list(t_mlist *list)
 	}
 }
 
-
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **menv)
 {
+	t_shell *shell;
+	t_mlist *list;
+
 	(void) argv;
 	argc = 0;
-	ENV = env;
+
+	shell = (t_shell *)malloc(sizeof(t_shell));
+	shell->env = ft_create_envlist(menv);
 
 	char *str;
+
 	signal(SIGINT, ft_action);
 	rl_catch_signals = 0;
 	using_history();
@@ -57,18 +61,22 @@ int main(int argc, char **argv, char **env)
 	{
 		str = readline("minishell>$ ");
 		if (!str)
+		{
+			printf("\033[1A\033[12Cexit\n");
 			return (1);
+		}
 		else if (ft_strncmp("exit", str, 5) == 0)
 		{
 			printf("exit\n");
 			exit(0);
 		}
-		t_mlist *list = ft_fill_list(str);
+		list = ft_fill_list(shell, str);
+		shell->list = &list;
 		add_history(str);
 		print_list(list);
 		free(str);
-		ft_pipex(list);
-		ft_free_2_linked_list(&list);
+		/* ft_pipex(*shell->list); */
+		ft_free_2_linked_list(shell->list);
 	}
 	return (0);
 }
