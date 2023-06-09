@@ -17,10 +17,11 @@ static void ft_set_list_command(t_shell *shell,
 								char **argv,
 								int n)
 {
-	if (argv[n][0] == '|' ||\
-		argv[n][0] == '&' ||\
-	   	argv[n][0] == '>' ||\
-		argv[n][0] == '<')
+	if (argv[n][0] == '|' ||
+		argv[n][0] == '&' ||
+	   	argv[n][0] == '>' ||
+		argv[n][0] == '<' ||
+		argv[n][0] == ';')
 	{
 		ft_list_add_back(list, ft_list_new(shell, argv, argv[n]));
 		argv[n] = NULL;

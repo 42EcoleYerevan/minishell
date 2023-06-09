@@ -8,3 +8,9 @@ void	ft_action(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
+
+void ft_quit(int sig)
+{
+	sig = 0;
+	rl_redisplay();
+}

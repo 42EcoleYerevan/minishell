@@ -9,6 +9,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <sys/signal.h>
 
 static void print_list(t_mlist *list)
 {
@@ -55,6 +56,7 @@ int main(int argc, char **argv, char **menv)
 	char *str;
 
 	signal(SIGINT, ft_action);
+	signal(SIGQUIT, ft_quit);
 	rl_catch_signals = 0;
 	using_history();
 	while (1)

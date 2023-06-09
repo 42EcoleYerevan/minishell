@@ -104,6 +104,7 @@ void	ft_pipex(t_mlist *list);
 
 // action
 void	ft_action(int sig);
+void	ft_quit(int sig);
 
 
 //minishell_create_envlist

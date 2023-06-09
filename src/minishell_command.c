@@ -9,7 +9,11 @@ int ft_amount_commands(char *str)
 	while (*str)
 	{
 		n++;
-		if (*str == '|' || *str == '&' || *str == '>' || *str == '<')
+		if (*str == '|' ||
+			   	*str == '&' ||
+			   	*str == '>' ||
+			   	*str == '<' ||
+			   	*str == ';')
 			str += ft_len_separator(str);
 		else if (*str == '$')
 			str += ft_len_word(str + 1) + 1;
