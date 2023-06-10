@@ -36,5 +36,7 @@ int		ft_num_check(char *arg);
 int		ft_export_print(t_env *env);
 t_env	*ft_export_add(char *str);
 void	ft_node_del(t_env **node);
+int		ft_find_env(char *str, t_env *env);
+void	ft_export_change(t_env *env, char *str);
 
 #endif
