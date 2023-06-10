@@ -120,6 +120,35 @@ void interesnaya_funkciya(t_shell *shell)
 		;
 }
 
+char	**ft_env_to_arr(t_env *env, int len, int i)
+{
+	t_env	*start;
+	char	**arr;
+	char	*tmp;
+
+	start = env;
+	while (env && ++len)
+		env = env->next;
+	arr = malloc(sizeof(char *) * (len + 1));
+	if (!arr)
+		return (NULL);
+	arr[len] = NULL;
+	while (start && ++i >= 0)
+	{
+		arr[i] = NULL;
+		if (start->value)
+			arr[i] = ft_strjoin("=", start->value);
+		tmp = arr[i];
+		arr[i] = ft_strjoin(start->key, arr[i]);
+		free(tmp);
+		start = start->next;
+	}
+	len = 0;
+	while (arr[len])
+		printf("%s\n", arr[len++]);
+	return (arr);
+}
+
 int main(int argc, char **argv, char **menv)
 {
 	t_shell *shell;
@@ -130,6 +159,7 @@ int main(int argc, char **argv, char **menv)
 
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	shell->env = ft_create_envlist(menv);
+	//ft_env_to_arr(shell->env, 0, -1);
 
 	char *str;
 
