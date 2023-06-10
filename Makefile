@@ -21,7 +21,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(HEADER) $(LIBFT_A)
+$(NAME): $(OBJS) $(HEADER) $(LIBFT_A) $(RL_A)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 $(LIBFT_A):
