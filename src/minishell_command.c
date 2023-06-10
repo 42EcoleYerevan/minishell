@@ -28,6 +28,8 @@ char *ft_get_command_from_path(char *command)
 {
 	char *tmp;;
 
+	if (!command)
+		return (NULL);
 	tmp = command;
 	while (*command)
 		command++;

@@ -1,45 +1,123 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/22 16:14:27 by agladkov          #+#    #+#             */ /*   Updated: 2023/06/03 17:52:23 by agladkov         ###   ########.fr       */
-/* ************************************************************************** */
-
 #include "../minishell.h"
-#include <sys/signal.h>
+#include <unistd.h>
 
-static void print_list(t_mlist *list)
+/* static void print_list(t_mlist *list) */
+/* { */
+/* 	int n; */
+/* 	int l; */
+
+/* 	l = 0; */
+/* 	while (list) */
+/* 	{ */
+/* 		printf("\033[33mlist #%d\n\033[0m", l++); */
+/* 		printf("bin \t: %s\n", (list->bin)); */
+/* 		n = 0; */
+/* 		while (list->argv[n]) */
+/* 		{ */
+/* 			printf("argv[%d]\t: %s\n", n, (list->argv[n])); */
+/* 			n++; */
+/* 		} */
+/* 		if (list->argv[0] == NULL) */
+/* 			printf("argv[0]\t: %s\n", NULL); */
+/* 		printf("command\t: %s\n", (list->command)); */
+/* 		if (list->next) */
+/* 			printf("next\t: %p\n", list->next); */
+/* 		else */
+/* 			printf("next\t: NULL\n"); */
+/* 		if (list->prev) */
+/* 			printf("prev\t: %p\n\n", list->prev); */
+/* 		else */
+/* 			printf("prev\t: NULL\n\n"); */
+/* 		list = list->next; */
+/* 	} */
+/* } */
+
+static void	ft_close_pipe(int fd[2])
 {
-	int n;
-	int l;
+	close(fd[0]);
+	close(fd[1]);
+}
 
-	l = 0;
-	while (list)
+/* static void	ft_child(t_mlist *list) */
+/* { */
+/* 	if (list->command && list->prev == NULL) */
+/* 	{ */
+/* 		dup2(list->fd[1], 1); */
+/* 		close(list->fd[1]); */
+/* 	} */
+/* 	else if (list->command) */
+/* 	{ */
+/* 		dup2(list->prev->fd[0], 0); */
+/* 		dup2(list->fd[1], 1); */
+/* 		ft_close_pipe(list->prev->fd); */
+/* 	} */
+/* 	else */
+/* 	{ */
+/* 		dup2(list->prev->fd[0], 0); */
+/* 		ft_close_pipe(list->prev->fd); */
+/* 	} */
+/* 	execve(list->bin, list->argv, NULL); */
+/* } */
+
+/* static char *ft_lowercase(char *str) */
+/* { */
+/* 	char *out; */
+/* 	int n; */
+
+/* 	if (!str) */
+/* 		return (str); */
+/* 	out = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1)); */
+/* 	n = 0; */
+/* 	while (str[n]) */
+/* 	{ */
+/* 		out[n] = str[n]; */
+/* 		n++; */
+/* 	} */
+/* 	return (out); */
+/* } */
+
+void interesnaya_funkciya(t_shell *shell)
+{
+	int pid;
+	char *key;
+
+	t_mlist *tmp = *shell->list;
+	while (tmp)
 	{
-		printf("\033[33mlist #%d\n\033[0m", l++);
-		printf("bin \t: %s\n", (list->bin));
-		n = 0;
-		while (list->argv[n])
+		if (tmp->argv && ft_strncmp(tmp->argv[0], "export", 7) == 0)
 		{
-			printf("argv[%d]\t: %s\n", n, (list->argv[n]));
-			n++;
+			ft_export(tmp->argv + 1, &shell->env);
+			return;
 		}
-		if (list->argv[0] == NULL)
-			printf("argv[0]\t: %s\n", NULL);
-		printf("command\t: %s\n", (list->command));
-		if (list->next)
-			printf("next\t: %p\n", list->next);
-		else
-			printf("next\t: NULL\n");
-		if (list->prev)
-			printf("prev\t: %p\n\n", list->prev);
-		else
-			printf("prev\t: NULL\n\n");
-		list = list->next;
+
+		key = ft_get_command_from_path(tmp->bin);
+		if (!key)
+			return ;
+		if (ft_strncmp(key, "cd", 3) == 0)
+			ft_cd(tmp->argv + 1);
+		else if (ft_strncmp(key, "pwd", 4) == 0)
+			ft_pwd();
+		else if (ft_strncmp(key, "echo", 5) == 0)
+			ft_echo(tmp->argv + 1, 0);
+		else if (ft_strncmp(key, "env", 4) == 0)
+			ft_env(shell->env);
+		else if (ft_strncmp(key, "exit", 5) == 0)
+			ft_exit(tmp->argv + 1);
+		else if (ft_strncmp(key, "unset", 6) == 0)
+			ft_unset(tmp->argv + 1, &shell->env);
+
+		else if (tmp->bin)
+		{
+			pid = fork();
+			if (pid == 0)
+				execve(tmp->bin, tmp->argv, NULL);
+		}
+
+		ft_close_pipe(tmp->fd);
+		tmp = tmp->next;
 	}
+	while (wait(NULL) != -1)
+		;
 }
 
 int main(int argc, char **argv, char **menv)
@@ -67,17 +145,11 @@ int main(int argc, char **argv, char **menv)
 			printf("\033[1A\033[12Cexit\n");
 			return (1);
 		}
-		else if (ft_strncmp("exit", str, 5) == 0)
-		{
-			printf("exit\n");
-			exit(0);
-		}
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
 		add_history(str);
-		print_list(list);
 		free(str);
-		/* ft_pipex(*shell->list); */
+		interesnaya_funkciya(shell);
 		ft_free_2_linked_list(shell->list);
 	}
 	return (0);
