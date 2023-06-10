@@ -103,6 +103,43 @@ int	ft_export_print(t_env *env)
 	return (0);
 }
 
+void	ft_export_change(t_env *env, char *str)
+{
+	int	len;
+
+	if (env->value)
+		free(env->value);
+	while (*str && *str != '=')
+		str++;
+	if (*str == '=')
+		str++;
+	len = ft_strlen(str);
+	env->value = malloc(len + 1);
+	len = 0;
+	while (*str)
+		env->value[len++] = *str++;
+	env->value[len] = '\0';
+}
+
+int	ft_find_env(char *str, t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	while (env)
+	{
+		if (!ft_strncmp(str, env->key, i))
+		{
+			ft_export_change(env, str);
+			return (1);
+		}
+		env = env->next;
+	}
+	return (0);
+}
+
 // Check the multiple "" and '' symbols
 t_env	*ft_export_add(char *str)
 {
@@ -146,6 +183,8 @@ int ft_export(char **args, t_env **env)
 		last = last->next;
 	while (*args)
 	{
+		if (ft_find_env(*args, *env) && *args++)
+			continue ;
 		last->next = ft_export_add(*args);
 		if (last->next)
 			last = last->next;
