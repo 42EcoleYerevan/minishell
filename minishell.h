@@ -126,6 +126,7 @@ t_env	*ft_export_add(char *str);
 void	ft_node_del(t_env **node);
 int		ft_find_env(char *str, t_env *env);
 void	ft_export_change(t_env *env, char *str);
-
+int		ft_export_valid(char *arg, int *res);
+void	ft_export_errprint(char *arg);
 
 #endif
