@@ -166,25 +166,58 @@ t_env	*ft_export_add(char *str)
 	return (newenv);
 }
 
+void	ft_export_errprint(char *arg)
+{
+	ft_putstr_fd("minishell: export: `",2);
+	while (*arg && *arg != '=')
+		write(2, arg++, 1);
+	ft_putendl_fd("': not a valid identifier", 2);
+}
+
+int	ft_export_valid(char *arg, int *res)
+{
+	int	status;
+	int	i;
+
+	if (!arg)
+		return (0);
+	status = 0;
+	if (ft_isdigit(arg[0]))
+		status = 1;
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+	{
+		if (!ft_isalnum(arg[i]))
+		{
+			status = 1;
+			break ;
+		}
+		i++;
+	}
+	*res = status;
+	if (status)
+		ft_export_errprint(arg);
+	return (status);
+}
+
 int ft_export(char **args, t_env **env)
 {
 	int		res;
 	t_env	*last;
 
 	res = 0;
-	printf("EXPORT CHECK \n");
     if (args[0] == NULL)
-	{
-		res = ft_export_print(*env);
-		return (res);
-	}
+		return (ft_export_print(*env));
 	last = *env;
 	while (last->next)
 		last = last->next;
 	while (*args)
 	{
-		if (ft_find_env(*args, *env) && *args++)
+		if ((ft_find_env(*args, *env) && *args)|| ft_export_valid(*args, &res))
+		{
+			args++;
 			continue ;
+		}
 		last->next = ft_export_add(*args);
 		if (last->next)
 			last = last->next;
@@ -214,17 +247,16 @@ int ft_unset(char **args, t_env **env)
 	t_env	*tmp;
 	t_env	*node;
 
+	printf("unset here\n");
 	if (!(*args))
 		return (0);
 	node = *env;
 	while (*args)
 	{
-		printf("HERE\n");
 		while (node->next)
 		{
 			if (!ft_strncmp(node->next->key, *args, ft_strlen(*args)))
 			{
-				printf("FIND\n");
 				tmp = node->next;
 				node->next = tmp->next;
 				ft_node_del(&tmp);
