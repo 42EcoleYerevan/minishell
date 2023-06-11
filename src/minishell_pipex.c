@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_pipex.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 13:35:17 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/03 17:50:50 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/06/11 20:22:16 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void	ft_pipex(t_mlist *list)
 		{
 			if (list->next == NULL && list->prev == NULL && list->bin != NULL)
 				execve(list->bin, list->argv, NULL);
-			else if (list->bin != NULL && ft_strncmp(list->command, "|", 2) == 0)
+			else if (list->bin != NULL
+				&& ft_strncmp(list->command, "|", 2) == 0)
 				ft_child(list);
 			else
 			{

@@ -75,21 +75,22 @@ static void	ft_close_pipe(int fd[2])
 /* 	} */
 /* 	return (out); */
 /* } */
+// ft_env_to_arr(shell->env, 0, -1);
 
-void interesnaya_funkciya(t_shell *shell)
+void	interesnaya_funkciya(t_shell *shell)
 {
-	int pid;
-	char *key;
+	int		pid;
+	char	*key;
+	t_mlist	*tmp;
 
-	t_mlist *tmp = *shell->list;
+	tmp = *shell->list;
 	while (tmp)
 	{
 		if (tmp->argv && ft_strncmp(tmp->argv[0], "export", 7) == 0)
 		{
 			ft_export(tmp->argv + 1, &shell->env);
-			return;
+			return ;
 		}
-
 		key = ft_get_command_from_path(tmp->bin);
 		if (!key)
 			return ;
@@ -105,14 +106,12 @@ void interesnaya_funkciya(t_shell *shell)
 			ft_exit(tmp->argv + 1);
 		else if (ft_strncmp(key, "unset", 6) == 0)
 			ft_unset(tmp->argv + 1, &shell->env);
-
 		else if (tmp->bin)
 		{
 			pid = fork();
 			if (pid == 0)
 				execve(tmp->bin, tmp->argv, NULL);
 		}
-
 		ft_close_pipe(tmp->fd);
 		tmp = tmp->next;
 	}
@@ -149,20 +148,16 @@ char	**ft_env_to_arr(t_env *env, int len, int i)
 	return (arr);
 }
 
-int main(int argc, char **argv, char **menv)
+int	main(int argc, char **argv, char **menv)
 {
-	t_shell *shell;
-	t_mlist *list;
+	t_shell	*shell;
+	t_mlist	*list;
+	char	*str;
 
 	(void) argv;
 	argc = 0;
-
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	shell->env = ft_create_envlist(menv);
-	//ft_env_to_arr(shell->env, 0, -1);
-
-	char *str;
-
 	signal(SIGINT, ft_action);
 	signal(SIGQUIT, ft_quit);
 	rl_catch_signals = 0;

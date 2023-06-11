@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_builtin.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/11 20:27:33 by almeliky          #+#    #+#             */
+/*   Updated: 2023/06/11 20:27:33 by almeliky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int    ft_pwd()
+int	ft_pwd(void)
 {
-    char    path[PATH_MAX];
+	char	path[PATH_MAX];
 
-    if (getcwd(path, PATH_MAX))
-    {
-        ft_putstr_fd(path, 1);
-        write(1, "\n", 1);
-        return (0);
-    }
-    return (1);
+	if (getcwd(path, PATH_MAX))
+	{
+		ft_putstr_fd(path, 1);
+		write(1, "\n", 1);
+		return (0);
+	}
+	return (1);
 }
 
 int	ft_echo(char **args, int n)
@@ -24,196 +36,62 @@ int	ft_echo(char **args, int n)
 	}
 	if (!n)
 		write(1, "\n", 1);
-    return (0);
+	return (0);
 }
 
-int     ft_env(t_env *env)
+int	ft_env(t_env *env)
 {
-    while (env != NULL)
-    {
+	while (env != NULL)
+	{
 		if (env->value == NULL)
 		{
 			env = env->next;
 			continue ;
 		}
-        ft_putstr_fd(env->key, 1);
-        write(1, "=", 1);
-        ft_putstr_fd(env->value, 1);
-        write(1, "\n", 1);
-        env = env->next;
-    }
-    return (0);
-}
-
-int     ft_num_check(char *arg)
-{
-    int i;
-
-    i = 0;
-    while (arg[i])
-    {
-        if (i >= 19 || arg[i] < '0' || arg[i] > '9')
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
-int     ft_exit(char **args)
-{
-    if (ft_num_check(args[0]))
-    {
-        ft_putendl_fd("exit", 2);
-        ft_putstr_fd("minishell: exit: ", 2);
-        ft_putstr_fd(args[0], 2);
-        ft_putendl_fd(": numeric argument required", 2);
-        exit(1);
-    }
-    else if (args[1])
-    {
-        ft_putendl_fd("exit", 2);
-        ft_putendl_fd("minishell: exit: too many arguments", 2);
-        return (1);
-    }
-    ft_putendl_fd("exit", 1);
-    exit(ft_atoi(args[0]));
-    return (0);
-}
-
-int	ft_export_print(t_env *env)
-{
-	while (env)
-	{
-		if (!ft_strncmp("_", env->key, ft_strlen(env->key)))
-		{
-	        env = env->next;
-			continue;
-		}
-		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(env->key, 1);
-		if (env->value)
-		{
-			ft_putstr_fd("=\"", 1);
-			ft_putstr_fd(env->value, 1);
-			ft_putstr_fd("\"", 1);
-		}
-		ft_putstr_fd("\n", 1);
-        env = env->next;
-	}
-	return (0);
-}
-
-void	ft_export_change(t_env *env, char *str)
-{
-	int	len;
-
-	if (env->value)
-		free(env->value);
-	while (*str && *str != '=')
-		str++;
-	if (*str == '=')
-		str++;
-	len = ft_strlen(str);
-	env->value = malloc(len + 1);
-	len = 0;
-	while (*str)
-		env->value[len++] = *str++;
-	env->value[len] = '\0';
-}
-
-int	ft_find_env(char *str, t_env *env)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	while (env)
-	{
-		if (!ft_strncmp(str, env->key, i))
-		{
-			ft_export_change(env, str);
-			return (1);
-		}
+		write(1, "=", 1);
+		ft_putstr_fd(env->value, 1);
+		write(1, "\n", 1);
 		env = env->next;
 	}
 	return (0);
 }
 
-// Check the multiple "" and '' symbols
-t_env	*ft_export_add(char *str)
+int	ft_exit(char **args)
 {
-	int		len;
-	t_env	*newenv;
-
-	newenv = (t_env *)malloc(sizeof(t_env));
-	if (!newenv)
-		return (NULL);
-	len = ft_strlen(str);
-	if (ft_strchr(str, '='))
+	if (ft_num_check(args[0]))
 	{
-		len = ft_strlen(ft_strchr(str, '=') + 1);
-		newenv->value = ft_substr(str, ft_strlen(str) - len, len);
-		len = ft_strlen(str) - len - 1;
+		ft_putendl_fd("exit", 2);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		exit(1);
 	}
-	else
-		newenv->value = NULL;
-	newenv->key = malloc(len + 1);
-	newenv->key[len] = '\0';
-	while (len-- > 0)
-		newenv->key[len] = str[len];
-	newenv->next = NULL;
-	return (newenv);
-}
-
-void	ft_export_errprint(char *arg)
-{
-	ft_putstr_fd("minishell: export: `",2);
-	while (*arg && *arg != '=')
-		write(2, arg++, 1);
-	ft_putendl_fd("': not a valid identifier", 2);
-}
-
-int	ft_export_valid(char *arg, int *res)
-{
-	int	status;
-	int	i;
-
-	if (!arg)
-		return (0);
-	status = 0;
-	if (ft_isdigit(arg[0]))
-		status = 1;
-	i = 0;
-	while (arg[i] && arg[i] != '=')
+	else if (args[1])
 	{
-		if (!ft_isalnum(arg[i]))
-		{
-			status = 1;
-			break ;
-		}
-		i++;
+		ft_putendl_fd("exit", 2);
+		ft_putendl_fd("minishell: exit: too many arguments", 2);
+		return (1);
 	}
-	*res = status;
-	if (status)
-		ft_export_errprint(arg);
-	return (status);
+	ft_putendl_fd("exit", 1);
+	exit(ft_atoi(args[0]));
+	return (0);
 }
 
-int ft_export(char **args, t_env **env)
+int	ft_export(char **args, t_env **env)
 {
 	int		res;
 	t_env	*last;
 
 	res = 0;
-    if (args[0] == NULL)
+	if (args[0] == NULL)
 		return (ft_export_print(*env));
 	last = *env;
 	while (last->next)
 		last = last->next;
 	while (*args)
 	{
-		if ((ft_find_env(*args, *env) && *args)|| ft_export_valid(*args, &res))
+		if ((ft_find_env(*args, *env) && *args) || ft_export_valid(*args, &res))
 		{
 			args++;
 			continue ;
@@ -226,74 +104,4 @@ int ft_export(char **args, t_env **env)
 		args++;
 	}
 	return (res);
-}
-
-void ft_node_del(t_env **node)
-{
-	if (!(*node))
-		return ;
-	if ((*node)->key)
-		free((*node)->key);
-	(*node)->key = NULL;
-	if ((*node)->value)
-		free((*node)->value);
-	(*node)->value = NULL;
-	free(*node);
-	node = NULL;
-}
-
-int ft_unset(char **args, t_env **env)
-{
-	t_env	*tmp;
-	t_env	*node;
-
-	printf("unset here\n");
-	if (!(*args))
-		return (0);
-	node = *env;
-	while (*args)
-	{
-		while (node->next)
-		{
-			if (!ft_strncmp(node->next->key, *args, ft_strlen(*args)))
-			{
-				tmp = node->next;
-				node->next = tmp->next;
-				ft_node_del(&tmp);
-				break ;
-			}
-			node = node->next;
-		}
-		args++;
-		node = *env;
-	}
-	return (0);
-}
-
-int	ft_cd(char	**args)
-{
-	int		status;
-	char	path[PATH_MAX];
-	DIR		*tmp;
-
-	if (!args || args[0] == NULL)
-		return (0);
-	getcwd(path, PATH_MAX);
-	tmp = opendir(args[0]);
-	status = access(args[0], F_OK);
-	if (chdir(args[0]) == -1)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(args[0], 2);
-		if (errno == 13)
-			ft_putendl_fd(": Permission denied", 2);
-		else if (status == -1)
-			ft_putendl_fd(": No such file or directory", 2);
-		else
-			ft_putendl_fd(": Not a directory", 2);
-		status = 1;
-	}
-	if (tmp)
-		closedir(tmp);
-	return (status);
 }

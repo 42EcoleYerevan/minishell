@@ -1,19 +1,19 @@
 #include "../minishell.h"
 
-int ft_amount_commands(char *str)
+int	ft_amount_commands(char *str)
 {
-	int n;
+	int	n;
 
 	n = 0;
 	str += ft_len_spaces(str);
 	while (*str)
 	{
 		n++;
-		if (*str == '|' ||
-			   	*str == '&' ||
-			   	*str == '>' ||
-			   	*str == '<' ||
-			   	*str == ';')
+		if (*str == '|'
+			|| *str == '&'
+			|| *str == '>'
+			|| *str == '<'
+			|| *str == ';')
 			str += ft_len_separator(str);
 		else if (*str == '$')
 			str += ft_len_word(str + 1) + 1;
@@ -24,9 +24,9 @@ int ft_amount_commands(char *str)
 	return (n);
 }
 
-char *ft_get_command_from_path(char *command)
+char	*ft_get_command_from_path(char *command)
 {
-	char *tmp;;
+	char	*tmp;
 
 	if (!command)
 		return (NULL);
@@ -40,9 +40,9 @@ char *ft_get_command_from_path(char *command)
 	return (command);
 }
 
-char *ft_get_command_path(char *command)
+char	*ft_get_command_path(char *command)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = ft_get_command_from_path(command);
 	return (ft_substr(command, 0, tmp - command));

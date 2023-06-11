@@ -9,7 +9,7 @@ void	ft_action(int sig)
 	rl_redisplay();
 }
 
-void ft_quit(int sig)
+void	ft_quit(int sig)
 {
 	sig = 0;
 	rl_redisplay();

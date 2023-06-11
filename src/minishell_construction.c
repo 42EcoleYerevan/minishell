@@ -1,9 +1,9 @@
 #include "../minishell.h"
 
-static int ft_len_env(t_shell *shell, char *str)
+static int	ft_len_env(t_shell *shell, char *str)
 {
-	int len;
-	char *value;
+	int		len;
+	char	*value;
 
 	len = 0;
 	while (*str)
@@ -26,9 +26,9 @@ static int ft_len_env(t_shell *shell, char *str)
 	return (len);
 }
 
-static void ft_insert_str(t_shell *shell, char *dst, char *src)
+static void	ft_insert_str(t_shell *shell, char *dst, char *src)
 {
-	char *value;
+	char	*value;
 
 	while (*src)
 	{
@@ -52,10 +52,10 @@ static void ft_insert_str(t_shell *shell, char *dst, char *src)
 	*dst = '\0';
 }
 
-char *ft_set_env(t_shell *shell, char *str)
+char	*ft_set_env(t_shell *shell, char *str)
 {
-	int len;
-	char *out;
+	int		len;
+	char	*out;
 
 	if (!str)
 		return (NULL);
@@ -73,9 +73,9 @@ char *ft_set_env(t_shell *shell, char *str)
 	return (out);
 }
 
-static char **ft_set_commands(t_shell *shell, char *str, char **out)
+static char	**ft_set_commands(t_shell *shell, char *str, char **out)
 {
-	int n;
+	int	n;
 
 	if (!out)
 		return (NULL);
@@ -101,10 +101,10 @@ static char **ft_set_commands(t_shell *shell, char *str, char **out)
 	return (out);
 }
 
-char **ft_parse_construction(t_shell *shell, char *str)
+char	**ft_parse_construction(t_shell *shell, char *str)
 {
-	char **out;
-	int len;
+	char	**out;
+	int		len;
 
 	len = ft_amount_commands(str) + 1;
 	out = (char **)malloc(sizeof(char *) * len);

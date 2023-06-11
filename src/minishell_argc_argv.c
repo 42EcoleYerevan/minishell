@@ -1,13 +1,13 @@
 #include "minishell.h"
 
-int ft_argc(char **arr)
+int	ft_argc(char **arr)
 {
-	int n;
+	int	n;
 
 	n = 0;
 	if (*arr[0] == '|' || *arr[0] == '&' || *arr[0] == '>')
 		arr++;
-	while (*arr && *arr[0] != '|' && *arr[0] != '&' && *arr[0] != '>') 
+	while (*arr && *arr[0] != '|' && *arr[0] != '&' && *arr[0] != '>')
 	{
 		n++;
 		arr++;
@@ -15,10 +15,10 @@ int ft_argc(char **arr)
 	return (n);
 }
 
-char **ft_argv(char **arr)
+char	**ft_argv(char **arr)
 {
-	char **argv;
-	char **tmp;
+	char	**argv;
+	char	**tmp;
 
 	argv = (char **)malloc(sizeof(char *) * ft_argc(arr) + 1);
 	tmp = argv;
@@ -26,7 +26,7 @@ char **ft_argv(char **arr)
 		return (NULL);
 	if (*arr[0] == '|' || *arr[0] == '&' || *arr[0] == '>' || *arr[0] == '<')
 		arr++;
-	while (*arr && *arr[0] != '|' && *arr[0] != '&' && *arr[0] != '>') 
+	while (*arr && *arr[0] != '|' && *arr[0] != '&' && *arr[0] != '>')
 	{
 		*argv = *arr;
 		argv++;
