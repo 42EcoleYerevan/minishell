@@ -1,5 +1,4 @@
 #include "../minishell.h"
-#include <unistd.h>
 
 /* static void print_list(t_mlist *list) */
 /* { */
@@ -11,8 +10,7 @@
 /* 	{ */
 /* 		printf("\033[33mlist #%d\n\033[0m", l++); */
 /* 		printf("bin \t: %s\n", (list->bin)); */
-/* 		n = 0; */
-/* 		while (list->argv[n]) */
+/* 		n = 0; */ /* 		while (list->argv[n]) */
 /* 		{ */
 /* 			printf("argv[%d]\t: %s\n", n, (list->argv[n])); */
 /* 			n++; */
@@ -38,6 +36,32 @@ static void	ft_close_pipe(int fd[2])
 	close(fd[1]);
 }
 
+int builtin_executor(t_shell *shell, t_mlist *list)
+{
+	char	*key;
+	int		out;
+
+	out = 1;
+	key = ft_get_command_from_path(list->argv[0]);
+	if (!key)
+		out = (1);
+	else if (list->argv && ft_strncmp(key, "export", 7) == 0)
+		out = ft_export(list->argv + 1, &shell->env);
+	else if (list->argv && ft_strncmp(key, "exit", 5) == 0)
+		out = ft_exit(list->argv + 1);
+	else if (ft_strncmp(key, "cd", 3) == 0)
+		out = ft_cd(list->argv + 1);
+	else if (ft_strncmp(key, "pwd", 4) == 0)
+		out = ft_pwd();
+	else if (ft_strncmp(key, "echo", 5) == 0)
+		out = ft_echo(list->argv + 1, 0);
+	else if (ft_strncmp(key, "env", 4) == 0)
+		out = ft_env(shell->env);
+	else if (ft_strncmp(key, "unset", 6) == 0)
+		out = ft_unset(list->argv + 1, &shell->env);
+	return (out);
+}
+
 /* static void	ft_child(t_mlist *list) */
 /* { */
 /* 	if (list->command && list->prev == NULL) */
@@ -58,124 +82,83 @@ static void	ft_close_pipe(int fd[2])
 /* 	} */
 /* 	execve(list->bin, list->argv, NULL); */
 /* } */
+void ft_child(char **env, t_mlist *list)
+{
+	if (list->bin)
+	{
+		if (list->prev == NULL && list->next == NULL)
+			execve(list->bin, list->argv, env);
+		if (list->next && list->command[0] == '|')
+		{
+			dup2(list->fd[1], 1);
+			close(list->fd[1]);
+		}
+		if (list->prev && list->prev->command[0] == '|')
+		{
+			dup2(list->prev->fd[0], 0);
+			ft_close_pipe(list->prev->fd);
+		}
+		execve(list->bin, list->argv, env);
+	}
+	else
+		printf("minishell: %s: command not found\n", list->argv[0]); 
+}
 
-/* static char *ft_lowercase(char *str) */
-/* { */
-/* 	char *out; */
-/* 	int n; */
-
-/* 	if (!str) */
-/* 		return (str); */
-/* 	out = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1)); */
-/* 	n = 0; */
-/* 	while (str[n]) */
-/* 	{ */
-/* 		out[n] = str[n]; */
-/* 		n++; */
-/* 	} */
-/* 	return (out); */
-/* } */
-// ft_env_to_arr(shell->env, 0, -1);
-
-void	interesnaya_funkciya(t_shell *shell)
+void	executor(t_shell *shell)
 {
 	int		pid;
-	char	*key;
+	int		bltin;
 	t_mlist	*tmp;
 
 	tmp = *shell->list;
 	while (tmp)
 	{
-		if (tmp->argv && ft_strncmp(tmp->argv[0], "export", 7) == 0)
+		bltin = builtin_executor(shell, tmp);
+		if (bltin == 1)
 		{
-			ft_export(tmp->argv + 1, &shell->env);
-			return ;
-		}
-		key = ft_get_command_from_path(tmp->bin);
-		if (!key)
-			return ;
-		if (ft_strncmp(key, "cd", 3) == 0)
-			ft_cd(tmp->argv + 1);
-		else if (ft_strncmp(key, "pwd", 4) == 0)
-			ft_pwd();
-		else if (ft_strncmp(key, "echo", 5) == 0)
-			ft_echo(tmp->argv + 1, 0);
-		else if (ft_strncmp(key, "env", 4) == 0)
-			ft_env(shell->env);
-		else if (ft_strncmp(key, "exit", 5) == 0)
-			ft_exit(tmp->argv + 1);
-		else if (ft_strncmp(key, "unset", 6) == 0)
-			ft_unset(tmp->argv + 1, &shell->env);
-		else if (tmp->bin)
-		{
+			pipe(tmp->fd);
 			pid = fork();
 			if (pid == 0)
-				execve(tmp->bin, tmp->argv, NULL);
+				ft_child(ft_env_to_arr(shell->env, 0, -1), tmp);
 		}
-		ft_close_pipe(tmp->fd);
+		if (tmp->prev && tmp->prev->command[0] == '|')
+			ft_close_pipe(tmp->prev->fd);
 		tmp = tmp->next;
 	}
 	while (wait(NULL) != -1)
 		;
 }
 
-char	**ft_env_to_arr(t_env *env, int len, int i)
+void ft_event_loop(t_shell *shell)
 {
-	t_env	*start;
-	char	**arr;
-	char	*tmp;
-
-	start = env;
-	while (env && ++len)
-		env = env->next;
-	arr = malloc(sizeof(char *) * (len + 1));
-	if (!arr)
-		return (NULL);
-	arr[len] = NULL;
-	while (start && ++i >= 0)
+	char	*str;
+	t_mlist	*list;
+	while (1)
 	{
-		arr[i] = NULL;
-		if (start->value)
-			arr[i] = ft_strjoin("=", start->value);
-		tmp = arr[i];
-		arr[i] = ft_strjoin(start->key, arr[i]);
-		free(tmp);
-		start = start->next;
+		str = readline("minishell>$ ");
+		ctrl_d_handler(str);
+		list = ft_fill_list(shell, str);
+		shell->list = &list;
+		add_history(str);
+		executor(shell);
+		free(str);
+		ft_free_2_linked_list(shell->list);
 	}
-	len = 0;
-	while (arr[len])
-		printf("%s\n", arr[len++]);
-	return (arr);
 }
 
 int	main(int argc, char **argv, char **menv)
 {
 	t_shell	*shell;
-	t_mlist	*list;
-	char	*str;
 
 	(void) argv;
-	argc = 0;
-	shell = (t_shell *)malloc(sizeof(t_shell));
-	shell->env = ft_create_envlist(menv);
-	signal(SIGINT, ft_action);
-	signal(SIGQUIT, ft_quit);
-	rl_catch_signals = 0;
-	using_history();
-	while (1)
+	if (argc == 1)
 	{
-		str = readline("minishell>$ ");
-		if (!str)
-		{
-			printf("\033[1A\033[12Cexit\n");
-			return (1);
-		}
-		list = ft_fill_list(shell, str);
-		shell->list = &list;
-		add_history(str);
-		free(str);
-		interesnaya_funkciya(shell);
-		ft_free_2_linked_list(shell->list);
+		shell = (t_shell *)malloc(sizeof(t_shell));
+		shell->env = ft_create_envlist(menv);
+		ft_init_action();
+		rl_catch_signals = 0;
+		using_history();
+		ft_event_loop(shell);
 	}
 	return (0);
 }

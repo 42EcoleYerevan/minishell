@@ -58,6 +58,7 @@ char	*ft_get_command_path(char *command);
 // env
 char	*ft_get_env_value(t_shell *shell, char *var);
 char	*ft_get_env_value_by_name(t_shell *shell, char *str);
+char	**ft_env_to_arr(t_env *env, int len, int i);
 
 // len construction
 int		ft_amount_constructions(char *str);
@@ -105,6 +106,8 @@ void	ft_pipex(t_mlist *list);
 // action
 void	ft_action(int sig);
 void	ft_quit(int sig);
+void	ft_init_action(void);
+void	ctrl_d_handler(char *str);
 
 //minishell_create_envlist
 t_env	*ft_env_add(char *str);

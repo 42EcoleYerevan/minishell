@@ -16,13 +16,14 @@ CFLAGS = -Wall -Werror -Wextra -I$(RLDIR) -fsanitize=address -I$(HEADERDIR)
 LIBS = -lreadline -L$(LIBFT) -lft -lncurses
 LIBS += -L$(RLDIR) 
 
-$(OBJDIR)%.o: $(SRCDIR)%.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-all: $(NAME)
+all: $(NAME) $(OBJDIR)
 
 $(NAME): $(OBJS) $(HEADER) $(LIBFT_A) $(RL_A)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	$(shell mkdir $(OBJDIR))
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT_A):
 	@make -C $(LIBFT) bonus
@@ -32,6 +33,7 @@ $(RL_A):
 	@make -C $(RLDIR)
 
 clean:
+	rm -rf $(OBJDIR)
 	rm -f $(OBJS)
 	@make -C $(LIBFT) clean
 

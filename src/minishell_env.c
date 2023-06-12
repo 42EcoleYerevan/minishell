@@ -22,3 +22,33 @@ char	*ft_get_env_value(t_shell *shell, char *var)
 		return (ft_strdup(""));
 	return (ft_strdup(tmp->value));
 }
+
+char	**ft_env_to_arr(t_env *env, int len, int i)
+{
+	t_env	*start;
+	char	**arr;
+	char	*tmp;
+
+	start = env;
+	while (env && ++len)
+		env = env->next;
+	arr = malloc(sizeof(char *) * (len + 1));
+	if (!arr)
+		return (NULL);
+	arr[len] = NULL;
+	while (start && ++i >= 0)
+	{
+		arr[i] = NULL;
+		if (start->value)
+			arr[i] = ft_strjoin("=", start->value);
+		tmp = arr[i];
+		arr[i] = ft_strjoin(start->key, arr[i]);
+		free(tmp);
+		start = start->next;
+	}
+	len = 0;
+	/* while (arr[len]) */
+	/* 	printf("%s\n", arr[len++]); */
+	return (arr);
+}
+
