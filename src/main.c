@@ -1,5 +1,4 @@
 #include "../minishell.h"
-#include <sys/fcntl.h>
 
 /* static void print_list(t_mlist *list) */
 /* { */
@@ -63,22 +62,26 @@ int ft_isbuiltin(char *path)
 	return (out);
 }
 
-void	builtin_executor(t_shell *shell, t_mlist *list, int command)
+int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 {
+	int out;
+
+	out = 1;
 	if (command == 1)
-		exit(ft_export(list->argv + 1, &shell->env));
+		out = ft_export(list->argv + 1, &shell->env);
 	else if (command == 2)
-		exit(ft_exit(list->argv + 1));
+		out = ft_exit(list->argv + 1);
 	else if (command == 3)
-		exit(ft_cd(list->argv + 1));
+		out = ft_cd(list->argv + 1);
 	else if (command == 4)
-		exit(ft_pwd());
+		out = ft_pwd();
 	else if (command == 5)
-		exit(ft_echo(list->argv + 1, 0));
+		out = ft_echo(list->argv + 1, 0);
 	else if (command == 6)
-		exit(ft_env(shell->env));
+		out = ft_env(shell->env);
 	else if (command == 7)
-		exit(ft_unset(list->argv + 1, &shell->env));
+		out = ft_unset(list->argv + 1, &shell->env);
+	return (out);
 }
 
 void	ft_redirect_to_file(int src_fd, char *filename, int mode)
@@ -92,11 +95,12 @@ void	ft_redirect_to_file(int src_fd, char *filename, int mode)
 	else if (mode == 1)
 		fd = open(filename, O_APPEND | O_CREAT);
 	res = read(src_fd, &c, 1);
-	while (res > 0 && c != '\0')
+	while (res > 0 && c != '\n')
 	{
 		write(fd, &c, 1);
 		res = read(src_fd, &c, 1);
 	}
+	write(fd, "\n", 1);
 	close(src_fd);
 	close(fd);
 	exit(0);
@@ -142,15 +146,20 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
-		pipe(tmp->fd);
-		pid = fork();
-		if (pid == 0)
+		bltin = ft_isbuiltin(tmp->argv[0]);
+		if (bltin && tmp->next == NULL)
+			builtin_executor(shell, tmp, bltin);
+		else
 		{
-			bltin = ft_isbuiltin(tmp->argv[0]);
-			ft_child(shell, tmp, bltin);
+			pipe(tmp->fd);
+			pid = fork();
+			if (pid == 0)
+			{
+				ft_child(shell, tmp, bltin);
+			}
+			if (tmp->prev && tmp->prev->command)
+				ft_close_pipe(tmp->prev->fd);
 		}
-		if (tmp->prev && tmp->prev->command)
-			ft_close_pipe(tmp->prev->fd);
 		tmp = tmp->next;
 	}
 	while (wait(NULL) != -1)
