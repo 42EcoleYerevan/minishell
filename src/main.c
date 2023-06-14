@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <sys/fcntl.h>
 
 /* static void print_list(t_mlist *list) */
 /* { */
@@ -91,9 +92,9 @@ void	ft_redirect_to_file(int src_fd, char *filename, int mode)
 	char c;
 
 	if (mode == 0)
-		fd = open(filename, O_WRONLY | O_CREAT);
+		fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT);
 	else if (mode == 1)
-		fd = open(filename, O_APPEND | O_CREAT);
+		fd = open(filename, O_WRONLY | O_APPEND | O_CREAT);
 	res = read(src_fd, &c, 1);
 	while (res > 0 && c != '\n')
 	{
@@ -113,13 +114,16 @@ void ft_child(t_shell *shell, t_mlist *list, int bltin)
 	env = ft_env_to_arr(shell->env, 0, -1);
 	if (list->prev && ft_strncmp(list->prev->command, ">", 2) == 0)
 		ft_redirect_to_file(list->prev->fd[0], list->argv[0], 0);
+	else if (list->prev && ft_strncmp(list->prev->command, ">>", 3) == 0)
+		ft_redirect_to_file(list->prev->fd[0], list->argv[0], 1);
 	if (list->bin || bltin)
 	{
 		if (list->prev == NULL && list->next == NULL)
 			execve(list->bin, list->argv, env);
 		if (list->next &&
 			(ft_strncmp(list->command, "|", 2) == 0 ||
-			ft_strncmp(list->command, ">", 2) == 0))
+			ft_strncmp(list->command, ">", 2) == 0 ||
+			ft_strncmp(list->command, ">>", 2) == 0))
 		{
 			dup2(list->fd[1], 1);
 			close(list->fd[1]);
