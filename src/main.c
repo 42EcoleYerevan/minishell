@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <sys/fcntl.h>
 
 /* static void print_list(t_mlist *list) */
 /* { */
@@ -36,72 +37,100 @@ static void	ft_close_pipe(int fd[2])
 	close(fd[1]);
 }
 
-int builtin_executor(t_shell *shell, t_mlist *list)
+int ft_isbuiltin(char *path)
 {
-	char	*key;
+	char	*command;
 	int		out;
 
-	out = 1;
-	key = ft_get_command_from_path(list->argv[0]);
-	if (!key)
-		out = (1);
-	else if (list->argv && ft_strncmp(key, "export", 7) == 0)
-		out = ft_export(list->argv + 1, &shell->env);
-	else if (list->argv && ft_strncmp(key, "exit", 5) == 0)
-		out = ft_exit(list->argv + 1);
-	else if (ft_strncmp(key, "cd", 3) == 0)
-		out = ft_cd(list->argv + 1);
-	else if (ft_strncmp(key, "pwd", 4) == 0)
-		out = ft_pwd();
-	else if (ft_strncmp(key, "echo", 5) == 0)
-		out = ft_echo(list->argv + 1, 0);
-	else if (ft_strncmp(key, "env", 4) == 0)
-		out = ft_env(shell->env);
-	else if (ft_strncmp(key, "unset", 6) == 0)
-		out = ft_unset(list->argv + 1, &shell->env);
+	out = 0;
+	command = ft_get_command_from_path(path);
+	if (!command)
+		out = 0;
+	else if (ft_strncmp(command, "export", 7) == 0)
+		out = 1;
+	else if (ft_strncmp(command, "exit", 5) == 0)
+		out = 2;
+	else if (ft_strncmp(command, "cd", 3) == 0)
+		out = 3;
+	else if (ft_strncmp(command, "pwd", 4) == 0)
+		out = 4;
+	else if (ft_strncmp(command, "echo", 5) == 0)
+		out = 5;
+	else if (ft_strncmp(command, "env", 4) == 0)
+		out = 6;
+	else if (ft_strncmp(command, "unset", 6) == 0)
+		out = 7;
 	return (out);
 }
 
-/* static void	ft_child(t_mlist *list) */
-/* { */
-/* 	if (list->command && list->prev == NULL) */
-/* 	{ */
-/* 		dup2(list->fd[1], 1); */
-/* 		close(list->fd[1]); */
-/* 	} */
-/* 	else if (list->command) */
-/* 	{ */
-/* 		dup2(list->prev->fd[0], 0); */
-/* 		dup2(list->fd[1], 1); */
-/* 		ft_close_pipe(list->prev->fd); */
-/* 	} */
-/* 	else */
-/* 	{ */
-/* 		dup2(list->prev->fd[0], 0); */
-/* 		ft_close_pipe(list->prev->fd); */
-/* 	} */
-/* 	execve(list->bin, list->argv, NULL); */
-/* } */
-void ft_child(char **env, t_mlist *list)
+void	builtin_executor(t_shell *shell, t_mlist *list, int command)
 {
+	if (command == 1)
+		exit(ft_export(list->argv + 1, &shell->env));
+	else if (command == 2)
+		exit(ft_exit(list->argv + 1));
+	else if (command == 3)
+		exit(ft_cd(list->argv + 1));
+	else if (command == 4)
+		exit(ft_pwd());
+	else if (command == 5)
+		exit(ft_echo(list->argv + 1, 0));
+	else if (command == 6)
+		exit(ft_env(shell->env));
+	else if (command == 7)
+		exit(ft_unset(list->argv + 1, &shell->env));
+}
+
+void	ft_redirect_to_file(int src_fd, char *filename)
+{
+	int fd;
+	int res;
+	char c;
+
+	fd = open(filename, O_WRONLY | O_CREAT);
+	res = read(src_fd, &c, 1);
+	while (res > 0)
+	{
+		write(fd, &c, 1);
+		res = read(src_fd, &c, 1);
+	}
+	exit(0);
+}
+
+void ft_child(t_shell *shell, t_mlist *list, int bltin)
+{
+	char **env;
+
+	env = ft_env_to_arr(shell->env, 0, -1);
 	if (list->bin)
 	{
 		if (list->prev == NULL && list->next == NULL)
 			execve(list->bin, list->argv, env);
-		if (list->next && list->command[0] == '|')
+		if (list->next &&
+			(ft_strncmp(list->command, "|", 2) == 0 ||
+			ft_strncmp(list->command, ">", 2) == 0))
 		{
 			dup2(list->fd[1], 1);
 			close(list->fd[1]);
 		}
-		if (list->prev && list->prev->command[0] == '|')
+		if (list->prev && ft_strncmp(list->prev->command, "|", 2) == 0)
 		{
 			dup2(list->prev->fd[0], 0);
 			ft_close_pipe(list->prev->fd);
 		}
 		execve(list->bin, list->argv, env);
 	}
-	else
-		printf("minishell: %s: command not found\n", list->argv[0]); 
+	else if (bltin)
+		builtin_executor(shell, list,bltin);
+	/* else if (list->argv && */ 
+	/* 		list->prev && */ 
+	/* 		ft_strncmp(list->prev->command, ">", 2) == 0) */
+	/* { */
+	/* 	ft_close_pipe(list->fd); */
+	/* 	ft_redirect_to_file(list->prev->fd[0], list->argv[0]); */
+	/* } */
+	printf("minishell: %s: command not found\n", list->argv[0]); 
+	exit(1);
 }
 
 void	executor(t_shell *shell)
@@ -113,15 +142,14 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
-		bltin = builtin_executor(shell, tmp);
-		if (bltin == 1)
+		pipe(tmp->fd);
+		pid = fork();
+		if (pid == 0)
 		{
-			pipe(tmp->fd);
-			pid = fork();
-			if (pid == 0)
-				ft_child(ft_env_to_arr(shell->env, 0, -1), tmp);
+			bltin = ft_isbuiltin(tmp->argv[0]);
+			ft_child(shell, tmp, bltin);
 		}
-		if (tmp->prev && tmp->prev->command[0] == '|')
+		if (tmp->prev && tmp->prev->command)
 			ft_close_pipe(tmp->prev->fd);
 		tmp = tmp->next;
 	}
@@ -155,7 +183,7 @@ int	main(int argc, char **argv, char **menv)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		shell->env = ft_create_envlist(menv);
-		ft_init_action();
+		/* ft_init_action(); */
 		rl_catch_signals = 0;
 		using_history();
 		ft_event_loop(shell);
