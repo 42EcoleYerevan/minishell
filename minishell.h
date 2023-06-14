@@ -122,18 +122,20 @@ int 	ft_export(char **args, t_env **env);
 
 //minishell_builtin_2
 int		ft_unset(char **args, t_env **env);
-int	    ft_cd(char	**args);
+int		ft_cd(char	**args, t_env **env, char *arr, char *oldpwd);
 
 //minishell_builtin_utils
-int		ft_num_check(char *arg);
 int		ft_export_print(t_env *env);
 int		ft_find_env(char *str, t_env *env);
 void	ft_export_change(t_env *env, char *str);
+t_env	*ft_ptr_by_key(char *key, t_env *env);
+char	*ft_value_by_key(char *key, t_env *env);
 
 //minishell_builtin_utils_2
 t_env	*ft_export_add(char *str);
 void	ft_export_errprint(char *arg);
 int		ft_export_valid(char *arg, int *res);
 void	ft_node_del(t_env **node);
+int		ft_num_check(char *arg);
 
 #endif

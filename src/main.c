@@ -72,7 +72,7 @@ int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 	else if (command == 2)
 		out = ft_exit(list->argv + 1);
 	else if (command == 3)
-		out = ft_cd(list->argv + 1);
+		out = ft_cd(list->argv + 1, &shell->env, NULL, NULL);
 	else if (command == 4)
 		out = ft_pwd();
 	else if (command == 5)
