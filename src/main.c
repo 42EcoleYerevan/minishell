@@ -81,19 +81,24 @@ void	builtin_executor(t_shell *shell, t_mlist *list, int command)
 		exit(ft_unset(list->argv + 1, &shell->env));
 }
 
-void	ft_redirect_to_file(int src_fd, char *filename)
+void	ft_redirect_to_file(int src_fd, char *filename, int mode)
 {
 	int fd;
 	int res;
 	char c;
 
-	fd = open(filename, O_WRONLY | O_CREAT);
+	if (mode == 0)
+		fd = open(filename, O_WRONLY | O_CREAT);
+	else if (mode == 1)
+		fd = open(filename, O_APPEND | O_CREAT);
 	res = read(src_fd, &c, 1);
-	while (res > 0)
+	while (res > 0 && c != '\0')
 	{
 		write(fd, &c, 1);
 		res = read(src_fd, &c, 1);
 	}
+	close(src_fd);
+	close(fd);
 	exit(0);
 }
 
@@ -102,7 +107,9 @@ void ft_child(t_shell *shell, t_mlist *list, int bltin)
 	char **env;
 
 	env = ft_env_to_arr(shell->env, 0, -1);
-	if (list->bin)
+	if (list->prev && ft_strncmp(list->prev->command, ">", 2) == 0)
+		ft_redirect_to_file(list->prev->fd[0], list->argv[0], 0);
+	if (list->bin || bltin)
 	{
 		if (list->prev == NULL && list->next == NULL)
 			execve(list->bin, list->argv, env);
@@ -118,17 +125,10 @@ void ft_child(t_shell *shell, t_mlist *list, int bltin)
 			dup2(list->prev->fd[0], 0);
 			ft_close_pipe(list->prev->fd);
 		}
+		if (bltin)
+			builtin_executor(shell, list, bltin);
 		execve(list->bin, list->argv, env);
 	}
-	else if (bltin)
-		builtin_executor(shell, list,bltin);
-	/* else if (list->argv && */ 
-	/* 		list->prev && */ 
-	/* 		ft_strncmp(list->prev->command, ">", 2) == 0) */
-	/* { */
-	/* 	ft_close_pipe(list->fd); */
-	/* 	ft_redirect_to_file(list->prev->fd[0], list->argv[0]); */
-	/* } */
 	printf("minishell: %s: command not found\n", list->argv[0]); 
 	exit(1);
 }
