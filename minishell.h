@@ -39,6 +39,8 @@ typedef struct s_shell
 	int 			err_status;
 } t_shell;
 
+extern int exit_status;
+
 // len_utils
 int		ft_len_spaces(char *str);
 int		ft_len_word(char *str);

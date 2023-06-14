@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:26:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/14 17:55:26 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/14 18:47:51 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,14 @@ int	ft_cd(char	**args, t_env **env, char *str, char *oldpwd)
 	if (ft_strncmp(args[0], "-", ft_strlen(args[0])) == 0)
 	{
 		str = ft_value_by_key("OLDPWD", *env);
+		if (str)
+			return (ft_cd(&str, env, NULL, NULL));
+		ft_putendl_fd("minishell: cd: OLDPWD not set", 2);
+		return (1);
+	}
+	if (args[0][0] == '~')
+	{
+		str = ft_strjoin(ft_value_by_key("HOME", *env), &(args[0][1]));
 		return (ft_cd(&str, env, NULL, NULL));
 	}
 	oldpwd = ft_value_by_key("PWD", *env);

@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+int	exit_status;
 /* static void print_list(t_mlist *list) */
 /* { */
 /* 	int n; */
@@ -188,6 +189,7 @@ int	main(int argc, char **argv, char **menv)
 	t_shell	*shell;
 
 	(void) argv;
+	exit_status = 0;
 	if (argc == 1)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
