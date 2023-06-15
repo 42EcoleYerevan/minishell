@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:29:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/14 17:55:05 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/15 18:42:54 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	ft_num_check(char *arg)
 	int	i;
 
 	i = 0;
+	if (arg[i] == '-' || arg[i] == '+')
+		i++;
 	while (arg[i])
 	{
 		if (i >= 19 || arg[i] < '0' || arg[i] > '9')
