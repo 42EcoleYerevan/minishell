@@ -14,7 +14,7 @@ static int	ft_len_env(t_shell *shell, char *str)
 			if (!value)
 				value = ft_strdup("");
 			len += ft_strlen(value);
-			str += ft_len_before_quote(str);
+			str += ft_len_env_key(str + 1) + 1;
 			free(value);
 		}
 		else
@@ -39,7 +39,7 @@ static void	ft_insert_str(t_shell *shell, char *dst, char *src)
 				value = ft_strdup("");
 			ft_strlcpy(dst, value, ft_strlen(value) + 1);
 			dst += ft_strlen(value);
-			src += ft_len_before_quote(src);
+			src += ft_len_env_key(src + 1) + 1;
 			free(value);
 		}
 		else

@@ -1,35 +1,36 @@
 #include "../minishell.h"
 #include <sys/fcntl.h>
 
-/* static void print_list(t_mlist *list) */
-/* { */
-/* 	int n; */
-/* 	int l; */
+static void print_list(t_mlist *list)
+{
+	int n;
+	int l;
 
-/* 	l = 0; */
-/* 	while (list) */
-/* 	{ */
-/* 		printf("\033[33mlist #%d\n\033[0m", l++); */
-/* 		printf("bin \t: %s\n", (list->bin)); */
-/* 		n = 0; */ /* 		while (list->argv[n]) */
-/* 		{ */
-/* 			printf("argv[%d]\t: %s\n", n, (list->argv[n])); */
-/* 			n++; */
-/* 		} */
-/* 		if (list->argv[0] == NULL) */
-/* 			printf("argv[0]\t: %s\n", NULL); */
-/* 		printf("command\t: %s\n", (list->command)); */
-/* 		if (list->next) */
-/* 			printf("next\t: %p\n", list->next); */
-/* 		else */
-/* 			printf("next\t: NULL\n"); */
-/* 		if (list->prev) */
-/* 			printf("prev\t: %p\n\n", list->prev); */
-/* 		else */
-/* 			printf("prev\t: NULL\n\n"); */
-/* 		list = list->next; */
-/* 	} */
-/* } */
+	l = 0;
+	while (list)
+	{
+		printf("\033[33mlist #%d\n\033[0m", l++);
+		printf("bin \t: %s\n", (list->bin));
+		n = 0;
+		while (list->argv[n])
+		{
+			printf("argv[%d]\t: %s\n", n, (list->argv[n]));
+			n++;
+		}
+		if (list->argv[0] == NULL)
+			printf("argv[0]\t: %s\n", NULL);
+		printf("command\t: %s\n", (list->command));
+		if (list->next)
+			printf("next\t: %p\n", list->next);
+		else
+			printf("next\t: NULL\n");
+		if (list->prev)
+			printf("prev\t: %p\n\n", list->prev);
+		else
+			printf("prev\t: NULL\n\n");
+		list = list->next;
+	}
+}
 
 static void	ft_close_pipe(int fd[2])
 {
@@ -85,6 +86,20 @@ int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 	return (out);
 }
 
+int ft_clear_file(char *filename)
+{
+	int	fd;
+
+	if (!filename)
+	{
+		printf("syntax error near unexpected token `newline'\n");
+		return (1);
+	}
+	fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT);
+	close(fd);
+	return (0);
+}
+
 void	ft_redirect_to_file(int src_fd, char *filename, int mode)
 {
 	int fd;
@@ -107,36 +122,63 @@ void	ft_redirect_to_file(int src_fd, char *filename, int mode)
 	exit(0);
 }
 
+int	ft_redirect_error(char *command)
+{
+		printf("syntax error near unexpected token `%s`\n", command); 
+		rl_on_new_line();
+		return (1);
+}
+
+void ft_redirect_handler(t_mlist *list)
+{
+	if (list->argv[0])
+	{
+		if (list->prev && ft_strncmp(list->prev->command, ">", 2) == 0)
+			ft_redirect_to_file(list->prev->fd[0], list->argv[0], 0);
+		else if (list->prev && ft_strncmp(list->prev->command, ">>", 3) == 0)
+			ft_redirect_to_file(list->prev->fd[0], list->argv[0], 1);
+	}
+	else 
+		exit(ft_redirect_error(list->prev->command));
+}
+
+void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
+{
+	if (list->prev == NULL && list->next == NULL)
+		execve(list->bin, list->argv, env);
+	if (list->next &&
+		(ft_strncmp(list->command, "|", 2) == 0 ||
+		ft_strncmp(list->command, ">", 2) == 0 ||
+		ft_strncmp(list->command, ">>", 2) == 0))
+	{
+		dup2(list->fd[1], 1);
+		close(list->fd[1]);
+	}
+	if (list->prev && ft_strncmp(list->prev->command, "|", 2) == 0)
+	{
+		dup2(list->prev->fd[0], 0);
+		ft_close_pipe(list->prev->fd);
+	}
+	if (bltin)
+		builtin_executor(shell, list, bltin);
+	execve(list->bin, list->argv, env);
+}
+
 void ft_child(t_shell *shell, t_mlist *list, int bltin)
 {
 	char **env;
 
 	env = ft_env_to_arr(shell->env, 0, -1);
-	if (list->prev && ft_strncmp(list->prev->command, ">", 2) == 0)
-		ft_redirect_to_file(list->prev->fd[0], list->argv[0], 0);
-	else if (list->prev && ft_strncmp(list->prev->command, ">>", 3) == 0)
-		ft_redirect_to_file(list->prev->fd[0], list->argv[0], 1);
+	if (list->prev && list->prev->command[0] == '>')
+		ft_redirect_handler(list);
+	else if (list->command && list->command[0] == '>')
+		exit(ft_redirect_error(list->command));
 	if (list->bin || bltin)
-	{
-		if (list->prev == NULL && list->next == NULL)
-			execve(list->bin, list->argv, env);
-		if (list->next &&
-			(ft_strncmp(list->command, "|", 2) == 0 ||
-			ft_strncmp(list->command, ">", 2) == 0 ||
-			ft_strncmp(list->command, ">>", 2) == 0))
-		{
-			dup2(list->fd[1], 1);
-			close(list->fd[1]);
-		}
-		if (list->prev && ft_strncmp(list->prev->command, "|", 2) == 0)
-		{
-			dup2(list->prev->fd[0], 0);
-			ft_close_pipe(list->prev->fd);
-		}
-		if (bltin)
-			builtin_executor(shell, list, bltin);
-		execve(list->bin, list->argv, env);
-	}
+		ft_pipe_executor(shell, list, bltin, env);
+	else if (list->command && list->next && 
+			(ft_strncmp(list->command, ">", 2) == 0 ||
+			ft_strncmp(list->command, ">>", 3) == 0))
+		exit(ft_clear_file(list->next->argv[0]));
 	printf("minishell: %s: command not found\n", list->argv[0]); 
 	exit(1);
 }
@@ -158,9 +200,7 @@ void	executor(t_shell *shell)
 			pipe(tmp->fd);
 			pid = fork();
 			if (pid == 0)
-			{
 				ft_child(shell, tmp, bltin);
-			}
 			if (tmp->prev && tmp->prev->command)
 				ft_close_pipe(tmp->prev->fd);
 		}
@@ -177,10 +217,11 @@ void ft_event_loop(t_shell *shell)
 	while (1)
 	{
 		str = readline("minishell>$ ");
+		add_history(str);
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		add_history(str);
+		print_list(list);
 		executor(shell);
 		free(str);
 		ft_free_2_linked_list(shell->list);

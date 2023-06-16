@@ -84,6 +84,7 @@ char	*ft_delete_quotes(char *str);
 // parse utils
 int		ft_len_before_quote(char *str);
 char	*ft_parse_quotes(t_shell *shell, char *str);
+int		ft_len_env_key(char *str);
 
 // free
 void	ft_free_2d_array_with_null(char **array);
