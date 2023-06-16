@@ -2,7 +2,6 @@
 # define MINISHELL_H
 
 
-//Libraries
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +9,8 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <signal.h>
-#include "./libft/libft.h"
+#include <errno.h>
+#include "libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -58,6 +58,7 @@ char	*ft_get_command_path(char *command);
 // env
 char	*ft_get_env_value(t_shell *shell, char *var);
 char	*ft_get_env_value_by_name(t_shell *shell, char *str);
+char	**ft_env_to_arr(t_env *env, int len, int i);
 
 // len construction
 int	ft_amount_constructions(char *str);
@@ -83,8 +84,9 @@ char	*ft_delete_quotes(char *str);
 // parse utils
 int		ft_len_before_quote(char *str);
 char	*ft_parse_quotes(t_shell *shell, char *str);
+int		ft_len_env_key(char *str);
 
-// utils
+// free
 void	ft_free_2d_array_with_null(char **array);
 void	ft_list_clear(t_mlist **list);
 void	ft_free_2_linked_list(t_mlist **list);
@@ -104,16 +106,35 @@ void	ft_pipex(t_mlist *list);
 
 // action
 void	ft_action(int sig);
-
+void	ft_quit(int sig);
+void	ft_init_action(void);
+void	ctrl_d_handler(char *str);
 
 //minishell_create_envlist
-t_env	*ft_add_env(char *str);
+t_env	*ft_env_add(char *str);
 t_env	*ft_create_envlist(char	**arr);
 
 //minishell_builtin
-void    ft_putstr_fd(char *s, int fd);
-int     ft_pwd();
-int     ft_echo(char **args, int n);
-int     ft_env(t_env *env);
+int		ft_pwd();
+int		ft_echo(char **args, int n);
+int		ft_env(t_env *env);
+int		ft_exit(char **args);
+int 	ft_export(char **args, t_env **env);
+
+//minishell_builtin_2
+int		ft_unset(char **args, t_env **env);
+int	    ft_cd(char	**args);
+
+//minishell_builtin_utils
+int		ft_num_check(char *arg);
+int		ft_export_print(t_env *env);
+int		ft_find_env(char *str, t_env *env);
+void	ft_export_change(t_env *env, char *str);
+
+//minishell_builtin_utils_2
+t_env	*ft_export_add(char *str);
+void	ft_export_errprint(char *arg);
+int		ft_export_valid(char *arg, int *res);
+void	ft_node_del(t_env **node);
 
 #endif

@@ -1,8 +1,8 @@
 #include "../minishell.h"
 
-static char *ft_check_path(char *path, char *command, DIR *d)
+static char	*ft_check_path(char *path, char *command, DIR *d)
 {
-	struct dirent *file;
+	struct dirent	*file;
 
 	file = readdir(d);
 	while (file)
@@ -14,11 +14,11 @@ static char *ft_check_path(char *path, char *command, DIR *d)
 	return (NULL);
 }
 
-char *ft_find_path(t_shell *shell, char *command)
+char	*ft_find_path(t_shell *shell, char *command)
 {
-	DIR *d;
-	char **paths;
-	char *out;
+	DIR		*d;
+	char	**paths;
+	char	*out;
 
 	paths = ft_split(ft_get_env_value(shell, "PATH"), ':');
 	if (!paths)
@@ -41,10 +41,10 @@ char *ft_find_path(t_shell *shell, char *command)
 	return (NULL);
 }
 
-char *ft_pathjoin(const char *path1, const char *path2)
+char	*ft_pathjoin(const char *path1, const char *path2)
 {
-	char *out;
-	char *tmp;
+	char	*out;
+	char	*tmp;
 
 	if (!path1 || !path2)
 		return (NULL);
@@ -56,8 +56,8 @@ char *ft_pathjoin(const char *path1, const char *path2)
 
 int	ft_check_file_in_directory(char *dir_path, char *filename)
 {
-	DIR *d;
-	struct dirent *dn;
+	DIR				*d;
+	struct dirent	*dn;
 
 	d = opendir(dir_path);
 	if (!d)
@@ -76,10 +76,10 @@ int	ft_check_file_in_directory(char *dir_path, char *filename)
 	return (1);
 }
 
-char *ft_check_file_in_current_directory(t_shell *shell, char *filename)
+char	*ft_check_file_in_current_directory(t_shell *shell, char *filename)
 {
-	char *pwd;
-	char *out;
+	char	*pwd;
+	char	*out;
 
 	pwd = ft_get_env_value(shell, "PWD");
 	if (ft_check_file_in_directory(pwd, filename) == 0)

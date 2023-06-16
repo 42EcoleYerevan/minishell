@@ -1,15 +1,16 @@
 #include "../minishell.h"
 
-int ft_len_construction(char *str)
+int	ft_len_construction(char *str)
 {
-	int n;
+	int	n;
 
 	n = 0;
-	while (*str &&
-		   	*str != '|' &&
-		   	*str != '&' &&
-		   	*str != '>' &&
-			*str != '<')
+	while (*str
+		&& *str != '|'
+		&& *str != '&'
+		&& *str != '>'
+		&& *str != '<'
+		&& *str != ';')
 	{
 		n++;
 		str++;
@@ -20,9 +21,9 @@ int ft_len_construction(char *str)
 	return (n);
 }
 
-int ft_amount_constructions(char *str)
+int	ft_amount_constructions(char *str)
 {
-	int n;
+	int	n;
 
 	n = 0;
 	while (*str)

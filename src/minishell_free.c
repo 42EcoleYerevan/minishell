@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void ft_free_2d_array_with_null(char **array)
+void	ft_free_2d_array_with_null(char **array)
 {
 	if (!array)
 		return ;
@@ -11,9 +11,9 @@ void ft_free_2d_array_with_null(char **array)
 	}
 }
 
-void ft_list_clear(t_mlist **list)
+void	ft_list_clear(t_mlist **list)
 {
-	int n;
+	int	n;
 
 	if (!list || !*list)
 		return ;
@@ -29,7 +29,7 @@ void ft_list_clear(t_mlist **list)
 	*list = NULL;
 }
 
-void ft_free_2_linked_list(t_mlist **list)
+void	ft_free_2_linked_list(t_mlist **list)
 {
 	while (*list)
 	{

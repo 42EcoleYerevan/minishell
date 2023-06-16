@@ -2,7 +2,7 @@
 
 int	ft_len_before_quote(char *str)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = str;
 	while (*str && *str != '\'' && *str != '\"')
@@ -10,9 +10,9 @@ int	ft_len_before_quote(char *str)
 	return (str - tmp);
 }
 
-static char *ft_process_quote(t_shell *shell, char *str)
+static char	*ft_process_quote(t_shell *shell, char *str)
 {
-	char *out;
+	char	*out;
 
 	out = ft_substr(str, 0, ft_len_quote(str, *str));
 	if (*str == '\"')
@@ -22,13 +22,13 @@ static char *ft_process_quote(t_shell *shell, char *str)
 	}
 	else
 		out = ft_strtrim(out, "\'");
-	return (out); 
+	return (out);
 }
 
 char	*ft_parse_quotes(t_shell *shell, char *str)
 {
-	char *out;
-	char *tmp;
+	char	*out;
+	char	*tmp;
 
 	out = "";
 	while (*str)
@@ -41,11 +41,22 @@ char	*ft_parse_quotes(t_shell *shell, char *str)
 		else
 		{
 			tmp = ft_process_quote(shell, str);
-			str += ft_len_quote(str, *str); 
+			str += ft_len_quote(str, *str);
 		}
 		out = ft_strjoin(out, tmp);
 		free(tmp);
 		tmp = NULL;
 	}
 	return (out);
+}
+
+int	ft_len_env_key(char *str)
+{
+	int		len;
+	char	sep[] = " <>|&./?@#$%^*-=+,[]{}";
+
+	len = 0;
+	while (str[len] && ft_strchr(sep, str[len]) == 0)
+		len++;
+	return (len);
 }

@@ -1,8 +1,8 @@
 #include "../minishell.h"
 
-int ft_num_quotes(char *str)
+int	ft_num_quotes(char *str)
 {
-	int num;
+	int	num;
 
 	num = 0;
 	while (*str)
@@ -14,19 +14,19 @@ int ft_num_quotes(char *str)
 	return (num);
 }
 
-char *ft_delete_quotes(char *str)
+char	*ft_delete_quotes(char *str)
 {
-	char *tmp;
-	char *out;
-	int indx;
-	int len;
+	char	*tmp;
+	char	*out;
+	int		indx;
+	int		len;
 
 	len = ft_strlen(str) - ft_num_quotes(str) + 1;
 	out = (char *)malloc(sizeof(char) * len);
 	if (!out)
 	{
-		free(str);
-		return NULL;
+		free (str);
+		return (NULL);
 	}
 	indx = 0;
 	tmp = str;
