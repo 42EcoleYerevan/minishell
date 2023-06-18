@@ -10,7 +10,7 @@
 #include <dirent.h>
 #include <signal.h>
 #include <errno.h>
-#include "libft/libft.h"
+#include "./libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -42,18 +42,18 @@ typedef struct s_shell
 extern int exit_status;
 
 // len_utils
-int		ft_len_spaces(char *str);
-int		ft_len_word(char *str);
-int		ft_len_quote(char *str, char quote);
-int		ft_len_separator(char *str);
-int		ft_len_command(char *str);
+int	ft_len_spaces(char *str);
+int	ft_len_word(char *str);
+int	ft_len_quote(char *str, char quote);
+int	ft_len_separator(char *str);
+int	ft_len_command(char *str);
 
 // argc argv
-int		ft_argc(char **arr);
+int	ft_argc(char **arr);
 char	**ft_argv(char **arr);
 
 // command
-int		ft_amount_commands(char *str);
+int	ft_amount_commands(char *str);
 char	*ft_get_command_from_path(char *command);
 char	*ft_get_command_path(char *command);
 
@@ -63,8 +63,8 @@ char	*ft_get_env_value_by_name(t_shell *shell, char *str);
 char	**ft_env_to_arr(t_env *env, int len, int i);
 
 // len construction
-int		ft_amount_constructions(char *str);
-int		ft_len_construction(char *str);
+int	ft_amount_constructions(char *str);
+int	ft_len_construction(char *str);
 
 // path
 char	*ft_get_absolute_path(t_shell *shell, char *command);
@@ -80,7 +80,7 @@ char	**ft_parse_construction(t_shell *shell, char *str);
 char	*ft_set_env(t_shell *shell, char *str);
 
 // construction utils
-int		ft_num_quotes(char *str);
+int	ft_num_quotes(char *str);
 char	*ft_delete_quotes(char *str);
 
 // parse utils

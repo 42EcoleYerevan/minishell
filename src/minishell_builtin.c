@@ -50,8 +50,7 @@ int	ft_env(t_env *env)
 		}
 		ft_putstr_fd(env->key, 1);
 		write(1, "=", 1);
-		ft_putstr_fd(env->value, 1);
-		write(1, "\n", 1);
+		ft_putendl_fd(env->value, 1);
 		env = env->next;
 	}
 	return (0);
