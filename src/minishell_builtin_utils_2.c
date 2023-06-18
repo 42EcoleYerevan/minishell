@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:29:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/15 18:42:54 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/18 17:03:03 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,16 +87,29 @@ void	ft_node_del(t_env **node)
 
 int	ft_num_check(char *arg)
 {
-	int	i;
+	int					i;
+	unsigned long long	max;
+	unsigned long long	check;
 
+	max = 9223372036854775807;
 	i = 0;
-	if (arg[i] == '-' || arg[i] == '+')
-		i++;
+	if (*arg == '-' || *arg == '+')
+		arg++;
+	if (ft_strlen(arg) > 19)
+		return (1);
 	while (arg[i])
 	{
-		if (i >= 19 || arg[i] < '0' || arg[i] > '9')
+		if (arg[i] < '0' || arg[i] > '9')
 			return (1);
 		i++;
 	}
-	return (0);
+	check = 0;
+	i = 0;
+	while (arg[i])
+	{
+		check *= 10;
+		check += arg[i] - '0';
+		i++;
+	}
+	return (check > max);
 }
