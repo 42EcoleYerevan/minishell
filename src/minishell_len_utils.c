@@ -61,7 +61,7 @@ int	ft_len_separator(char *str)
 		|| str[n] == '<'
 		|| str[n] == ';')
 		sep = str[n];
-	while (str[n] && str[n] == sep)
+	while (str[n] && str[n] == sep && n < 2)
 		n++;
 	return (n);
 }
