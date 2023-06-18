@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 20:27:42 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/14 18:34:24 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/11 20:27:47 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ t_env	*ft_env_add(char *str)
 	if (!newenv)
 		return (NULL);
 	len = ft_strlen(ft_strchr(str, '=') + 1);
-	newenv->value = NULL;
-	if (ft_strncmp("OLDPWD", str, ft_strlen(str) - len - 1) != 0)
-		newenv->value = ft_substr(str, ft_strlen(str) - len, len);
+	newenv->value = ft_substr(str, ft_strlen(str) - len, len);
 	len = ft_strlen(str) - len - 1;
 	newenv->key = malloc(len + 1);
 	newenv->key[len] = '\0';
