@@ -37,6 +37,7 @@ char	*ft_parse_quotes(t_shell *shell, char *str)
 		{
 			tmp = ft_substr(str, 0, ft_len_before_quote(str));
 			str += ft_strlen(tmp);
+			tmp = ft_set_env(shell, tmp);
 		}
 		else
 		{

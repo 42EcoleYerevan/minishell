@@ -64,6 +64,16 @@ int ft_isbuiltin(char *path)
 	return (out);
 }
 
+int ft_check_n_flag(char **arr)
+{
+	if (!*arr)
+		return (0);
+	arr++;
+	if (ft_strchr(*arr, 'n') == 0)
+		return (1);
+	return (0);
+}
+
 int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 {
 	int out;
@@ -79,7 +89,12 @@ int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 	else if (command == 4)
 		out = ft_pwd();
 	else if (command == 5)
-		out = ft_echo(list->argv + 1, 0);
+	{
+		if (ft_check_n_flag(list->argv))
+			out = ft_echo(list->argv + 1, 0);
+		else
+			out = ft_echo(list->argv + 2, 1);
+	}
 	else if (command == 6)
 		out = ft_env(shell->env);
 	else if (command == 7)
@@ -172,8 +187,6 @@ void ft_child(t_shell *shell, t_mlist *list, int bltin)
 	env = ft_env_to_arr(shell->env, 0, -1);
 	if (list->prev && list->prev->command[0] == '>')
 		ft_redirect_handler(list);
-	else if (list->command && list->command[0] == '>')
-		exit(ft_redirect_error(list->command));
 	if (list->bin || bltin)
 		ft_pipe_executor(shell, list, bltin, env);
 	else if (list->command && list->next && 
