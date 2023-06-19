@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:29:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/19 17:17:32 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/19 18:19:14 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	ft_export_valid(char *arg, int *res)
 	status = 0;
 	if (ft_isdigit(arg[0]) || arg[0] == '=')
 		status = 1;
-	while (arg[i] && arg[i] != '=')
+	while (arg[i] && arg[i] != '=' && arg[i] != '+')
 	{
 		if (!ft_isalnum(arg[i]) && arg[i] != '_')
 		{
