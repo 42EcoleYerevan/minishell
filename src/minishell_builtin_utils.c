@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:26:41 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/14 17:54:46 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:14:46 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	ft_find_env(char *str, t_env *env)
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
+	if (i == 0)
+		return (0);
 	while (env)
 	{
 		if (!ft_strncmp(str, env->key, i))

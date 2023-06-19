@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <pthread.h>
 #include <signal.h>
 #include <errno.h>
 #include "./libft/libft.h"

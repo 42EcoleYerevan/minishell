@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:29:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/18 17:03:03 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/19 17:17:32 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_env	*ft_export_add(char *str)
 void	ft_export_errprint(char *arg)
 {
 	ft_putstr_fd("minishell: export: `", 2);
-	while (*arg && *arg != '=')
+	while (*arg)
 		write(2, arg++, 1);
 	ft_putendl_fd("': not a valid identifier", 2);
 }
@@ -49,16 +49,16 @@ int	ft_export_valid(char *arg, int *res)
 {
 	int	status;
 	int	i;
-
+	
+	i = 0;
 	if (!arg)
 		return (0);
 	status = 0;
-	if (ft_isdigit(arg[0]))
+	if (ft_isdigit(arg[0]) || arg[0] == '=')
 		status = 1;
-	i = 0;
 	while (arg[i] && arg[i] != '=')
 	{
-		if (!ft_isalnum(arg[i]))
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
 		{
 			status = 1;
 			break ;
