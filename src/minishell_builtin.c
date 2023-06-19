@@ -50,8 +50,7 @@ int	ft_env(t_env *env)
 		}
 		ft_putstr_fd(env->key, 1);
 		write(1, "=", 1);
-		ft_putstr_fd(env->value, 1);
-		write(1, "\n", 1);
+		ft_putendl_fd(env->value, 1);
 		env = env->next;
 	}
 	return (0);
@@ -59,13 +58,18 @@ int	ft_env(t_env *env)
 
 int	ft_exit(char **args)
 {
+	if (!args || !args[0])
+	{
+		ft_putendl_fd("exit", 1);
+		exit(0);
+	}
 	if (ft_num_check(args[0]))
 	{
 		ft_putendl_fd("exit", 2);
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(args[0], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		exit(1);
+		exit(255);
 	}
 	else if (args[1])
 	{

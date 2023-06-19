@@ -6,25 +6,11 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 21:26:41 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/11 21:29:59 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/14 17:54:46 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	ft_num_check(char *arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		if (i >= 19 || arg[i] < '0' || arg[i] > '9')
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 int	ft_export_print(t_env *env)
 {
@@ -53,10 +39,10 @@ void	ft_export_change(t_env *env, char *str)
 {
 	int	len;
 
+	if (env == NULL)
+		return ;
 	if (env->value)
 		free(env->value);
-	while (*str && *str != '=')
-		str++;
 	if (*str == '=')
 		str++;
 	len = ft_strlen(str);
@@ -78,10 +64,42 @@ int	ft_find_env(char *str, t_env *env)
 	{
 		if (!ft_strncmp(str, env->key, i))
 		{
-			ft_export_change(env, str);
+			ft_export_change(env, str + i);
 			return (1);
 		}
 		env = env->next;
 	}
 	return (0);
+}
+
+char	*ft_value_by_key(char *key, t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while (key[i] && key[i] != '=')
+		i++;
+	while (env)
+	{
+		if (!ft_strncmp(key, env->key, i))
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+t_env	*ft_ptr_by_key(char *key, t_env *env)
+{
+	int	i;
+
+	i = 0;
+	while (key[i] && key[i] != '=')
+		i++;
+	while (env)
+	{
+		if (!ft_strncmp(key, env->key, i))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
 }
