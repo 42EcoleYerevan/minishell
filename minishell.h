@@ -138,7 +138,7 @@ char	*ft_value_by_key(char *key, t_env *env);
 //minishell_builtin_utils_2
 t_env	*ft_export_add(char *str);
 void	ft_export_errprint(char *arg);
-int		ft_export_valid(char *arg, int *res);
+int		ft_export_valid(char *arg, int *res, t_env *env);
 void	ft_node_del(t_env **node);
 int		ft_num_check(char *arg);
 

@@ -1,16 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_builtin_utils_2.c                        :+:      :+:    :+:   */
+/*   minishell_export_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/11 21:29:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/19 18:19:14 by almeliky         ###   ########.fr       */
+/*   Created: 2023/06/19 19:45:32 by almeliky          #+#    #+#             */
+/*   Updated: 2023/06/19 19:46:06 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	ft_export_print(t_env *env)
+{
+	while (env)
+	{
+		if (!ft_strncmp("_", env->key, ft_strlen(env->key)))
+		{
+			env = env->next;
+			continue ;
+		}
+		ft_putstr_fd("declare -x ", 1);
+		ft_putstr_fd(env->key, 1);
+		if (env->value)
+		{
+			ft_putstr_fd("=\"", 1);
+			ft_putstr_fd(env->value, 1);
+			ft_putstr_fd("\"", 1);
+		}
+		ft_putstr_fd("\n", 1);
+		env = env->next;
+	}
+	return (0);
+}
 
 t_env	*ft_export_add(char *str)
 {
@@ -45,7 +68,20 @@ void	ft_export_errprint(char *arg)
 	ft_putendl_fd("': not a valid identifier", 2);
 }
 
-int	ft_export_valid(char *arg, int *res)
+int	ft_export_concat(char *arg, t_env *env, int i)
+{
+	char	*prev;
+
+	if (arg[i] == '+' && arg[i + 1] != '=')
+		return (1);
+	prev = ft_value_by_key(arg, env);
+	if (!prev)
+		prev = "";	
+	ft_export_change(ft_ptr_by_key(arg, env), ft_strjoin(prev, (arg + i + 2)));
+	return (2);
+}
+
+int	ft_export_valid(char *arg, int *res, t_env *env)
 {
 	int	status;
 	int	i;
@@ -65,51 +101,10 @@ int	ft_export_valid(char *arg, int *res)
 		}
 		i++;
 	}
+	if (arg[i] == '+')
+		status = ft_export_concat(arg, env, i);
 	*res = status;
-	if (status)
+	if (status == 1)
 		ft_export_errprint(arg);
 	return (status);
-}
-
-void	ft_node_del(t_env **node)
-{
-	if (!(*node))
-		return ;
-	if ((*node)->key)
-		free((*node)->key);
-	(*node)->key = NULL;
-	if ((*node)->value)
-		free((*node)->value);
-	(*node)->value = NULL;
-	free(*node);
-	node = NULL;
-}
-
-int	ft_num_check(char *arg)
-{
-	int					i;
-	unsigned long long	max;
-	unsigned long long	check;
-
-	max = 9223372036854775807;
-	i = 0;
-	if (*arg == '-' || *arg == '+')
-		arg++;
-	if (ft_strlen(arg) > 19)
-		return (1);
-	while (arg[i])
-	{
-		if (arg[i] < '0' || arg[i] > '9')
-			return (1);
-		i++;
-	}
-	check = 0;
-	i = 0;
-	while (arg[i])
-	{
-		check *= 10;
-		check += arg[i] - '0';
-		i++;
-	}
-	return (check > max);
 }

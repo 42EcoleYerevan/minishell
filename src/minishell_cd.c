@@ -1,44 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_builtin_2.c                              :+:      :+:    :+:   */
+/*   minishell_cd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/11 21:26:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/15 17:40:16 by almeliky         ###   ########.fr       */
+/*   Created: 2023/06/19 19:42:30 by almeliky          #+#    #+#             */
+/*   Updated: 2023/06/19 19:47:55 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	ft_unset(char **args, t_env **env)
-{
-	t_env	*tmp;
-	t_env	*node;
-
-	printf("unset here\n");
-	if (!(*args))
-		return (0);
-	node = *env;
-	while (*args)
-	{
-		while (node->next)
-		{
-			if (!ft_strncmp(node->next->key, *args, ft_strlen(*args)))
-			{
-				tmp = node->next;
-				node->next = tmp->next;
-				ft_node_del(&tmp);
-				break ;
-			}
-			node = node->next;
-		}
-		args++;
-		node = *env;
-	}
-	return (0);
-}
 
 int	ft_cd(char	**args, t_env **env, char *str, char *oldpwd)
 {

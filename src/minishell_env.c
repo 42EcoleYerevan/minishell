@@ -52,3 +52,20 @@ char	**ft_env_to_arr(t_env *env, int len, int i)
 	return (arr);
 }
 
+int	ft_env(t_env *env)
+{
+	while (env != NULL)
+	{
+		if (env->value == NULL)
+		{
+			env = env->next;
+			continue ;
+		}
+		ft_putstr_fd(env->key, 1);
+		write(1, "=", 1);
+		ft_putendl_fd(env->value, 1);
+		env = env->next;
+	}
+	return (0);
+}
+

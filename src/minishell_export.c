@@ -1,39 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_builtin_utils.c                          :+:      :+:    :+:   */
+/*   minishell_export.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/11 21:26:41 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/19 17:14:46 by almeliky         ###   ########.fr       */
+/*   Created: 2023/06/19 19:00:12 by almeliky          #+#    #+#             */
+/*   Updated: 2023/06/19 19:45:50 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	ft_export_print(t_env *env)
-{
-	while (env)
-	{
-		if (!ft_strncmp("_", env->key, ft_strlen(env->key)))
-		{
-			env = env->next;
-			continue ;
-		}
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(env->key, 1);
-		if (env->value)
-		{
-			ft_putstr_fd("=\"", 1);
-			ft_putstr_fd(env->value, 1);
-			ft_putstr_fd("\"", 1);
-		}
-		ft_putstr_fd("\n", 1);
-		env = env->next;
-	}
-	return (0);
-}
 
 void	ft_export_change(t_env *env, char *str)
 {
@@ -81,6 +58,8 @@ char	*ft_value_by_key(char *key, t_env *env)
 	i = 0;
 	while (key[i] && key[i] != '=')
 		i++;
+	if (i > 0 && key[i - 1] == '+')
+		i--;
 	while (env)
 	{
 		if (!ft_strncmp(key, env->key, i))
@@ -97,6 +76,8 @@ t_env	*ft_ptr_by_key(char *key, t_env *env)
 	i = 0;
 	while (key[i] && key[i] != '=')
 		i++;
+	if (i > 0 && key[i - 1] == '+')
+		i--;
 	while (env)
 	{
 		if (!ft_strncmp(key, env->key, i))
@@ -104,4 +85,32 @@ t_env	*ft_ptr_by_key(char *key, t_env *env)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+int	ft_export(char **args, t_env **env)
+{
+	int		res;
+	t_env	*last;
+
+	res = 0;
+	if (args[0] == NULL)
+		return (ft_export_print(*env));
+	last = *env;
+	while (last->next)
+		last = last->next;
+	while (*args)
+	{
+		if ((ft_find_env(*args, *env) && *args) || ft_export_valid(*args, &res, *env))
+		{
+			args++;
+			continue ;
+		}
+		last->next = ft_export_add(*args);
+		if (last->next)
+			last = last->next;
+		if (!last)
+			res = 1;
+		args++;
+	}
+	return (res);
 }
