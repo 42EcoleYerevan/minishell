@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:56 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/19 19:46:45 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/21 20:03:58 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,51 @@ void	ft_node_del(t_env **node)
 	node = NULL;
 }
 
-int	ft_unset(char **args, t_env **env)
+void	ft_unset_errprint(char *arg)
+{
+	ft_putstr_fd("minishell: unset: `", 2);
+	while (*arg)
+		write(2, arg++, 1);
+	ft_putendl_fd("': not a valid identifier", 2);
+}
+
+int	ft_unset_valid(char *arg)
+{
+	int	status;
+	int	i;
+	
+	i = 0;
+	if (!arg)
+		return (0);
+	status = 0;
+	if (ft_isdigit(arg[0]))
+		status = 1;
+	while (arg[i])
+	{
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+		{
+			status = 1;
+			break ;
+		}
+		i++;
+	}
+	if (status == 1)
+		ft_unset_errprint(arg);
+	return (status);
+}
+
+int	ft_unset(char **args, t_env **env, int status)
 {
 	t_env	*tmp;
 	t_env	*node;
 
-	printf("unset here\n");
 	if (!(*args))
 		return (0);
 	node = *env;
 	while (*args)
 	{
+		if (ft_unset_valid(*args))
+			status = 1;
 		while (node->next)
 		{
 			if (!ft_strncmp(node->next->key, *args, ft_strlen(*args)))
@@ -51,5 +85,5 @@ int	ft_unset(char **args, t_env **env)
 		args++;
 		node = *env;
 	}
-	return (0);
+	return (status);
 }

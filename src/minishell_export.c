@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:12 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/19 19:45:50 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/21 18:44:38 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	ft_export(char **args, t_env **env)
 	t_env	*last;
 
 	res = 0;
-	if (args[0] == NULL)
+	if (!args || args[0] == NULL)
 		return (ft_export_print(*env));
 	last = *env;
 	while (last->next)
@@ -105,7 +105,7 @@ int	ft_export(char **args, t_env **env)
 			args++;
 			continue ;
 		}
-		last->next = ft_export_add(*args);
+		ft_export_add(*args, &last);
 		if (last->next)
 			last = last->next;
 		if (!last)

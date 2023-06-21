@@ -62,6 +62,7 @@ char	*ft_get_command_path(char *command);
 char	*ft_get_env_value(t_shell *shell, char *var);
 char	*ft_get_env_value_by_name(t_shell *shell, char *str);
 char	**ft_env_to_arr(t_env *env, int len, int i);
+int		ft_env(t_env *env);
 
 // len construction
 int	ft_amount_constructions(char *str);
@@ -117,29 +118,37 @@ void	ctrl_d_handler(char *str);
 t_env	*ft_env_add(char *str);
 t_env	*ft_create_envlist(char	**arr);
 
-//minishell_builtin
-int		ft_pwd();
-int		ft_echo(char **args, int n);
-int		ft_env(t_env *env);
-int		ft_exit(char **args);
+//minishell_cd
+int		ft_cd(char	**args, t_env **env, char *arr, int status);
+void	ft_cd_change(char *arg, t_env **env);
+
+//minishell_export
 int 	ft_export(char **args, t_env **env);
-
-//minishell_builtin_2
-int		ft_unset(char **args, t_env **env);
-int		ft_cd(char	**args, t_env **env, char *arr, char *oldpwd);
-
-//minishell_builtin_utils
-int		ft_export_print(t_env *env);
-int		ft_find_env(char *str, t_env *env);
 void	ft_export_change(t_env *env, char *str);
+int		ft_find_env(char *str, t_env *env);
 t_env	*ft_ptr_by_key(char *key, t_env *env);
 char	*ft_value_by_key(char *key, t_env *env);
 
-//minishell_builtin_utils_2
-t_env	*ft_export_add(char *str);
+//minishell_export_utils
+int		ft_export_print(t_env *env);
+void	ft_export_add(char *str, t_env **env);
 void	ft_export_errprint(char *arg);
 int		ft_export_valid(char *arg, int *res, t_env *env);
+
+//minishell_unset
+int		ft_unset(char **args, t_env **env, int status);
+int		ft_unset_valid(char *arg);
+void	ft_unset_errprint(char *arg);
 void	ft_node_del(t_env **node);
+
+//minishell_pwd
+int		ft_pwd();
+
+//minishell_echo
+int		ft_echo(char **args, int n);
+
+//minishell_exit
+int		ft_exit(char **args);
 int		ft_num_check(char *arg);
 
 #endif

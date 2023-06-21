@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:45:32 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/19 19:46:06 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/06/21 18:48:11 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,15 @@ int	ft_export_print(t_env *env)
 	return (0);
 }
 
-t_env	*ft_export_add(char *str)
+void	ft_export_add(char *str, t_env **env)
 {
 	int		len;
 	t_env	*newenv;
 
 	newenv = (t_env *)malloc(sizeof(t_env));
+	(*env)->next = NULL;
 	if (!newenv)
-		return (NULL);
+		return ;
 	len = ft_strlen(str);
 	if (ft_strchr(str, '='))
 	{
@@ -57,7 +58,7 @@ t_env	*ft_export_add(char *str)
 	while (len-- > 0)
 		newenv->key[len] = str[len];
 	newenv->next = NULL;
-	return (newenv);
+	(*env)->next = newenv;
 }
 
 void	ft_export_errprint(char *arg)
