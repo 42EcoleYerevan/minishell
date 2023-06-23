@@ -98,7 +98,7 @@ int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 	else if (command == 6)
 		out = ft_env(shell->env);
 	else if (command == 7)
-		out = ft_unset(list->argv + 1, &shell->env);
+		out = ft_unset(list->argv + 1, &shell->env, 0);
 	return (out);
 }
 
@@ -163,9 +163,7 @@ void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
 	if (list->prev == NULL && list->next == NULL)
 		execve(list->bin, list->argv, env);
 	if (list->next &&
-		(ft_strncmp(list->command, "|", 2) == 0 ||
-		ft_strncmp(list->command, ">", 2) == 0 ||
-		ft_strncmp(list->command, ">>", 2) == 0))
+		(ft_strncmp(list->command, "|", 2) == 0))
 	{
 		dup2(list->fd[1], 1);
 		close(list->fd[1]);
@@ -178,23 +176,6 @@ void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
 	if (bltin)
 		builtin_executor(shell, list, bltin);
 	execve(list->bin, list->argv, env);
-}
-
-void ft_child(t_shell *shell, t_mlist *list, int bltin)
-{
-	char **env;
-
-	env = ft_env_to_arr(shell->env, 0, -1);
-	if (list->prev && list->prev->command[0] == '>')
-		ft_redirect_handler(list);
-	if (list->bin || bltin)
-		ft_pipe_executor(shell, list, bltin, env);
-	else if (list->command && list->next && 
-			(ft_strncmp(list->command, ">", 2) == 0 ||
-			ft_strncmp(list->command, ">>", 3) == 0))
-		exit(ft_clear_file(list->next->argv[0]));
-	printf("minishell: %s: command not found\n", list->argv[0]); 
-	exit(1);
 }
 
 void	executor(t_shell *shell)
@@ -214,7 +195,7 @@ void	executor(t_shell *shell)
 			pipe(tmp->fd);
 			pid = fork();
 			if (pid == 0)
-				ft_child(shell, tmp, bltin);
+				ft_pipe_executor(shell, tmp, bltin, ft_env_to_arr(shell->env, 0, -1));
 			if (tmp->prev && tmp->prev->command)
 				ft_close_pipe(tmp->prev->fd);
 		}
