@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <iso646.h>
 #include <sys/fcntl.h>
 
 // static void print_list(t_mlist *list)
@@ -116,27 +117,28 @@ int ft_clear_file(char *filename)
 	return (0);
 }
 
-void	ft_redirect_to_file(int src_fd, char *filename, int mode)
-{
-	int fd;
-	int res;
-	char c;
+/* void	ft_redirect_to_file(int src_fd, char *filename, int mode) */
+/* { */
+/* 	int fd; */
+/* 	int res; */
+/* 	char c; */
 
-	if (mode == 0)
-		fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT);
-	else if (mode == 1)
-		fd = open(filename, O_WRONLY | O_APPEND | O_CREAT);
-	res = read(src_fd, &c, 1);
-	while (res > 0 && c != '\n')
-	{
-		write(fd, &c, 1);
-		res = read(src_fd, &c, 1);
-	}
-	write(fd, "\n", 1);
-	close(src_fd);
-	close(fd);
-	exit(0);
-}
+/* 	if (mode == 0) */
+/* 		fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT); */
+/* 	else if (mode == 1) */
+/* 		fd = open(filename, O_WRONLY | O_APPEND | O_CREAT); */
+/* 	res = read(src_fd, &c, 1); */
+/* 	while (res > 0 && c != '\0') */
+/* 	{ */
+/* 		write(fd, &c, 1); */
+/* 		res = read(src_fd, &c, 1); */
+/* 	} */
+/* 	printf(" after while %d\n", res); */
+/* 	write(fd, "\n", 1); */
+/* 	close(src_fd); */
+/* 	close(fd); */
+/* 	exit(0); */
+/* } */
 
 int	ft_redirect_error(char *command)
 {
@@ -145,17 +147,27 @@ int	ft_redirect_error(char *command)
 		return (1);
 }
 
-void ft_redirect_handler(t_mlist *list)
+void ft_redirect_output(t_shell *shell, t_mlist *list, int bltin, char **env)
 {
-	if (list->argv[0])
+	int fd;
+
+	if (list->command)
 	{
-		if (list->prev && ft_strncmp(list->prev->command, ">", 2) == 0)
-			ft_redirect_to_file(list->prev->fd[0], list->argv[0], 0);
-		else if (list->prev && ft_strncmp(list->prev->command, ">>", 3) == 0)
-			ft_redirect_to_file(list->prev->fd[0], list->argv[0], 1);
+		if (ft_strncmp(list->command, ">", 2) == 0)
+			fd = open(list->next->argv[0], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		else
+			fd = open(list->next->argv[0], O_WRONLY | O_APPEND | O_CREAT, 0644);
+		dup2(fd, 1);
 	}
-	else 
-		exit(ft_redirect_error(list->prev->command));
+	if (bltin)
+		exit(builtin_executor(shell, list, bltin));
+	execve(list->bin, list->argv, env);
+}
+
+void ft_redirect_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
+{
+	if (list->command && list->command[0] == '>')
+		ft_redirect_output(shell, list, bltin, env);
 }
 
 void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
@@ -174,7 +186,7 @@ void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
 		ft_close_pipe(list->prev->fd);
 	}
 	if (bltin)
-		builtin_executor(shell, list, bltin);
+		exit(builtin_executor(shell, list, bltin));
 	execve(list->bin, list->argv, env);
 }
 
@@ -188,17 +200,50 @@ void	executor(t_shell *shell)
 	while (tmp)
 	{
 		bltin = ft_isbuiltin(tmp->argv[0]);
-		if (bltin && tmp->next == NULL)
-			builtin_executor(shell, tmp, bltin);
-		else
+		if (tmp->bin || (tmp->prev && tmp->prev->command))
 		{
 			pipe(tmp->fd);
 			pid = fork();
 			if (pid == 0)
-				ft_pipe_executor(shell, tmp, bltin, ft_env_to_arr(shell->env, 0, -1));
+			{
+				if (tmp->prev == NULL && tmp->next == NULL)
+				{
+					if (bltin)
+						exit(builtin_executor(shell, tmp, bltin));
+					else
+						execve(
+								tmp->bin,
+							   	tmp->argv,
+							   	ft_env_to_arr(shell->env, 0, -1)
+								);
+				}
+
+				if ((tmp->command && tmp->command[0] == '>') || 
+						(tmp->prev &&
+						 tmp->prev->command &&
+					   	 tmp->prev->command[0] == '>'))
+					ft_redirect_executor(
+							shell,
+						   	tmp,
+						   	bltin,
+						   	ft_env_to_arr(shell->env, 0, -1)
+							);
+
+				else if ((tmp->command && tmp->command[0] == '|') || 
+						(tmp->prev && tmp->prev->command[0] == '|') ||
+						tmp->bin)
+					ft_pipe_executor(
+							shell,
+						   	tmp,
+						   	bltin,
+						   	ft_env_to_arr(shell->env, 0, -1)
+							);
+			}
 			if (tmp->prev && tmp->prev->command)
 				ft_close_pipe(tmp->prev->fd);
 		}
+		if (tmp->command && tmp->command[0] == '>')
+			tmp = tmp->next;
 		tmp = tmp->next;
 	}
 	while (wait(NULL) != -1)
