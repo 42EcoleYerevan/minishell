@@ -164,10 +164,29 @@ void ft_redirect_output(t_shell *shell, t_mlist *list, int bltin, char **env)
 	execve(list->bin, list->argv, env);
 }
 
+void ft_redirect_input(t_shell *shell, t_mlist *list, int bltin, char **env)
+{
+	int fd;
+
+	if (list->command)
+	{
+		fd = open(list->next->argv[0], O_RDONLY | O_CREAT);
+		dup2(fd, 0);
+	}
+	if (bltin)
+		exit(builtin_executor(shell, list, bltin));
+	execve(list->bin, list->argv, env);
+}
+
 void ft_redirect_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
 {
-	if (list->command && list->command[0] == '>')
-		ft_redirect_output(shell, list, bltin, env);
+	if (list->command)
+	{
+		if (list->command[0] == '>')
+			ft_redirect_output(shell, list, bltin, env);
+		else if (list->command[0] == '<')
+			ft_redirect_input(shell, list, bltin, env);
+	}
 }
 
 void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
@@ -217,18 +236,14 @@ void	executor(t_shell *shell)
 							   	ft_env_to_arr(shell->env, 0, -1)
 								);
 				}
-
 				if ((tmp->command && tmp->command[0] == '>') || 
-						(tmp->prev &&
-						 tmp->prev->command &&
-					   	 tmp->prev->command[0] == '>'))
+					(tmp->command && tmp->command[0] == '<'))
 					ft_redirect_executor(
 							shell,
 						   	tmp,
 						   	bltin,
 						   	ft_env_to_arr(shell->env, 0, -1)
 							);
-
 				else if ((tmp->command && tmp->command[0] == '|') || 
 						(tmp->prev && tmp->prev->command[0] == '|') ||
 						tmp->bin)
@@ -242,7 +257,7 @@ void	executor(t_shell *shell)
 			if (tmp->prev && tmp->prev->command)
 				ft_close_pipe(tmp->prev->fd);
 		}
-		if (tmp->command && tmp->command[0] == '>')
+		if (tmp->command && (tmp->command[0] == '>' || tmp->command[0] == '<'))
 			tmp = tmp->next;
 		tmp = tmp->next;
 	}
