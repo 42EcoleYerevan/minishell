@@ -26,6 +26,7 @@ void	ft_list_clear(t_mlist **list)
 	free((*list)->argv);
 	free((*list)->command);
 	free((*list)->bin);
+	free(*list);
 	*list = NULL;
 }
 
@@ -41,4 +42,5 @@ void	ft_free_2_linked_list(t_mlist **list)
 		else
 			ft_list_clear(list);
 	}
+	*list = NULL;
 }

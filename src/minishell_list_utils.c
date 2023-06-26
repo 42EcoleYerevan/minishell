@@ -20,6 +20,8 @@ t_mlist	*ft_list_new(t_shell *shell, char **argv, char *command)
 	new->bin = ft_get_absolute_path(shell, argv[0]);
 	new->argv = argv;
 	new->command = command;
+	new->fd[0] = 0;
+	new->fd[1] = 1;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);

@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <iso646.h>
-#include <sys/fcntl.h>
 
 static void print_list(t_mlist *list)
 {
@@ -147,118 +145,235 @@ int	ft_redirect_error(char *command)
 		return (1);
 }
 
-void ft_redirect_output(t_shell *shell, t_mlist *list, int bltin, char **env)
+// echo leha > file.txt
+/* void ft_redirect_output(t_shell *shell, t_mlist *list, int bltin, char **env) */
+/* { */
+/* 	int fd; */
+
+/* 	fd = 0; */
+/* 	if (list->command && list->next && list->next->argv[0]) */
+/* 	{ */
+/* 		if (ft_strncmp(list->command, ">", 2) == 0) */
+/* 			fd = open(list->next->argv[0], O_WRONLY | O_TRUNC | O_CREAT, 0644); */
+/* 		else if (ft_strncmp(list->command, ">>", 3) == 0) */
+/* 			fd = open(list->next->argv[0], O_WRONLY | O_APPEND | O_CREAT, 0644); */
+/* 		dup2(fd, 1); */
+/* 	} */
+/* 	else */ 
+/* 		ft_redirect_error(list->next->command); */
+/* 	if (bltin) */
+/* 		exit(builtin_executor(shell, list, bltin)); */
+/* 	execve(list->bin, list->argv, env); */
+/* } */
+
+/* void ft_heredoc(char *tgkey) */
+/* { */
+/* 	char *line; */
+/* 	int tglen; */
+/* 	int pipefd[2]; */
+	   
+/* 	pipe(pipefd); */
+/* 	tglen = ft_strlen(tgkey); */
+/* 	line = readline(">"); */
+/* 	while (ft_strncmp(line, tgkey, tglen) != 0) */
+/* 	{ */
+/* 		write(pipefd[0], line, ft_strlen(line)); */
+/* 		line = readline(">"); */
+/* 	} */
+/* } */
+
+/* void ft_redirect_input(t_shell *shell, t_mlist *list, int bltin, char **env) */
+/* { */
+/* 	int fd; */
+
+/* 	if (list->command) */
+/* 	{ */
+/* 		if (ft_strncmp(list->command, "<", 2) == 0) */
+/* 			fd = open(list->next->argv[0], O_RDONLY | O_CREAT); */
+/* 		else if (ft_strncmp(list->command, "<<", 3) == 0) */
+/* 			ft_heredoc(list->next->argv[0]); */
+
+/* 		dup2(fd, 0); */
+/* 	} */
+/* 	if (bltin) */
+/* 		exit(builtin_executor(shell, list, bltin)); */
+/* 	execve(list->bin, list->argv, env); */
+/* } */
+
+/* void ft_redirect_executor(t_shell *shell, t_mlist *list, int bltin, char **env) */
+/* { */
+/* 	if (list->command) */
+/* 	{ */
+/* 		if (list->command[0] == '>') */
+/* 			ft_redirect_output(shell, list, bltin, env); */
+/* 		/1* else if (list->command[0] == '<') *1/ */
+/* 		/1* 	ft_redirect_input(shell, list, bltin, env); *1/ */
+/* 	} */
+/* } */
+
+/* void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env) */
+/* { */
+/* 	if (list->prev == NULL && list->next == NULL) */
+/* 		execve(list->bin, list->argv, env); */
+/* 	if (list->next && */
+/* 		(ft_strncmp(list->command, "|", 2) == 0)) */
+/* 	{ */
+/* 		dup2(list->fd[1], 1); */
+/* 		close(list->fd[1]); */
+/* 	} */
+/* 	if (list->prev && ft_strncmp(list->prev->command, "|", 2) == 0) */
+/* 	{ */
+/* 		dup2(list->prev->fd[0], 0); */
+/* 		ft_close_pipe(list->prev->fd); */
+/* 	} */
+/* 	if (bltin) */
+/* 		exit(builtin_executor(shell, list, bltin)); */
+/* 	execve(list->bin, list->argv, env); */
+/* } */
+void ft_remove_redirect(char ***argv, int n)
+{
+	int		len;
+
+	len = ft_len_nullable_2d_array(*argv);
+	while (n < len)
+	{
+		if (n + 2 < len && (*argv)[n + 2])
+			(*argv)[n] = (*argv)[n + 2];
+		else 
+			(*argv)[n] = NULL;
+		n++;
+	}
+}
+
+int ft_redirect_input(t_mlist *list, int n)
 {
 	int fd;
+	int out;
+	char *string;
 
-	if (list->command)
+	fd = 0;
+	out = 0;
+	if (ft_strncmp(list->argv[n], "<", 2) == 0)
 	{
-		if (ft_strncmp(list->command, ">", 2) == 0)
-			fd = open(list->next->argv[0], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-		else
-			fd = open(list->next->argv[0], O_WRONLY | O_APPEND | O_CREAT, 0644);
-		dup2(fd, 1);
+		if (list->argv[n + 1])
+		{
+			fd = open(list->argv[n + 1], O_RDONLY | O_TRUNC | O_CREAT);
+			dup2(fd, 0);
+			close(fd);
+			out = 1;
+		}
+		else 
+		{
+			ft_redirect_error("newline");
+			out = 0;
+		}
 	}
-	if (bltin)
-		exit(builtin_executor(shell, list, bltin));
-	execve(list->bin, list->argv, env);
+	else if (ft_strncmp(list->argv[n], "<<", 3) == 0)
+	{
+		if (list->argv[n + 1])
+		{
+			pipe(list->fd);
+			string = readline(">");
+			while (ft_strncmp(string, list->argv[n + 1], ft_strlen(list->argv[n + 1])) != 0)
+			{
+				write(list->fd[1], string, ft_strlen(string));
+				write(list->fd[1], "\n", 1); string = readline(">");
+			}
+			out = 1;
+		}
+		else 
+		{
+			ft_redirect_error("newline");
+			out = 0;
+		}
+	}
+	ft_remove_redirect(&list->argv, n);
+	return (out);
 }
 
-void ft_redirect_input(t_shell *shell, t_mlist *list, int bltin, char **env)
+int ft_handle_redirect(t_mlist *list)
 {
-	int fd;
+	int n;
+	int out;
 
-	if (list->command)
+	n = 0;
+	out = 1;
+	while (list->argv[n])
 	{
-		fd = open(list->next->argv[0], O_RDONLY | O_CREAT);
-		dup2(fd, 0);
+		if (list->argv[n][0] == '<')
+			out = ft_redirect_input(list, n);
+		n++;
 	}
-	if (bltin)
-		exit(builtin_executor(shell, list, bltin));
-	execve(list->bin, list->argv, env);
-}
-
-void ft_redirect_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
-{
-	if (list->command)
-	{
-		if (list->command[0] == '>')
-			ft_redirect_output(shell, list, bltin, env);
-		else if (list->command[0] == '<')
-			ft_redirect_input(shell, list, bltin, env);
-	}
-}
-
-void ft_pipe_executor(t_shell *shell, t_mlist *list, int bltin, char **env)
-{
-	if (list->prev == NULL && list->next == NULL)
-		execve(list->bin, list->argv, env);
-	if (list->next &&
-		(ft_strncmp(list->command, "|", 2) == 0))
-	{
-		dup2(list->fd[1], 1);
-		close(list->fd[1]);
-	}
-	if (list->prev && ft_strncmp(list->prev->command, "|", 2) == 0)
-	{
-		dup2(list->prev->fd[0], 0);
-		ft_close_pipe(list->prev->fd);
-	}
-	if (bltin)
-		exit(builtin_executor(shell, list, bltin));
-	execve(list->bin, list->argv, env);
+	return (out);
 }
 
 void	executor(t_shell *shell)
 {
 	int		pid;
-	int		bltin;
+	int		red;
 	t_mlist	*tmp;
 
 	tmp = *shell->list;
 	while (tmp)
 	{
-		bltin = ft_isbuiltin(tmp->argv[0]);
-		if (tmp->bin || (tmp->prev && tmp->prev->command))
+		red = ft_handle_redirect(tmp);
+		if (red == 0)
+			break;
+		if (tmp->bin)
 		{
-			pipe(tmp->fd);
 			pid = fork();
 			if (pid == 0)
 			{
-				if (tmp->prev == NULL && tmp->next == NULL)
-				{
-					if (bltin)
-						exit(builtin_executor(shell, tmp, bltin));
-					else
-						execve(
-								tmp->bin,
-							   	tmp->argv,
-							   	ft_env_to_arr(shell->env, 0, -1)
-								);
-				}
-				if ((tmp->command && tmp->command[0] == '>') || 
-					(tmp->command && tmp->command[0] == '<'))
-					ft_redirect_executor(
-							shell,
-						   	tmp,
-						   	bltin,
-						   	ft_env_to_arr(shell->env, 0, -1)
-							);
-				else if ((tmp->command && tmp->command[0] == '|') || 
-						(tmp->prev && tmp->prev->command[0] == '|') ||
-						tmp->bin)
-					ft_pipe_executor(
-							shell,
-						   	tmp,
-						   	bltin,
-						   	ft_env_to_arr(shell->env, 0, -1)
-							);
+				dup2(tmp->fd[0], 0);
+				if (red)
+					ft_close_pipe(tmp->fd);
+				execve(tmp->bin, tmp->argv, NULL);
 			}
-			if (tmp->prev && tmp->prev->command)
-				ft_close_pipe(tmp->prev->fd);
+			ft_close_pipe(tmp->fd);
 		}
-		if (tmp->command && (tmp->command[0] == '>' || tmp->command[0] == '<'))
-			tmp = tmp->next;
+		/* bltin = 0; */
+		/* if (tmp->argv[0]) */
+		/* 	bltin = ft_isbuiltin(tmp->argv[0]); */
+		/* if (tmp->bin || (tmp->prev && tmp->prev->command)) */
+		/* { */
+		/* 	pipe(tmp->fd); */
+		/* 	pid = fork(); */
+		/* 	if (pid == 0) */
+		/* 	{ */
+		/* 		if (tmp->prev == NULL && tmp->next == NULL) */
+		/* 		{ */
+		/* 			if (bltin) */
+		/* 				exit(builtin_executor(shell, tmp, bltin)); */
+		/* 			else */
+		/* 				execve( */
+		/* 						tmp->bin, */
+		/* 					   	tmp->argv, */
+		/* 					   	ft_env_to_arr(shell->env, 0, -1) */
+		/* 						); */
+		/* 		} */
+		/* 		if ((tmp->command && tmp->command[0] == '>') || */ 
+		/* 			(tmp->command && tmp->command[0] == '<')) */
+		/* 			ft_redirect_executor( */
+		/* 					shell, */
+		/* 				   	tmp, */
+		/* 				   	bltin, */
+		/* 				   	ft_env_to_arr(shell->env, 0, -1) */
+		/* 					); */
+		/* 		else if ((tmp->command && tmp->command[0] == '|') || */ 
+		/* 				(tmp->prev && tmp->prev->command[0] == '|') || */
+		/* 				tmp->bin) */
+		/* 			ft_pipe_executor( */
+		/* 					shell, */
+		/* 				   	tmp, */
+		/* 				   	bltin, */
+		/* 				   	ft_env_to_arr(shell->env, 0, -1) */
+		/* 					); */
+		/* 	} */
+		/* 	if (tmp->prev && tmp->prev->command) */
+		/* 		ft_close_pipe(tmp->prev->fd); */
+		/* } */
+		/* if (tmp->command && (tmp->command[0] == '>' || tmp->command[0] == '<')) */
+		/* 	tmp = tmp->next; */
 		tmp = tmp->next;
 	}
 	while (wait(NULL) != -1)
@@ -276,8 +391,8 @@ void ft_event_loop(t_shell *shell)
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
+		executor(shell);
 		print_list(list);
-		/* executor(shell); */
 		free(str);
 		ft_free_2_linked_list(shell->list);
 	}

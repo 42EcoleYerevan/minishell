@@ -103,6 +103,7 @@ void	ft_list_add_back(t_mlist **list, t_mlist *new);
 void	ft_list_clear(t_mlist **list);
 
 // fill list
+int		ft_len_nullable_2d_array(char **arr);
 t_mlist *ft_fill_list(t_shell *shell, char *str);
 	
 // pipex

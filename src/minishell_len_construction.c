@@ -8,8 +8,6 @@ int	ft_len_construction(char *str)
 	while (*str
 		&& *str != '|'
 		&& *str != '&'
-		&& *str != '>'
-		&& *str != '<'
 		&& *str != ';')
 	{
 		n++;
