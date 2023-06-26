@@ -6,6 +6,7 @@ char	*ft_get_env_value_by_name(t_shell *shell, char *name)
 	char	*out;
 
 	tmp = ft_substr(name, 0, ft_len_env_key(name));
+	puts(tmp);
 	out = ft_get_env_value(shell, tmp);
 	free(tmp);
 	return (out);

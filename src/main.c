@@ -2,36 +2,36 @@
 #include <iso646.h>
 #include <sys/fcntl.h>
 
-// static void print_list(t_mlist *list)
-// {
-// 	int n;
-// 	int l;
+static void print_list(t_mlist *list)
+{
+	int n;
+	int l;
 
-// 	l = 0;
-// 	while (list)
-// 	{
-// 		printf("\033[33mlist #%d\n\033[0m", l++);
-// 		printf("bin \t: %s\n", (list->bin));
-// 		n = 0;
-// 		while (list->argv[n])
-// 		{
-// 			printf("argv[%d]\t: %s\n", n, (list->argv[n]));
-// 			n++;
-// 		}
-// 		if (list->argv[0] == NULL)
-// 			printf("argv[0]\t: %s\n", NULL);
-// 		printf("command\t: %s\n", (list->command));
-// 		if (list->next)
-// 			printf("next\t: %p\n", list->next);
-// 		else
-// 			printf("next\t: NULL\n");
-// 		if (list->prev)
-// 			printf("prev\t: %p\n\n", list->prev);
-// 		else
-// 			printf("prev\t: NULL\n\n");
-// 		list = list->next;
-// 	}
-// }
+	l = 0;
+	while (list)
+	{
+		printf("\033[33mlist #%d\n\033[0m", l++);
+		printf("bin \t: %s\n", (list->bin));
+		n = 0;
+		while (list->argv[n])
+		{
+			printf("argv[%d]\t: %s\n", n, (list->argv[n]));
+			n++;
+		}
+		if (list->argv[0] == NULL)
+			printf("argv[0]\t: %s\n", NULL);
+		printf("command\t: %s\n", (list->command));
+		if (list->next)
+			printf("next\t: %p\n", list->next);
+		else
+			printf("next\t: NULL\n");
+		if (list->prev)
+			printf("prev\t: %p\n\n", list->prev);
+		else
+			printf("prev\t: NULL\n\n");
+		list = list->next;
+	}
+}
 
 static void	ft_close_pipe(int fd[2])
 {
@@ -276,8 +276,8 @@ void ft_event_loop(t_shell *shell)
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		// print_list(list);
-		executor(shell);
+		print_list(list);
+		/* executor(shell); */
 		free(str);
 		ft_free_2_linked_list(shell->list);
 	}

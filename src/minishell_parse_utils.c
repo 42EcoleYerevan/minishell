@@ -54,7 +54,7 @@ char	*ft_parse_quotes(t_shell *shell, char *str)
 int	ft_len_env_key(char *str)
 {
 	int		len;
-	char	sep[] = " <>|&./?@#$%^*-=+,[]{}";
+	char	sep[] = " <>|&./?@#$%^*-=+,[]{}\'\"";
 
 	len = 0;
 	while (str[len] && ft_strchr(sep, str[len]) == 0)
