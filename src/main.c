@@ -17,7 +17,7 @@ static void print_list(t_mlist *list)
 			n++;
 		}
 		if (list->argv[0] == NULL)
-			printf("argv[0]\t: %s\n", NULL);
+			printf("argv[0]\t: (null)\n");
 		printf("command\t: %s\n", (list->command));
 		if (list->next)
 			printf("next\t: %p\n", list->next);
