@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <sys/fcntl.h>
 
 void print_list(t_mlist *list)
 {
@@ -31,7 +32,7 @@ void print_list(t_mlist *list)
 	}
 }
 
-static void	ft_close_pipe(int fd[2])
+void	ft_close_pipe(int fd[2])
 {
 	close(fd[0]);
 	close(fd[1]);
@@ -238,49 +239,35 @@ void ft_redirect_error_argument(t_mlist *list, int n)
 int ft_one_redirect_input(t_mlist *list, int n)
 {
 	int fd;
-	int out;
+	int res;
+	int check;
+	char *c;
 
 	fd = 0;
-	out = 1;
+	check = 1;
+	c = NULL;
 	if (list->argv[n + 1])
 	{
-		fd = open(list->argv[n + 1], O_RDONLY | O_TRUNC | O_CREAT);
-		dup2(fd, 0);
-		close(fd);
-		out = 0;
-	}
-	else 
-		ft_redirect_error_argument(list, n);
-	return (out);
-}
-
-int ft_two_redirect_input(t_mlist *list, int n)
-{
-	int fd;
-	int out;
-	int lenkey;
-	char *string;
-
-	fd = 0;
-	out = 1;
-	lenkey = ft_strlen(list->argv[n + 1]) + 1;
-	if (list->argv[n + 1])
-	{
+		list->ispipe = 1;
 		pipe(list->fd);
-		string = readline(">");
-		while (ft_strncmp(string, list->argv[n + 1], lenkey) != 0)
+		fd = open(list->argv[n + 1], O_RDONLY | O_CREAT, 0644);
+		printf("%d\n", fd);
+		res = read(fd, c, 1);
+		printf("%d\n", res);
+		while (res > 0)
 		{
-			write(list->fd[1], string, ft_strlen(string));
-			write(list->fd[1], "\n", 1); string = readline(">");
+			write(list->fd[1], c, 1);
+			res = read(fd, c, 1);
 		}
-		out = 0;
+		close(fd);
+		check = 0;
 	}
 	else 
 		ft_redirect_error_argument(list, n);
-	return (out);
+	return (check);
 }
 
-int ft_check_redirect_argument(t_mlist *list, int n)
+int ft_check_two_redirect_argument(t_mlist *list, int n)
 {
 	if (list->argv[n + 1] && ft_strchr("<>|;&", list->argv[n + 1][0]) == NULL)
 		return (0);	
@@ -291,18 +278,40 @@ int ft_check_redirect_argument(t_mlist *list, int n)
 	return (1);
 }
 
+int ft_two_redirect_input(t_mlist *list, int n)
+{
+	int fd;
+	int check;
+	int lenkey;
+	char *string;
+
+	fd = 0;
+	check = ft_check_two_redirect_argument(list, n);
+	lenkey = ft_strlen(list->argv[n + 1]) + 1;
+	if (check == 0)
+	{
+		list->ispipe = 1;
+		pipe(list->fd);
+		string = readline(">");
+		while (ft_strncmp(string, list->argv[n + 1], lenkey) != 0)
+		{
+			write(list->fd[1], string, ft_strlen(string));
+			write(list->fd[1], "\n", 1); string = readline(">");
+		}
+	}
+	else 
+		ft_redirect_error_argument(list, n);
+	return (check);
+}
+
 int ft_redirect_input(t_mlist *list, int n)
 {
 	int out;
 
-	out = ft_check_redirect_argument(list, n);
-	if (out == 0)
-	{
-		if (ft_strncmp(list->argv[n], "<", 2) == 0)
-			out = ft_one_redirect_input(list, n);
-		else
-			out = ft_two_redirect_input(list, n);
-	}
+	if (ft_strncmp(list->argv[n], "<", 2) == 0)
+		out = ft_one_redirect_input(list, n);
+	else
+		out = ft_two_redirect_input(list, n);
 	ft_remove_redirect(&list->argv, n);
 	return (out);
 }
@@ -313,7 +322,7 @@ int ft_handle_redirect(t_mlist *list)
 	int out;
 
 	n = 0;
-	out = 1;
+	out = 0;
 	while (list->argv[n])
 	{
 		if (list->argv[n][0] == '<')
@@ -341,12 +350,15 @@ void	executor(t_shell *shell)
 			pid = fork();
 			if (pid == 0)
 			{
-				dup2(tmp->fd[0], 0);
-				if (red)
+				if (tmp->ispipe == 1)
+				{
+					dup2(tmp->fd[0], 0);
 					ft_close_pipe(tmp->fd);
+				}
 				execve(tmp->bin, tmp->argv, NULL);
 			}
-			ft_close_pipe(tmp->fd);
+			if (tmp->ispipe == 1)
+				ft_close_pipe(tmp->fd);
 		}
 		tmp = tmp->next;
 	}
@@ -365,8 +377,8 @@ void ft_event_loop(t_shell *shell)
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		print_list(list);
 		executor(shell);
+		/* print_list(list); */
 		free(str);
 		ft_free_2_linked_list(shell->list);
 	}
