@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static void print_list(t_mlist *list)
+void print_list(t_mlist *list)
 {
 	int n;
 	int l;
@@ -115,29 +115,6 @@ int ft_clear_file(char *filename)
 	return (0);
 }
 
-/* void	ft_redirect_to_file(int src_fd, char *filename, int mode) */
-/* { */
-/* 	int fd; */
-/* 	int res; */
-/* 	char c; */
-
-/* 	if (mode == 0) */
-/* 		fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT); */
-/* 	else if (mode == 1) */
-/* 		fd = open(filename, O_WRONLY | O_APPEND | O_CREAT); */
-/* 	res = read(src_fd, &c, 1); */
-/* 	while (res > 0 && c != '\0') */
-/* 	{ */
-/* 		write(fd, &c, 1); */
-/* 		res = read(src_fd, &c, 1); */
-/* 	} */
-/* 	printf(" after while %d\n", res); */
-/* 	write(fd, "\n", 1); */
-/* 	close(src_fd); */
-/* 	close(fd); */
-/* 	exit(0); */
-/* } */
-
 int	ft_redirect_error(char *command)
 {
 		printf("syntax error near unexpected token `%s`\n", command); 
@@ -232,60 +209,99 @@ int	ft_redirect_error(char *command)
 /* } */
 void ft_remove_redirect(char ***argv, int n)
 {
-	int		len;
+	int	len;
+	int step;
 
+	if ((*argv)[n + 1])
+		step = 2;
+	else
+		step = 1;
 	len = ft_len_nullable_2d_array(*argv);
 	while (n < len)
 	{
-		if (n + 2 < len && (*argv)[n + 2])
-			(*argv)[n] = (*argv)[n + 2];
+		if (n + step < len && (*argv)[n + step])
+			(*argv)[n] = (*argv)[n + step];
 		else 
 			(*argv)[n] = NULL;
 		n++;
 	}
 }
 
-int ft_redirect_input(t_mlist *list, int n)
+void ft_redirect_error_argument(t_mlist *list, int n)
+{
+	if (list->argv[n + 1])
+		ft_redirect_error(list->argv[n + 1]);
+	else
+		ft_redirect_error("newline");
+}
+
+int ft_one_redirect_input(t_mlist *list, int n)
 {
 	int fd;
 	int out;
+
+	fd = 0;
+	out = 1;
+	if (list->argv[n + 1])
+	{
+		fd = open(list->argv[n + 1], O_RDONLY | O_TRUNC | O_CREAT);
+		dup2(fd, 0);
+		close(fd);
+		out = 0;
+	}
+	else 
+		ft_redirect_error_argument(list, n);
+	return (out);
+}
+
+int ft_two_redirect_input(t_mlist *list, int n)
+{
+	int fd;
+	int out;
+	int lenkey;
 	char *string;
 
 	fd = 0;
-	out = 0;
-	if (ft_strncmp(list->argv[n], "<", 2) == 0)
+	out = 1;
+	lenkey = ft_strlen(list->argv[n + 1]) + 1;
+	if (list->argv[n + 1])
 	{
-		if (list->argv[n + 1])
+		pipe(list->fd);
+		string = readline(">");
+		while (ft_strncmp(string, list->argv[n + 1], lenkey) != 0)
 		{
-			fd = open(list->argv[n + 1], O_RDONLY | O_TRUNC | O_CREAT);
-			dup2(fd, 0);
-			close(fd);
-			out = 1;
+			write(list->fd[1], string, ft_strlen(string));
+			write(list->fd[1], "\n", 1); string = readline(">");
 		}
-		else 
-		{
-			ft_redirect_error("newline");
-			out = 0;
-		}
+		out = 0;
 	}
-	else if (ft_strncmp(list->argv[n], "<<", 3) == 0)
+	else 
+		ft_redirect_error_argument(list, n);
+	return (out);
+}
+
+int ft_check_redirect_argument(t_mlist *list, int n)
+{
+	if (list->argv[n + 1] && ft_strchr("<>|;&", list->argv[n + 1][0]) == NULL)
+		return (0);	
+	if (list->argv[n + 1] == NULL)
+		ft_redirect_error("newline");
+	else
+		ft_redirect_error(list->argv[n + 1]);
+	return (1);
+}
+
+int ft_redirect_input(t_mlist *list, int n)
+{
+	int out;
+
+	out = ft_check_redirect_argument(list, n);
+	if (out == 0)
 	{
-		if (list->argv[n + 1])
-		{
-			pipe(list->fd);
-			string = readline(">");
-			while (ft_strncmp(string, list->argv[n + 1], ft_strlen(list->argv[n + 1])) != 0)
-			{
-				write(list->fd[1], string, ft_strlen(string));
-				write(list->fd[1], "\n", 1); string = readline(">");
-			}
-			out = 1;
-		}
-		else 
-		{
-			ft_redirect_error("newline");
-			out = 0;
-		}
+		if (ft_strncmp(list->argv[n], "<", 2) == 0)
+			out = ft_one_redirect_input(list, n);
+		else
+			out = ft_two_redirect_input(list, n);
 	}
 	ft_remove_redirect(&list->argv, n);
 	return (out);
@@ -302,7 +318,8 @@ int ft_handle_redirect(t_mlist *list)
 	{
 		if (list->argv[n][0] == '<')
 			out = ft_redirect_input(list, n);
-		n++;
+		else
+			n++;
 	}
 	return (out);
 }
@@ -317,7 +334,7 @@ void	executor(t_shell *shell)
 	while (tmp)
 	{
 		red = ft_handle_redirect(tmp);
-		if (red == 0)
+		if (red == 1)
 			break;
 		if (tmp->bin)
 		{
@@ -331,49 +348,6 @@ void	executor(t_shell *shell)
 			}
 			ft_close_pipe(tmp->fd);
 		}
-		/* bltin = 0; */
-		/* if (tmp->argv[0]) */
-		/* 	bltin = ft_isbuiltin(tmp->argv[0]); */
-		/* if (tmp->bin || (tmp->prev && tmp->prev->command)) */
-		/* { */
-		/* 	pipe(tmp->fd); */
-		/* 	pid = fork(); */
-		/* 	if (pid == 0) */
-		/* 	{ */
-		/* 		if (tmp->prev == NULL && tmp->next == NULL) */
-		/* 		{ */
-		/* 			if (bltin) */
-		/* 				exit(builtin_executor(shell, tmp, bltin)); */
-		/* 			else */
-		/* 				execve( */
-		/* 						tmp->bin, */
-		/* 					   	tmp->argv, */
-		/* 					   	ft_env_to_arr(shell->env, 0, -1) */
-		/* 						); */
-		/* 		} */
-		/* 		if ((tmp->command && tmp->command[0] == '>') || */ 
-		/* 			(tmp->command && tmp->command[0] == '<')) */
-		/* 			ft_redirect_executor( */
-		/* 					shell, */
-		/* 				   	tmp, */
-		/* 				   	bltin, */
-		/* 				   	ft_env_to_arr(shell->env, 0, -1) */
-		/* 					); */
-		/* 		else if ((tmp->command && tmp->command[0] == '|') || */ 
-		/* 				(tmp->prev && tmp->prev->command[0] == '|') || */
-		/* 				tmp->bin) */
-		/* 			ft_pipe_executor( */
-		/* 					shell, */
-		/* 				   	tmp, */
-		/* 				   	bltin, */
-		/* 				   	ft_env_to_arr(shell->env, 0, -1) */
-		/* 					); */
-		/* 	} */
-		/* 	if (tmp->prev && tmp->prev->command) */
-		/* 		ft_close_pipe(tmp->prev->fd); */
-		/* } */
-		/* if (tmp->command && (tmp->command[0] == '>' || tmp->command[0] == '<')) */
-		/* 	tmp = tmp->next; */
 		tmp = tmp->next;
 	}
 	while (wait(NULL) != -1)
@@ -391,8 +365,8 @@ void ft_event_loop(t_shell *shell)
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		executor(shell);
 		print_list(list);
+		executor(shell);
 		free(str);
 		ft_free_2_linked_list(shell->list);
 	}

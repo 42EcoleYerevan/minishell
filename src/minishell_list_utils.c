@@ -22,6 +22,7 @@ t_mlist	*ft_list_new(t_shell *shell, char **argv, char *command)
 	new->command = command;
 	new->fd[0] = 0;
 	new->fd[1] = 1;
+	new->ispipe = 0;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);

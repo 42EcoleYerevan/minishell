@@ -22,6 +22,7 @@ typedef struct s_mlist
 	struct s_mlist *next;
 	struct s_mlist *prev;
 	int	fd[2];
+	int ispipe;
 	char *bin;
 	char **argv;
 	char *command;
