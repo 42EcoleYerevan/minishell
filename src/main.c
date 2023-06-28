@@ -115,23 +115,6 @@ int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 /* 	return (0); */
 /* } */
 
-int ft_handle_redirect(t_mlist *list)
-{
-	int n;
-	int out;
-
-	n = 0;
-	out = 0;
-	while (list->argv[n])
-	{
-		if (list->argv[n][0] == '<')
-			out = ft_redirect_input(list, n);
-		else
-			n++;
-	}
-	return (out);
-}
-
 void	executor(t_shell *shell)
 {
 	int		pid;
@@ -149,11 +132,7 @@ void	executor(t_shell *shell)
 			pid = fork();
 			if (pid == 0)
 			{
-				if (tmp->ispipe == 1)
-				{
-					dup2(tmp->fd[0], 0);
-					ft_close_pipe(tmp->fd);
-				}
+				ft_dup_redirect(tmp);
 				execve(tmp->bin, tmp->argv, NULL);
 			}
 			if (tmp->ispipe == 1)

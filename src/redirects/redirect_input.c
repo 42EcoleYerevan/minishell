@@ -2,10 +2,12 @@
 
 int ft_check_one_redirect_input_argument(t_mlist *list, int n)
 {
+	int check;
 	struct dirent *f;
 	DIR *d;
 
-	if (list->argv && list->argv[n + 1])
+	check = ft_check_next_redirect_input_argument(list, n);
+	if (check == 0)
 	{
 		if (access(list->argv[n + 1], R_OK) == 0)
 			return (0);
@@ -23,8 +25,7 @@ int ft_check_one_redirect_input_argument(t_mlist *list, int n)
 		rl_on_new_line();
 		return (1);
 	}
-	else 
-		return ft_redirect_unexpected_error("newline");
+	return (check);
 }
 
 int ft_one_redirect_input(t_mlist *list, int n)
@@ -35,15 +36,11 @@ int ft_one_redirect_input(t_mlist *list, int n)
 	fd = 0;
 	check = ft_check_one_redirect_input_argument(list, n);
 	if (check == 0)
-	{
-		list->ispipe = 1;
 		list->fd[0] = open(list->argv[n + 1], O_RDONLY);
-		list->fd[1] = list->fd[0];
-	}
 	return (check);
 }
 
-int ft_check_two_redirect_input_argument(t_mlist *list, int n)
+int ft_check_next_redirect_input_argument(t_mlist *list, int n)
 {
 	if (list->argv[n + 1] && ft_strchr("<>|;&", list->argv[n + 1][0]) == NULL)
 		return (0);	
@@ -62,7 +59,7 @@ int ft_two_redirect_input(t_mlist *list, int n)
 	char *string;
 
 	fd = 0;
-	check = ft_check_two_redirect_input_argument(list, n);
+	check = ft_check_next_redirect_input_argument(list, n);
 	if (check == 0)
 	{
 		lenkey = ft_strlen(list->argv[n + 1]) + 1;
@@ -87,5 +84,7 @@ int ft_redirect_input(t_mlist *list, int n)
 	else
 		out = ft_two_redirect_input(list, n);
 	ft_remove_redirect(&list->argv, n);
+	if (out == 0)
+		list->isinput = 1;
 	return (out);
 }

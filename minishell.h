@@ -22,6 +22,8 @@ typedef struct s_mlist
 	struct s_mlist *prev;
 	int	fd[2];
 	int ispipe;
+	int isoutput;
+	int isinput;
 	char *bin;
 	char **argv;
 	char *command;
@@ -160,11 +162,20 @@ void ft_redirect_error_argument(t_mlist *list, int n);
 // redirect input
 int ft_check_one_redirect_input_argument(t_mlist *list, int n);
 int ft_one_redirect_input(t_mlist *list, int n);
-int ft_check_two_redirect_input_argument(t_mlist *list, int n);
+int ft_check_next_redirect_input_argument(t_mlist *list, int n);
 int ft_two_redirect_input(t_mlist *list, int n);
 int ft_redirect_input(t_mlist *list, int n);
 
 // redirect utils
 void ft_remove_redirect(char ***argv, int n);
 
+// redirect
+int ft_handle_redirect(t_mlist *list);
+
+// redirect output
+int ft_redirect_two_output(t_mlist *list, int n);
+int ft_redirect_one_output(t_mlist *list, int n);
+int ft_redirect_output(t_mlist *list, int n);
+
+void	ft_close_pipe(int fd[2]);
 #endif

@@ -23,9 +23,12 @@ void	ft_list_clear(t_mlist **list)
 		free((*list)->argv[n]);
 		n++;
 	}
-	free((*list)->argv);
-	free((*list)->command);
-	free((*list)->bin);
+	if ((*list)->argv)
+		free((*list)->argv);
+	if ((*list)->command)
+		free((*list)->command);
+	if ((*list)->bin)
+		free((*list)->bin);
 	free(*list);
 	*list = NULL;
 }

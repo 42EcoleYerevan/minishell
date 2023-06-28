@@ -19,3 +19,25 @@ void ft_remove_redirect(char ***argv, int n)
 		n++;
 	}
 }
+
+void ft_dup_redirect(t_mlist *list)
+{
+	if (list->ispipe == 1)
+	{
+		dup2(list->fd[0], 0);
+		ft_close_pipe(list->fd);
+	}
+	else
+	{
+		if (list->isinput )
+		{
+			dup2(list->fd[0], 0);
+			close(list->fd[0]);
+		}
+		if (list->isoutput)
+		{
+			dup2(list->fd[1], 1);
+			close(list->fd[1]);
+		}
+	}
+}
