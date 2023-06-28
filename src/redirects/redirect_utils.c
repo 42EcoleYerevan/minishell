@@ -22,22 +22,22 @@ void ft_remove_redirect(char ***argv, int n)
 
 void ft_dup_redirect(t_mlist *list)
 {
-	if (list->ispipe == 1)
+	if (list->isheredoc == 1)
 	{
-		dup2(list->fd[0], 0);
-		ft_close_pipe(list->fd);
+		dup2(list->heredoc[0], 0);
+		ft_close_pipe(list->heredoc);
 	}
 	else
 	{
 		if (list->isinput )
 		{
-			dup2(list->fd[0], 0);
-			close(list->fd[0]);
+			dup2(list->heredoc[0], 0);
+			close(list->heredoc[0]);
 		}
 		if (list->isoutput)
 		{
-			dup2(list->fd[1], 1);
-			close(list->fd[1]);
+			dup2(list->heredoc[1], 1);
+			close(list->heredoc[1]);
 		}
 	}
 }

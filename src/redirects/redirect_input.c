@@ -30,13 +30,11 @@ int ft_check_one_redirect_input_argument(t_mlist *list, int n)
 
 int ft_one_redirect_input(t_mlist *list, int n)
 {
-	int fd;
 	int check;
 
-	fd = 0;
 	check = ft_check_one_redirect_input_argument(list, n);
 	if (check == 0)
-		list->fd[0] = open(list->argv[n + 1], O_RDONLY);
+		list->heredoc[0] = open(list->argv[n + 1], O_RDONLY);
 	return (check);
 }
 
@@ -53,23 +51,21 @@ int ft_check_next_redirect_input_argument(t_mlist *list, int n)
 
 int ft_two_redirect_input(t_mlist *list, int n)
 {
-	int fd;
 	int check;
 	int lenkey;
 	char *string;
 
-	fd = 0;
 	check = ft_check_next_redirect_input_argument(list, n);
 	if (check == 0)
 	{
 		lenkey = ft_strlen(list->argv[n + 1]) + 1;
-		list->ispipe = 1;
-		pipe(list->fd);
+		list->isheredoc = 1;
+		pipe(list->heredoc);
 		string = readline(">");
 		while (ft_strncmp(string, list->argv[n + 1], lenkey) != 0)
 		{
-			write(list->fd[1], string, ft_strlen(string));
-			write(list->fd[1], "\n", 1); string = readline(">");
+			write(list->heredoc[1], string, ft_strlen(string));
+			write(list->heredoc[1], "\n", 1); string = readline(">");
 		}
 	}
 	return (check);

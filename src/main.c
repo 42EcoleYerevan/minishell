@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <sys/_types/_null.h>
 
 void print_list(t_mlist *list)
 {
@@ -73,7 +74,7 @@ int ft_check_n_flag(char **arr)
 	return (0);
 }
 
-int	builtin_executor(t_shell *shell, t_mlist *list, int command)
+int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 {
 	int out;
 
@@ -101,19 +102,14 @@ int	builtin_executor(t_shell *shell, t_mlist *list, int command)
 	return (out);
 }
 
-/* int ft_clear_file(char *filename) */
-/* { */
-/* 	int	fd; */
+void ft_pipe(t_shell *shell, t_mlist *list)
+{
+	char **env;
 
-/* 	if (!filename) */
-/* 	{ */
-/* 		printf("syntax error near unexpected token `newline'\n"); */
-/* 		return (1); */
-/* 	} */
-/* 	fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT); */
-/* 	close(fd); */
-/* 	return (0); */
-/* } */
+	env = ft_env_to_arr(shell->env, 0, -1);
+	if (list->next == NULL && list->prev == NULL)
+		execve(list->bin, list->argv, env);
+}
 
 void	executor(t_shell *shell)
 {
@@ -129,14 +125,24 @@ void	executor(t_shell *shell)
 			break;
 		if (tmp->bin)
 		{
-			pid = fork();
-			if (pid == 0)
+			if (tmp->command)
 			{
-				ft_dup_redirect(tmp);
-				execve(tmp->bin, tmp->argv, NULL);
+				pipe(tmp->fd);
+				if (ft_isbuiltin(tmp->bin))
+				{
+					ft_builtin_executor(shell, tmp, ft_isbuiltin(tmp->bin));
+					continue;
+				}
+				pid = fork();
+				if (pid == 0)
+				{
+					ft_dup_redirect(tmp);
+					ft_pipe(shell, tmp);
+					/* execve(tmp->bin, tmp->argv, NULL); */
+				}
+				if (tmp->isheredoc == 1)
+					ft_close_pipe(tmp->heredoc);
 			}
-			if (tmp->ispipe == 1)
-				ft_close_pipe(tmp->fd);
 		}
 		tmp = tmp->next;
 	}

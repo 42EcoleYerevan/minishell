@@ -7,7 +7,7 @@ int ft_redirect_two_output(t_mlist *list, int n)
 
 	out = ft_check_next_redirect_input_argument(list, n);
 	if (out == 0)
-		list->fd[1] = open(list->argv[n + 1],
+		list->heredoc[1] = open(list->argv[n + 1],
 			   	O_WRONLY | O_APPEND | O_CREAT, 0644);	
 	return (out);
 }
@@ -18,7 +18,7 @@ int ft_redirect_one_output(t_mlist *list, int n)
 
 	out = ft_check_next_redirect_input_argument(list, n);
 	if (out == 0)
-		list->fd[1] = open(list->argv[n + 1],
+		list->heredoc[1] = open(list->argv[n + 1],
 			   	O_WRONLY | O_TRUNC | O_CREAT, 0644);	
 	return (out);
 }
