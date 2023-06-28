@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 t_mlist	*ft_list_new(t_shell *shell, char **argv, char *command)
 {

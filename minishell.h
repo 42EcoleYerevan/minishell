@@ -1,7 +1,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,7 +11,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <sys/wait.h>
-#include "./libft/libft.h"
+#include "libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -153,5 +152,19 @@ int		ft_echo(char **args, int n);
 //minishell_exit
 int		ft_exit(char **args);
 int		ft_num_check(char *arg);
+
+// redirect error
+int	ft_redirect_unexpected_error(char *command);
+void ft_redirect_error_argument(t_mlist *list, int n);
+
+// redirect input
+int ft_check_one_redirect_input_argument(t_mlist *list, int n);
+int ft_one_redirect_input(t_mlist *list, int n);
+int ft_check_two_redirect_input_argument(t_mlist *list, int n);
+int ft_two_redirect_input(t_mlist *list, int n);
+int ft_redirect_input(t_mlist *list, int n);
+
+// redirect utils
+void ft_remove_redirect(char ***argv, int n);
 
 #endif
