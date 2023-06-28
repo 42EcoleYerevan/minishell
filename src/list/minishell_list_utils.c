@@ -12,12 +12,24 @@
 
 #include "minishell.h"
 
+char *ft_find_command(char **arr)
+{
+	char **tmp;
+
+	tmp = arr;
+	while (*tmp && (*tmp[0] == '>' || *tmp[0] == '<'))
+		tmp += 2;
+	return (*tmp);
+}
+
 t_mlist	*ft_list_new(t_shell *shell, char **argv, char *command)
 {
 	t_mlist	*new;
+	char *bin;
 
+	bin = ft_find_command(argv);
 	new = (t_mlist *)malloc(sizeof(t_mlist));
-	new->bin = ft_get_absolute_path(shell, argv[0]);
+	new->bin = ft_get_absolute_path(shell, bin);
 	new->argv = argv;
 	new->command = command;
 	new->fd[0] = 0;

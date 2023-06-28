@@ -18,7 +18,7 @@ void	ft_list_clear(t_mlist **list)
 	if (!list || !*list)
 		return ;
 	n = 0;
-	while ((*list)->argv[n])
+	while ((*list)->argv && (*list)->argv[n])
 	{
 		free((*list)->argv[n]);
 		n++;

@@ -99,7 +99,7 @@ void	ft_list_clear(t_mlist **list);
 void	ft_free_2_linked_list(t_mlist **list);
 
 // list utils
-t_mlist *ft_list_new(t_shell *shell, char **argv, char *command);
+t_mlist	*ft_list_new(t_shell *shell, char **argv, char *command);
 t_mlist	*ft_list_last(t_mlist *list);
 void	ft_list_add_front(t_mlist **list, t_mlist *new);
 void	ft_list_add_back(t_mlist **list, t_mlist *new);
@@ -164,10 +164,11 @@ int ft_check_one_redirect_input_argument(t_mlist *list, int n);
 int ft_one_redirect_input(t_mlist *list, int n);
 int ft_check_next_redirect_input_argument(t_mlist *list, int n);
 int ft_two_redirect_input(t_mlist *list, int n);
-int ft_redirect_input(t_mlist *list, int n);
+int		ft_redirect_input(t_mlist *list, int n);
 
 // redirect utils
-void ft_remove_redirect(char ***argv, int n);
+void	ft_remove_redirect(char ***argv, int n);
+void	ft_dup_redirect(t_mlist *list);
 
 // redirect
 int ft_handle_redirect(t_mlist *list);
