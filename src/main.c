@@ -1,5 +1,5 @@
 #include "minishell.h"
-#include <sys/_types/_null.h>
+#include <unistd.h>
 
 void print_list(t_mlist *list)
 {
@@ -41,27 +41,27 @@ void	ft_close_pipe(int fd[2])
 int ft_isbuiltin(char *path)
 {
 	char	*command;
-	int		out;
+	int		n_command;
 
-	out = 0;
+	n_command = 0;
 	command = ft_get_command_from_path(path);
 	if (!command)
-		out = 0;
+		n_command = 0;
 	else if (ft_strncmp(command, "export", 7) == 0)
-		out = 1;
+		n_command = 1;
 	else if (ft_strncmp(command, "exit", 5) == 0)
-		out = 2;
+		n_command = 2;
 	else if (ft_strncmp(command, "cd", 3) == 0)
-		out = 3;
+		n_command = 3;
 	else if (ft_strncmp(command, "pwd", 4) == 0)
-		out = 4;
+		n_command = 4;
 	else if (ft_strncmp(command, "echo", 5) == 0)
-		out = 5;
+		n_command = 5;
 	else if (ft_strncmp(command, "env", 4) == 0)
-		out = 6;
+		n_command = 6;
 	else if (ft_strncmp(command, "unset", 6) == 0)
-		out = 7;
-	return (out);
+		n_command = 7;
+	return (n_command);
 }
 
 int ft_check_n_flag(char **arr)
@@ -74,11 +74,10 @@ int ft_check_n_flag(char **arr)
 	return (0);
 }
 
-int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
+int ft_builtin_bin(t_shell *shell, t_mlist *list, int command)
 {
 	int out;
 
-	printf("BUILTINS\n");
 	out = 1;
 	if (command == 1)
 		out = ft_export(list->argv + 1, &shell->env);
@@ -102,48 +101,89 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 	return (out);
 }
 
-void ft_pipe(t_shell *shell, t_mlist *list)
+void ft_dup_pipe(t_mlist *list)
+{
+	if (list->next)
+	{
+		dup2(list->fd[1], 1);
+		close(list->fd[1]);
+	}
+	if (list->prev)
+	{
+		dup2(list->prev->fd[0], 0);
+		close(list->prev->fd[0]);
+	}
+}
+
+int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
+{
+	int status;
+	int red;
+
+	status = 1;
+	red = ft_handle_redirect(list);
+	if (red == 1)
+		return (red);
+	ft_dup_pipe(list);
+	if (list->isinput || list->isoutput)
+	{
+		if (fork() == 0)
+		{
+			ft_dup_redirect(list);
+			exit(ft_builtin_bin(shell, list, command));
+		}
+	}
+	else 
+		status = ft_builtin_bin(shell, list, command);
+	if (list->next)
+		ft_close_pipe(list->fd);
+	if (list->prev)
+		ft_close_pipe(list->prev->fd);
+	if (list->isheredoc || list->isinput || list->isoutput)
+		ft_close_pipe(list->heredoc);
+	return (status);
+}
+
+void ft_close_fd(t_mlist *list)
+{
+	if (list->next)
+		close(list->fd[1]);
+	if (list->prev)
+		close(list->prev->fd[0]);
+}
+
+int ft_executor(t_shell *shell, t_mlist *list)
 {
 	char **env;
 
 	env = ft_env_to_arr(shell->env, 0, -1);
-	if (list->next == NULL && list->prev == NULL)
+	ft_handle_redirect(list);
+	if (fork() == 0)
+	{
+		ft_dup_pipe(list);
+		ft_dup_redirect(list);
+		ft_close_fd(list);
 		execve(list->bin, list->argv, env);
+	}
+	ft_close_fd(list);
+	return (0);
 }
 
 void	executor(t_shell *shell)
 {
 	int		pid;
-	int		red;
+	int		status;
 	t_mlist	*tmp;
 
+	pid = 1;
 	tmp = *shell->list;
 	while (tmp)
 	{
-		red = ft_handle_redirect(tmp);
-		if (red == 1)
-			break;
-		if (tmp->bin)
-		{
-			if (tmp->command)
-			{
-				pipe(tmp->fd);
-				if (ft_isbuiltin(tmp->bin))
-				{
-					ft_builtin_executor(shell, tmp, ft_isbuiltin(tmp->bin));
-					continue;
-				}
-				pid = fork();
-				if (pid == 0)
-				{
-					ft_dup_redirect(tmp);
-					ft_pipe(shell, tmp);
-					/* execve(tmp->bin, tmp->argv, NULL); */
-				}
-				if (tmp->isheredoc == 1)
-					ft_close_pipe(tmp->heredoc);
-			}
-		}
+		if (tmp->next)
+			pipe(tmp->fd);
+		status = ft_executor(shell, tmp);
+		if (status)
+			break ;
 		tmp = tmp->next;
 	}
 	while (wait(NULL) != -1)
@@ -161,8 +201,8 @@ void ft_event_loop(t_shell *shell)
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		executor(shell);
 		/* print_list(list); */
+		executor(shell);
 		free(str);
 		ft_free_2_linked_list(shell->list);
 	}
