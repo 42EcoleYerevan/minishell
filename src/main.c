@@ -115,41 +115,40 @@ void ft_dup_pipe(t_mlist *list)
 	}
 }
 
-int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
-{
-	int status;
-	int red;
-
-	status = 1;
-	red = ft_handle_redirect(list);
-	if (red == 1)
-		return (red);
-	ft_dup_pipe(list);
-	if (list->isinput || list->isoutput)
-	{
-		if (fork() == 0)
-		{
-			ft_dup_redirect(list);
-			exit(ft_builtin_bin(shell, list, command));
-		}
-	}
-	else 
-		status = ft_builtin_bin(shell, list, command);
-	if (list->next)
-		ft_close_pipe(list->fd);
-	if (list->prev)
-		ft_close_pipe(list->prev->fd);
-	if (list->isheredoc || list->isinput || list->isoutput)
-		ft_close_pipe(list->heredoc);
-	return (status);
-}
-
 void ft_close_fd(t_mlist *list)
 {
 	if (list->next)
 		close(list->fd[1]);
 	if (list->prev)
 		close(list->prev->fd[0]);
+}
+
+int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
+{
+	int status;
+
+	status = 1;
+	ft_handle_redirect(list);
+	if (list->isinput || list->isoutput)
+	{
+		if (fork() == 0)
+		{
+			ft_dup_pipe(list);
+			ft_dup_redirect(list);
+			ft_close_fd(list);
+			exit(ft_builtin_bin(shell, list, command));
+		}
+	}
+	else
+	{
+		ft_dup_pipe(list);
+		ft_dup_redirect(list);
+		ft_close_fd(list);
+		ft_builtin_bin(shell, list, command);
+	}
+	if (list->isheredoc || list->isinput || list->isoutput)
+		ft_close_pipe(list->heredoc);
+	return (status);
 }
 
 int ft_executor(t_shell *shell, t_mlist *list)
@@ -165,6 +164,8 @@ int ft_executor(t_shell *shell, t_mlist *list)
 		ft_close_fd(list);
 		execve(list->bin, list->argv, env);
 	}
+	if (list->isheredoc || list->isinput || list->isoutput)
+		ft_close_pipe(list->heredoc);
 	ft_close_fd(list);
 	return (0);
 }
@@ -181,7 +182,10 @@ void	executor(t_shell *shell)
 	{
 		if (tmp->next)
 			pipe(tmp->fd);
-		status = ft_executor(shell, tmp);
+		if (ft_isbuiltin(tmp->bin))
+			status = ft_builtin_executor(shell, tmp, ft_isbuiltin(tmp->bin));
+		else
+			status = ft_executor(shell, tmp);
 		if (status)
 			break ;
 		tmp = tmp->next;
