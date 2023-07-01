@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:56 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/21 20:03:58 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/01 17:09:00 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_unset_valid(char *arg)
 {
 	int	status;
 	int	i;
-	
+
 	i = 0;
 	if (!arg)
 		return (0);

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_builtin_utils.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
+/*   Updated: 2023/07/01 17:14:33 by almeliky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int ft_isbuiltin(char *path)
+int	ft_isbuiltin(char *path)
 {
 	char	*command;
 	int		n_command;
@@ -26,9 +38,10 @@ int ft_isbuiltin(char *path)
 	return (n_command);
 }
 
-int ft_check_n_flag(char **arr)
+int	ft_check_n_flag(char **arr)
 {
 	char	*tmp;
+
 	if (!*arr)
 		return (0);
 	arr++;
@@ -36,13 +49,13 @@ int ft_check_n_flag(char **arr)
 	if (tmp == NULL)
 		return (1);
 	else if (*(tmp + 1) == 'n')
-		return 0;
+		return (0);
 	return (1);
 }
 
-int ft_builtin_bin(t_shell *shell, t_mlist *list, int command)
+int	ft_builtin_bin(t_shell *shell, t_mlist *list, int command)
 {
-	int out;
+	int	out;
 
 	out = 1;
 	if (command == 1)
@@ -69,7 +82,7 @@ int ft_builtin_bin(t_shell *shell, t_mlist *list, int command)
 
 int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 {
-	int status;
+	int	status;
 
 	status = ft_handle_redirect(list);
 	if (list->isinput || list->isoutput)
@@ -96,9 +109,9 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 	return (status);
 }
 
-int ft_builtin_handler(t_shell *shell, t_mlist *list)
+int	ft_builtin_handler(t_shell *shell, t_mlist *list)
 {
-	int status;
+	int	status;
 
 	status = 1;
 	if (ft_isbuiltin(list->bin) || ft_isbuiltin(list->argv[0]))
@@ -106,15 +119,13 @@ int ft_builtin_handler(t_shell *shell, t_mlist *list)
 		if (ft_isbuiltin(list->bin))
 			status = ft_builtin_executor(
 					shell,
-				   	list,
-				   	ft_isbuiltin(list->bin)
-					);
+					list,
+					ft_isbuiltin(list->bin));
 		else
 			status = ft_builtin_executor(
 					shell,
-				   	list,
-				   	ft_isbuiltin(list->argv[0])
-					);
+					list,
+					ft_isbuiltin(list->argv[0]));
 	}
 	return (status);
 }
