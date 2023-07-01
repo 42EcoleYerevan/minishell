@@ -131,8 +131,7 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 {
 	int status;
 
-	status = 1;
-	ft_handle_redirect(list);
+	status = ft_handle_redirect(list);
 	if (list->isinput || list->isoutput)
 	{
 		if (fork() == 0)
@@ -183,9 +182,12 @@ int ft_builtin_handler(t_shell *shell, t_mlist *list)
 int ft_executor(t_shell *shell, t_mlist *list)
 {
 	char **env;
+	int status;
 
 	env = ft_env_to_arr(shell->env, 0, -1);
-	ft_handle_redirect(list);
+	status = ft_handle_redirect(list);
+	if (status != 0)
+		return (status);
 	if (fork() == 0)
 	{
 		ft_dup_pipe(list);
@@ -193,7 +195,7 @@ int ft_executor(t_shell *shell, t_mlist *list)
 		ft_dup_redirect(list);
 		if (list->isheredoc || list->isinput || list->isoutput)
 			ft_close_pipe(list->heredoc);
-		execve(list->bin, list->argv, env);
+		return execve(list->bin, list->argv, env);
 	}
 	if (list->isheredoc || list->isinput || list->isoutput)
 		ft_close_pipe(list->heredoc);
@@ -204,7 +206,6 @@ int ft_executor(t_shell *shell, t_mlist *list)
 void	executor(t_shell *shell)
 {
 	int		pid;
-	int		status;
 	t_mlist	*tmp;
 
 	pid = 1;
@@ -216,19 +217,19 @@ void	executor(t_shell *shell)
 			if (tmp->next)
 				pipe(tmp->fd);
 			if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
-				status = ft_builtin_handler(shell, tmp);
+				exit_status = ft_builtin_handler(shell, tmp);
 			else
-				status = ft_executor(shell, tmp);
-			exit_status = status;
-			if (status)
+				exit_status = ft_executor(shell, tmp);
+			if (exit_status != 0)
 				break ;
 		}
 		else 
 			printf("minishell: %s: command not found\n", tmp->argv[0]);
 		tmp = tmp->next;
 	}
-	while (wait(NULL) != -1)
-		;
+	/* while(wait(NULL) != -1); */
+	while(waitpid(-1, &exit_status, 0) != -1);
+	exit_status = exit_status / 256;
 }
 
 void ft_event_loop(t_shell *shell)
