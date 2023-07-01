@@ -43,10 +43,9 @@ int ft_check_next_redirect_input_argument(t_mlist *list, int n)
 	if (list->argv[n + 1] && ft_strchr("<>|;&", list->argv[n + 1][0]) == NULL)
 		return (0);	
 	if (list->argv[n + 1] == NULL)
-		ft_redirect_unexpected_error("newline");
+		return ft_redirect_unexpected_error("newline");
 	else
-		ft_redirect_unexpected_error(list->argv[n + 1]);
-	return (1);
+		return ft_redirect_unexpected_error(list->argv[n + 1]);
 }
 
 int ft_two_redirect_input(t_mlist *list, int n)

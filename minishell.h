@@ -158,7 +158,7 @@ int		ft_num_check(char *arg);
 
 // redirect error
 int	ft_redirect_unexpected_error(char *command);
-void ft_redirect_error_argument(t_mlist *list, int n);
+int ft_redirect_error_argument(t_mlist *list, int n);
 
 // redirect input
 int ft_check_one_redirect_input_argument(t_mlist *list, int n);
@@ -180,4 +180,20 @@ int ft_redirect_one_output(t_mlist *list, int n);
 int ft_redirect_output(t_mlist *list, int n);
 
 void	ft_close_pipe(int fd[2]);
+
+// minishell builtin utils
+int ft_isbuiltin(char *path);
+int ft_check_n_flag(char **arr);
+int ft_builtin_bin(t_shell *shell, t_mlist *list, int command);
+int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command);
+int ft_builtin_handler(t_shell *shell, t_mlist *list);
+
+// minishell pipe utils
+void	ft_close_pipe(int fd[2]);
+void ft_dup_pipe(t_mlist *list);
+void ft_close_fd(t_mlist *list);
+
+// minishell executor
+int ft_executor(t_shell *shell, t_mlist *list);
+
 #endif
