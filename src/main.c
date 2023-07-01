@@ -1,5 +1,5 @@
 #include "minishell.h"
-#include <unistd.h>
+#include <stdlib.h>
 
 void print_list(t_mlist *list)
 {
@@ -66,12 +66,16 @@ int ft_isbuiltin(char *path)
 
 int ft_check_n_flag(char **arr)
 {
+	char	*tmp;
 	if (!*arr)
 		return (0);
 	arr++;
-	if (ft_strchr(*arr, 'n') == 0)
+	tmp = ft_strchr(*arr, '-');
+	if (tmp == NULL)
 		return (1);
-	return (0);
+	else if (*(tmp + 1) == 'n')
+		return 0;
+	return (1);
 }
 
 int ft_builtin_bin(t_shell *shell, t_mlist *list, int command)
@@ -151,6 +155,29 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 	return (status);
 }
 
+int ft_builtin_handler(t_shell *shell, t_mlist *list)
+{
+	int status;
+
+	status = 1;
+	if (ft_isbuiltin(list->bin) || ft_isbuiltin(list->argv[0]))
+	{
+		if (ft_isbuiltin(list->bin))
+			status = ft_builtin_executor(
+					shell,
+				   	list,
+				   	ft_isbuiltin(list->bin)
+					);
+		else
+			status = ft_builtin_executor(
+					shell,
+				   	list,
+				   	ft_isbuiltin(list->argv[0])
+					);
+	}
+	return (status);
+}
+
 int ft_executor(t_shell *shell, t_mlist *list)
 {
 	char **env;
@@ -180,14 +207,20 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
-		if (tmp->next)
-			pipe(tmp->fd);
-		if (ft_isbuiltin(tmp->bin))
-			status = ft_builtin_executor(shell, tmp, ft_isbuiltin(tmp->bin));
-		else
-			status = ft_executor(shell, tmp);
-		if (status)
-			break ;
+		if (tmp->bin || ft_isbuiltin(tmp->argv[0]))
+		{
+			if (tmp->next)
+				pipe(tmp->fd);
+			if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
+				status = ft_builtin_handler(shell, tmp);
+			else
+				status = ft_executor(shell, tmp);
+			exit_status = status;
+			if (status)
+				break ;
+		}
+		else 
+			printf("minishell: %s: command not found\n", tmp->argv[0]);
 		tmp = tmp->next;
 	}
 	while (wait(NULL) != -1)
@@ -205,18 +238,21 @@ void ft_event_loop(t_shell *shell)
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		print_list(list);
+		/* print_list(list); */
 		executor(shell);
 		free(str);
 		ft_free_2_linked_list(shell->list);
 	}
 }
 
+int exit_status;
+
 int	main(int argc, char **argv, char **menv)
 {
 	t_shell	*shell;
 
 	(void) argv;
+
 	if (argc == 1)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
@@ -226,5 +262,5 @@ int	main(int argc, char **argv, char **menv)
 		using_history();
 		ft_event_loop(shell);
 	}
-	return (0);
+	return (exit_status);
 }

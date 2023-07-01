@@ -1,12 +1,14 @@
 #include "../minishell.h"
+#include "libft/libft.h"
 
 char	*ft_get_env_value_by_name(t_shell *shell, char *name)
 {
 	char	*tmp;
 	char	*out;
 
+	if (*name == '?')
+		return ft_itoa(exit_status);
 	tmp = ft_substr(name, 0, ft_len_env_key(name));
-	puts(tmp);
 	out = ft_get_env_value(shell, tmp);
 	free(tmp);
 	return (out);
@@ -69,4 +71,3 @@ int	ft_env(t_env *env)
 	}
 	return (0);
 }
-

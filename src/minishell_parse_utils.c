@@ -57,6 +57,8 @@ int	ft_len_env_key(char *str)
 	char	sep[] = " <>|&./?@#$%^*-=+,[]{}\'\"";
 
 	len = 0;
+	if (*str == '?')
+		return (1);
 	while (str[len] && ft_strchr(sep, str[len]) == 0)
 		len++;
 	return (len);
