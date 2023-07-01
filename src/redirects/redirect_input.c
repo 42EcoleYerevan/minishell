@@ -67,6 +67,7 @@ int ft_two_redirect_input(t_mlist *list, int n)
 			write(list->heredoc[1], string, ft_strlen(string));
 			write(list->heredoc[1], "\n", 1); string = readline(">");
 		}
+		close(list->heredoc[1]);
 	}
 	return (check);
 }
