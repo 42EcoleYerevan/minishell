@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirect_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/01 20:42:44 by almeliky          #+#    #+#             */
+/*   Updated: 2023/07/01 20:43:12 by almeliky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void ft_remove_redirect(char ***argv, int n)
+void	ft_remove_redirect(char ***argv, int n)
 {
 	int	len;
-	int step;
+	int	step;
 
 	if ((*argv)[n + 1])
 		step = 2;
@@ -14,15 +26,15 @@ void ft_remove_redirect(char ***argv, int n)
 	{
 		if (n + step < len && (*argv)[n + step])
 			(*argv)[n] = (*argv)[n + step];
-		else 
+		else
 			(*argv)[n] = NULL;
 		n++;
 	}
 }
 
-void ft_dup_redirect(t_mlist *list)
+void	ft_dup_redirect(t_mlist *list)
 {
-	if (list->isinput )
+	if (list->isinput)
 	{
 		dup2(list->heredoc[0], 0);
 		close(list->heredoc[0]);

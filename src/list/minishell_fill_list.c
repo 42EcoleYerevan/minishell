@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 20:59:28 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/11 20:36:22 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/01 20:55:27 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,11 @@ static void	ft_set_list_command(t_shell *shell,
 		ft_list_add_back(list, ft_list_new(shell, argv, NULL));
 }
 
-int ft_len_nullable_2d_array(char **arr)
+int	ft_len_nullable_2d_array(char **arr)
 {
-	int n = 0;
+	int	n;
 
+	n = 0;
 	if (!arr)
 		return (0);
 	while (arr[n])

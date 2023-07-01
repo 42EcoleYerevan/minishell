@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_env.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/01 20:58:18 by almeliky          #+#    #+#             */
+/*   Updated: 2023/07/01 20:59:12 by almeliky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 #include "libft/libft.h"
 
@@ -7,7 +19,7 @@ char	*ft_get_env_value_by_name(t_shell *shell, char *name)
 	char	*out;
 
 	if (*name == '?')
-		return ft_itoa(exit_status);
+		return (ft_itoa(exit_status));
 	tmp = ft_substr(name, 0, ft_len_env_key(name));
 	out = ft_get_env_value(shell, tmp);
 	free(tmp);
@@ -50,10 +62,10 @@ char	**ft_env_to_arr(t_env *env, int len, int i)
 		start = start->next;
 	}
 	len = 0;
-	/* while (arr[len]) */
-	/* 	printf("%s\n", arr[len++]); */
 	return (arr);
 }
+// while (arr[len])
+// printf("%s\n", arr[len++]);
 
 int	ft_env(t_env *env)
 {

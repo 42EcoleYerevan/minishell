@@ -6,15 +6,15 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:44:39 by agladkov          #+#    #+#             */
-/*   Updated: 2023/06/11 20:28:55 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/01 20:54:46 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *ft_find_command(char **arr)
+char	*ft_find_command(char **arr)
 {
-	char **tmp;
+	char	**tmp;
 
 	tmp = arr;
 	while (*tmp && (*tmp[0] == '>' || *tmp[0] == '<'))
@@ -25,7 +25,7 @@ char *ft_find_command(char **arr)
 t_mlist	*ft_list_new(t_shell *shell, char **argv, char *command)
 {
 	t_mlist	*new;
-	char *bin;
+	char	*bin;
 
 	bin = ft_find_command(argv);
 	new = (t_mlist *)malloc(sizeof(t_mlist));
