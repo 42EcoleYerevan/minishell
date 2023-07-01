@@ -205,7 +205,7 @@ void ft_event_loop(t_shell *shell)
 		ctrl_d_handler(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		/* print_list(list); */
+		print_list(list);
 		executor(shell);
 		free(str);
 		ft_free_2_linked_list(shell->list);
