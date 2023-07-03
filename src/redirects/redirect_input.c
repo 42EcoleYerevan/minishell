@@ -64,8 +64,11 @@ int ft_two_redirect_input(t_mlist *list, int n)
 		while (ft_strncmp(string, list->argv[n + 1], lenkey) != 0)
 		{
 			write(list->heredoc[1], string, ft_strlen(string));
-			write(list->heredoc[1], "\n", 1); string = readline(">");
+			write(list->heredoc[1], "\n", 1);
+			free(string);
+		   	string = readline(">");
 		}
+		free(string);
 		close(list->heredoc[1]);
 	}
 	return (check);

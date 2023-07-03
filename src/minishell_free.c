@@ -2,12 +2,15 @@
 
 void	ft_free_2d_array_with_null(char **array)
 {
+	char **tmp;
+
 	if (!array)
 		return ;
-	while (*array)
+	tmp = array;
+	while (*tmp)
 	{
-		free(*array);
-		array++;
+		free(*tmp);
+		tmp++;
 	}
 }
 

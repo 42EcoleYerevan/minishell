@@ -18,7 +18,10 @@ char *ft_find_command(char **arr)
 
 	tmp = arr;
 	while (*tmp && (*tmp[0] == '>' || *tmp[0] == '<'))
-		tmp += 2;
+		if (*(tmp + 1))
+			tmp += 2;
+		else
+			return (NULL);
 	return (*tmp);
 }
 

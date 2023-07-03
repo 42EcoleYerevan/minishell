@@ -19,7 +19,7 @@ LIBFT_A = $(LIBFT)/libft.a
 RLDIR = ./readline
 RL_A = $(RLDIR)/libreadline.a
 
-CFLAGS = -Wall -Werror -Wextra -I$(RLDIR) -I$(HEADERDIR) -fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -I$(RLDIR) -I$(HEADERDIR) -g #-fsanitize=address
 LIBS = -lreadline -L$(LIBFT) -lft -lncurses
 LIBS += -L$(RLDIR) 
 

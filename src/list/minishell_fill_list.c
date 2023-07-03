@@ -52,11 +52,9 @@ t_mlist	*ft_fill_list(t_shell *shell, char *str)
 		construction = ft_substr(str, 0, ft_len_construction(str));
 		argv = ft_parse_construction(shell, construction);
 		n = ft_amount_commands(construction) - 1;
+		free(construction);
 		if (n == -1)
-		{
-			free(construction);
 			return (NULL);
-		}
 		ft_set_list_command(shell, &list, argv, n);
 		str += ft_len_construction(str);
 	}

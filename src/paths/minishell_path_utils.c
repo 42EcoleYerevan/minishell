@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <dirent.h>
 
 static char	*ft_check_path(char *path, char *command, DIR *d)
 {
@@ -14,30 +15,43 @@ static char	*ft_check_path(char *path, char *command, DIR *d)
 	return (NULL);
 }
 
-char	*ft_find_path(t_shell *shell, char *command)
+char	*ft_find_path_loop(char **paths, char *command) 
 {
-	DIR		*d;
-	char	**paths;
-	char	*out;
+	char *tmp;
+	DIR *d;
 
-	paths = ft_split(ft_get_env_value(shell, "PATH"), ':');
-	if (!paths)
-		return (NULL);
 	while (*paths)
 	{
 		d = opendir(*paths);
-		out = ft_check_path(*paths, command, d);
-		if (out)
+		tmp = ft_check_path(*paths, command, d);
+		if (tmp)
 		{
 			ft_free_2d_array_with_null(paths);
 			closedir(d);
-			return (out);
+			return (tmp);
 		}
+		closedir(d);
 		free(*paths);
 		paths++;
 	}
 	ft_free_2d_array_with_null(paths);
-	closedir(d);
+	return (NULL);
+}
+
+char	*ft_find_path(t_shell *shell, char *command)
+{
+	char	**paths;
+	char	*tmp;
+
+	tmp = ft_get_env_value(shell, "PATH");
+	paths = ft_split(tmp, ':');
+	free(tmp);
+	if (!paths)
+		return (NULL);
+	tmp = ft_find_path_loop(paths, command);
+	free(paths);
+	if (tmp)
+		return (tmp);
 	return (NULL);
 }
 

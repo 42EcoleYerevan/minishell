@@ -22,11 +22,11 @@ void print_list(t_mlist *list)
 		if (list->next)
 			printf("next\t: %p\n", list->next);
 		else
-			printf("next\t: NULL\n");
+			printf("next\t: (null)\n");
 		if (list->prev)
 			printf("prev\t: %p\n\n", list->prev);
 		else
-			printf("prev\t: NULL\n\n");
+			printf("prev\t: (null)\n\n");
 		list = list->next;
 	}
 }
@@ -40,7 +40,8 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
-		if (tmp->bin || ft_isbuiltin(tmp->argv[0]))
+		if (tmp->bin || (tmp->argv[0] && 
+				 (tmp->argv[0][0] == '<' || tmp->argv[0][0] == '>')))
 		{
 			if (tmp->next)
 				pipe(tmp->fd);

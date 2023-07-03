@@ -15,7 +15,10 @@ void ft_remove_redirect(char ***argv, int n)
 		if (n + step < len && (*argv)[n + step])
 			(*argv)[n] = (*argv)[n + step];
 		else 
+		{
+			free((*argv)[n]);
 			(*argv)[n] = NULL;
+		}
 		n++;
 	}
 }
