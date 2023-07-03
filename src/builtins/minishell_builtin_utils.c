@@ -32,6 +32,8 @@ int ft_check_n_flag(char **arr)
 	if (!*arr)
 		return (0);
 	arr++;
+	if (!*arr)
+		return (1);
 	tmp = ft_strchr(*arr, '-');
 	if (tmp == NULL)
 		return (1);

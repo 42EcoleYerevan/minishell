@@ -102,5 +102,6 @@ char	*ft_check_file_in_current_directory(t_shell *shell, char *filename)
 		free(pwd);
 		return (out);
 	}
+	free(pwd);
 	return (NULL);
 }

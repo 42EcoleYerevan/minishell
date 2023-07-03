@@ -12,12 +12,12 @@ void ft_dup_pipe(t_mlist *list)
 	if (list->next)
 	{
 		dup2(list->fd[1], 1);
-		close(list->fd[1]);
+		ft_close_pipe(list->fd);
 	}
 	if (list->prev)
 	{
 		dup2(list->prev->fd[0], 0);
-		close(list->prev->fd[0]);
+		ft_close_pipe(list->prev->fd);
 	}
 }
 
@@ -26,6 +26,6 @@ void ft_close_fd(t_mlist *list)
 	if (list->next)
 		close(list->fd[1]);
 	if (list->prev)
-		close(list->prev->fd[0]);
+		ft_close_pipe(list->prev->fd);
 }
 
