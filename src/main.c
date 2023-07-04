@@ -40,7 +40,8 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
-		if (tmp->bin || tmp->argv[0])
+		if (tmp->bin || ft_isbuiltin(tmp->argv[0]) || \
+				tmp->argv[0][0] == '<' || tmp->argv[0][0] == '>')
 		{
 			if (tmp->next)
 				pipe(tmp->fd);
