@@ -1,5 +1,21 @@
 #include "minishell.h"
 
+void ft_rebase_redirect_argv(char ***argv, int n, int step, int len)
+{
+	if (n + step < len && (*argv)[n + step])
+	{
+		free((*argv)[n]);
+		(*argv)[n] = (*argv)[n + step];
+		(*argv)[n + step] = NULL;;
+	}
+	else 
+	{
+		if ((*argv)[n])
+			free((*argv)[n]);
+		(*argv)[n] = NULL;
+	}
+}
+
 void ft_remove_redirect(char ***argv, int n)
 {
 	int	len;
@@ -12,14 +28,8 @@ void ft_remove_redirect(char ***argv, int n)
 	len = ft_len_nullable_2d_array(*argv);
 	while (n < len)
 	{
-		if (n + step < len && (*argv)[n + step])
-			(*argv)[n] = (*argv)[n + step];
-		else 
-		{
-			free((*argv)[n]);
-			(*argv)[n] = NULL;
-		}
-		n++;
+		ft_rebase_redirect_argv(argv, n, step, len);
+		n ++;
 	}
 }
 

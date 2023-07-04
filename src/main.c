@@ -1,35 +1,35 @@
 #include "minishell.h"
 
-void print_list(t_mlist *list)
-{
-	int n;
-	int l;
+/* void print_list(t_mlist *list) */
+/* { */
+/* 	int n; */
+/* 	int l; */
 
-	l = 0;
-	while (list)
-	{
-		printf("\033[33mlist #%d\n\033[0m", l++);
-		printf("bin \t: %s\n", (list->bin));
-		n = 0;
-		while (list->argv[n])
-		{
-			printf("argv[%d]\t: %s\n", n, (list->argv[n]));
-			n++;
-		}
-		if (list->argv[0] == NULL)
-			printf("argv[0]\t: (null)\n");
-		printf("command\t: %s\n", (list->command));
-		if (list->next)
-			printf("next\t: %p\n", list->next);
-		else
-			printf("next\t: (null)\n");
-		if (list->prev)
-			printf("prev\t: %p\n\n", list->prev);
-		else
-			printf("prev\t: (null)\n\n");
-		list = list->next;
-	}
-}
+/* 	l = 0; */
+/* 	while (list) */
+/* 	{ */
+/* 		printf("\033[33mlist #%d\n\033[0m", l++); */
+/* 		printf("bin \t: %s\n", (list->bin)); */
+/* 		n = 0; */
+/* 		while (list->argv[n]) */
+/* 		{ */
+/* 			printf("argv[%d]\t: %s\n", n, (list->argv[n])); */
+/* 			n++; */
+/* 		} */
+/* 		if (list->argv[0] == NULL) */
+/* 			printf("argv[0]\t: (null)\n"); */
+/* 		printf("command\t: %s\n", (list->command)); */
+/* 		if (list->next) */
+/* 			printf("next\t: %p\n", list->next); */
+/* 		else */
+/* 			printf("next\t: (null)\n"); */
+/* 		if (list->prev) */
+/* 			printf("prev\t: %p\n\n", list->prev); */
+/* 		else */
+/* 			printf("prev\t: (null)\n\n"); */
+/* 		list = list->next; */
+/* 	} */
+/* } */
 
 void	executor(t_shell *shell)
 {

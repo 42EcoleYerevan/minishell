@@ -14,7 +14,9 @@ int ft_executor(t_shell *shell, t_mlist *list)
 		ft_dup_pipe(list);
 		ft_close_fd(list);
 		ft_dup_redirect(list);
-		return execve(list->bin, list->argv, env);
+		if (list->bin)
+			return execve(list->bin, list->argv, env);
+		exit(0);
 	}
 	ft_close_fd(list);
 	ft_free_2d_array_with_null(env);
