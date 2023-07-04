@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirect_input.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/01 20:45:04 by almeliky          #+#    #+#             */
+/*   Updated: 2023/07/01 20:49:42 by almeliky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int ft_check_one_redirect_input_argument(t_mlist *list, int n)
+int	ft_check_one_redirect_input_argument(t_mlist *list, int n)
 {
-	int check;
-	struct dirent *f;
-	DIR *d;
+	int				check;
+	struct dirent	*f;
+	DIR				*d;
 
 	check = ft_check_next_redirect_input_argument(list, n);
 	if (check == 0)
@@ -13,11 +25,11 @@ int ft_check_one_redirect_input_argument(t_mlist *list, int n)
 			return (0);
 		d = opendir("./");
 		f = readdir(d);
-		while (f )
+		while (f)
 		{
 			if (ft_strncmp(list->argv[n + 1],
-					   	f->d_name,
-					   	ft_strlen(f->d_name) + 1) == 0)
+					f->d_name,
+					ft_strlen(f->d_name) + 1) == 0)
 				return (0);
 			f = readdir(d);
 		}
@@ -28,9 +40,9 @@ int ft_check_one_redirect_input_argument(t_mlist *list, int n)
 	return (check);
 }
 
-int ft_one_redirect_input(t_mlist *list, int n)
+int	ft_one_redirect_input(t_mlist *list, int n)
 {
-	int check;
+	int	check;
 
 	check = ft_check_one_redirect_input_argument(list, n);
 	if (check == 0)
@@ -38,21 +50,21 @@ int ft_one_redirect_input(t_mlist *list, int n)
 	return (check);
 }
 
-int ft_check_next_redirect_input_argument(t_mlist *list, int n)
+int	ft_check_next_redirect_input_argument(t_mlist *list, int n)
 {
 	if (list->argv[n + 1] && ft_strchr("<>|;&", list->argv[n + 1][0]) == NULL)
-		return (0);	
+		return (0);
 	if (list->argv[n + 1] == NULL)
-		return ft_redirect_unexpected_error("newline");
+		return (ft_redirect_unexpected_error("newline"));
 	else
-		return ft_redirect_unexpected_error(list->argv[n + 1]);
+		return (ft_redirect_unexpected_error(list->argv[n + 1]));
 }
 
-int ft_two_redirect_input(t_mlist *list, int n)
+int	ft_two_redirect_input(t_mlist *list, int n)
 {
-	int check;
-	int lenkey;
-	char *string;
+	int		check;
+	int		lenkey;
+	char	*string;
 
 	check = ft_check_next_redirect_input_argument(list, n);
 	if (check == 0)
@@ -74,9 +86,9 @@ int ft_two_redirect_input(t_mlist *list, int n)
 	return (check);
 }
 
-int ft_redirect_input(t_mlist *list, int n)
+int	ft_redirect_input(t_mlist *list, int n)
 {
-	int out;
+	int	out;
 
 	if (ft_strncmp(list->argv[n], "<", 2) == 0)
 		out = ft_one_redirect_input(list, n);

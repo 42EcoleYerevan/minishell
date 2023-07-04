@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:12 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/21 18:44:38 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/01 17:10:08 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ int	ft_export(char **args, t_env **env)
 		last = last->next;
 	while (*args)
 	{
-		if ((ft_find_env(*args, *env) && *args) || ft_export_valid(*args, &res, *env))
+		if ((ft_find_env(*args, *env) && *args)
+			|| ft_export_valid(*args, &res, *env))
 		{
 			args++;
 			continue ;

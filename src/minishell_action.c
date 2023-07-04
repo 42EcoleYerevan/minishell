@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_action.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/01 20:59:38 by almeliky          #+#    #+#             */
+/*   Updated: 2023/07/01 20:59:49 by almeliky         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_action(int sig)
@@ -16,7 +28,7 @@ void	ft_quit(int sig)
 	rl_redisplay();
 }
 
-void ctrl_d_handler(char *str)
+void	ctrl_d_handler(char *str)
 {
 	if (!str)
 	{

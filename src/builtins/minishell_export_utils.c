@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:45:32 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/21 18:48:11 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/01 17:09:32 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	ft_export_concat(char *arg, t_env *env, int i)
 		return (1);
 	prev = ft_value_by_key(arg, env);
 	if (!prev)
-		prev = "";	
+		prev = "";
 	ft_export_change(ft_ptr_by_key(arg, env), ft_strjoin(prev, (arg + i + 2)));
 	return (2);
 }
@@ -86,7 +86,7 @@ int	ft_export_valid(char *arg, int *res, t_env *env)
 {
 	int	status;
 	int	i;
-	
+
 	i = 0;
 	if (!arg)
 		return (0);
@@ -104,8 +104,9 @@ int	ft_export_valid(char *arg, int *res, t_env *env)
 	}
 	if (arg[i] == '+')
 		status = ft_export_concat(arg, env, i);
-	*res = status;
-	if (status == 1)
+	if (status == 1 && *res == 0)
 		ft_export_errprint(arg);
+	if (status == 1)
+		*res = status;
 	return (status);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_path_utils.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/01 20:54:05 by almeliky          #+#    #+#             */
+/*   Updated: 2023/07/04 16:19:39 by agladkov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <dirent.h>
 
@@ -15,10 +27,10 @@ static char	*ft_check_path(char *path, char *command, DIR *d)
 	return (NULL);
 }
 
-char	*ft_find_path_loop(char **paths, char *command) 
+char	*ft_find_path_loop(char **paths, char *command)
 {
-	char *tmp;
-	DIR *d;
+	char	*tmp;
+	DIR		*d;
 
 	while (*paths)
 	{

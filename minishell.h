@@ -126,6 +126,8 @@ t_env	*ft_create_envlist(char	**arr);
 
 //minishell_cd
 int		ft_cd(char	**args, t_env **env, char *arr, int status);
+void	ft_cd_err(char **args, int *status);
+int		ft_cd_key(char	**args, t_env **env, char *str);
 void	ft_cd_change(char *arg, t_env **env);
 
 //minishell_export

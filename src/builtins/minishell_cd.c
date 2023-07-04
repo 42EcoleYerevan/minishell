@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:42:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/21 19:52:32 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/01 17:10:38 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,8 @@ void	ft_cd_change(char *arg, t_env **env)
 	ft_export_add(arg, &last);
 }
 
-int	ft_cd(char	**args, t_env **env, char *str, int status)
+int	ft_cd_key(char	**args, t_env **env, char *str)
 {
-	DIR		*tmp;
-	char	path[PATH_MAX];
-
-	getcwd(path, PATH_MAX);
 	if (!args || !args[0])
 	{
 		str = ft_value_by_key("HOME", *env);
@@ -51,20 +47,35 @@ int	ft_cd(char	**args, t_env **env, char *str, int status)
 		str = ft_strjoin(ft_value_by_key("HOME", *env), *args + 1);
 		return (ft_cd(&str, env, NULL, 0));
 	}
+	return (0);
+}
+
+void	ft_cd_err(char **args, int *status)
+{
+	ft_putstr_fd("minishell: cd: ", 2);
+	ft_putstr_fd(args[0], 2);
+	if (errno == 13)
+		ft_putendl_fd(": Permission denied", 2);
+	else if (*status == -1)
+		ft_putendl_fd(": No such file or directory", 2);
+	else
+		ft_putendl_fd(": Not a directory", 2);
+	*status = 1;
+}
+
+int	ft_cd(char	**args, t_env **env, char *str, int status)
+{
+	DIR		*tmp;
+	char	path[PATH_MAX];
+
+	getcwd(path, PATH_MAX);
+	if (!args || !args[0] || ft_strncmp(args[0], "-", 2) == 0
+		|| args[0][0] == '~')
+		return (ft_cd_key(args, env, str));
 	tmp = opendir(args[0]);
 	status = access(args[0], F_OK);
 	if (chdir(args[0]) == -1)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(args[0], 2);
-		if (errno == 13)
-			ft_putendl_fd(": Permission denied", 2);
-		else if (status == -1)
-			ft_putendl_fd(": No such file or directory", 2);
-		else
-			ft_putendl_fd(": Not a directory", 2);
-		status = 1;
-	}
+		ft_cd_err(args, &status);
 	if (!status)
 	{
 		ft_cd_change(ft_strjoin("OLDPWD=", path), env);
