@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_action.c                                 :+:      :+:    :+:   */
+/*   minishell_init_actions.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/01 20:59:38 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:59:49 by almeliky         ###   ########.fr       */
+/*   Created: 2023/07/04 17:31:45 by agladkov          #+#    #+#             */
+/*   Updated: 2023/07/04 17:32:09 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,20 @@ void	ft_action(int sig)
 	exit_status = 1;
 }
 
+void	ft_sigint(int signum)
+{
+	(void) signum;
+	printf("\n");
+	exit_status = 1;
+}
+
+void	ft_sigquit(int sig)
+{
+	(void) sig;
+	printf("Quit\n");
+	exit_status = 0;
+}
+
 void	ft_quit(int sig)
 {
 	(void) sig;
@@ -35,10 +49,4 @@ void	ctrl_d_handler(char *str)
 		printf("\033[1A\033[12Cexit\n");
 		exit(0);
 	}
-}
-
-void	ft_init_action(void)
-{
-	signal(SIGINT, ft_action);
-	signal(SIGQUIT, ft_quit);
 }

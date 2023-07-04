@@ -6,21 +6,21 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:42:44 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:43:12 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/04 17:37:28 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_rebase_redirect_argv(char ***argv, int n, int step, int len)
+void	ft_rebase_redirect_argv(char ***argv, int n, int step, int len)
 {
 	if (n + step < len && (*argv)[n + step])
 	{
 		free((*argv)[n]);
 		(*argv)[n] = (*argv)[n + step];
-		(*argv)[n + step] = NULL;;
+		(*argv)[n + step] = NULL;
 	}
-	else 
+	else
 	{
 		if ((*argv)[n])
 			free((*argv)[n]);
@@ -28,7 +28,7 @@ void ft_rebase_redirect_argv(char ***argv, int n, int step, int len)
 	}
 }
 
-void ft_remove_redirect(char ***argv, int n)
+void	ft_remove_redirect(char ***argv, int n)
 {
 	int	len;
 	int	step;

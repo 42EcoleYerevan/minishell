@@ -8,6 +8,7 @@ SRCS += $(wildcard $(SRCDIR)paths/*.c)
 SRCS += $(wildcard $(SRCDIR)constructions/*.c)
 SRCS += $(wildcard $(SRCDIR)list/*.c)
 SRCS += $(wildcard $(SRCDIR)pipes/*.c)
+SRCS += $(wildcard $(SRCDIR)actions/*.c)
 
 OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
 HEADERDIR = ./
@@ -36,6 +37,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(shell mkdir -p $(OBJDIR)/constructions)
 	$(shell mkdir -p $(OBJDIR)/list)
 	$(shell mkdir -p $(OBJDIR)/pipes)
+	$(shell mkdir -p $(OBJDIR)/actions)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT_A):

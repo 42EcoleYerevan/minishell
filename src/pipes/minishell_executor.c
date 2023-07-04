@@ -6,11 +6,12 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:53:50 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/04 17:36:19 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 int	ft_executor(t_shell *shell, t_mlist *list)
 {
@@ -21,13 +22,14 @@ int	ft_executor(t_shell *shell, t_mlist *list)
 	status = ft_handle_redirect(list);
 	if (status != 0)
 		return (status);
+	ft_define_signals();
 	if (fork() == 0)
 	{
 		ft_dup_pipe(list);
 		ft_close_fd(list);
 		ft_dup_redirect(list);
 		if (list->bin)
-			return execve(list->bin, list->argv, env);
+			return (execve(list->bin, list->argv, env));
 		exit(0);
 	}
 	ft_close_fd(list);

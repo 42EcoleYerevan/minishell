@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:45:04 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:49:42 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/04 17:36:45 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	ft_two_redirect_input(t_mlist *list, int n)
 			write(list->heredoc[1], string, ft_strlen(string));
 			write(list->heredoc[1], "\n", 1);
 			free(string);
-		   	string = readline(">");
+			string = readline(">");
 		}
 		free(string);
 		close(list->heredoc[1]);

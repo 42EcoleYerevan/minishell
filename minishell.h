@@ -117,8 +117,13 @@ void	ft_pipex(t_mlist *list);
 // action
 void	ft_action(int sig);
 void	ft_quit(int sig);
-void	ft_init_action(void);
 void	ctrl_d_handler(char *str);
+void	ft_sigint(int signum);
+void	ft_sigquit(int sig);
+
+// init actions
+void	ft_init_action(void);
+void	ft_define_signals(void);
 
 //minishell_create_envlist
 t_env	*ft_env_add(char *str);
@@ -198,5 +203,6 @@ void ft_close_fd(t_mlist *list);
 
 // minishell executor
 int ft_executor(t_shell *shell, t_mlist *list);
+
 
 #endif
