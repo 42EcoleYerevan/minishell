@@ -77,7 +77,7 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 	int status;
 
 	status = ft_handle_redirect(list);
-	if (list->isinput || list->isoutput)
+	if (list->isinput || list->isoutput || list->next)
 	{
 		if (fork() == 0)
 		{

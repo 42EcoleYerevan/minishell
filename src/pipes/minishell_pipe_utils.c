@@ -26,6 +26,6 @@ void ft_close_fd(t_mlist *list)
 	if (list->next)
 		close(list->fd[1]);
 	if (list->prev)
-		close(list->prev->fd[0]);
+		ft_close_pipe(list->prev->fd);
 }
 
