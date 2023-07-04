@@ -4,8 +4,7 @@
 /*   minishell_builtin_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
+/*                                                +#+#+#+#+#+   +#+           */ /*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
 /*   Updated: 2023/07/01 17:14:33 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -90,13 +89,13 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 	int	status;
 
 	status = ft_handle_redirect(list);
-	if (list->isinput || list->isoutput || list->next)
+	if (list->isinput || list->isoutput || list->next || list->prev)
 	{
 		if (fork() == 0)
 		{
 			ft_dup_pipe(list);
-			ft_dup_redirect(list);
 			ft_close_fd(list);
+			ft_dup_redirect(list);
 			if (list->isheredoc || list->isinput || list->isoutput)
 				ft_close_pipe(list->heredoc);
 			exit(ft_builtin_bin(shell, list, command));
@@ -105,8 +104,8 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 	else
 	{
 		ft_dup_pipe(list);
-		ft_dup_redirect(list);
 		ft_close_fd(list);
+		ft_dup_redirect(list);
 		status = ft_builtin_bin(shell, list, command);
 	}
 	if (list->isheredoc || list->isinput || list->isoutput)
