@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/04 17:27:36 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/05 16:40:21 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,18 @@ void	ft_event_loop(t_shell *shell)
 
 	while (1)
 	{
+		ft_init_action();
 		str = readline("minishell>$ ");
-		add_history(str);
+		if (str && *str == '\0')
+		{
+			free(str);
+			continue ;
+		}
 		ctrl_d_handler(str);
+		add_history(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
 		executor(shell);
-		ft_init_action();
 		free(str);
 		ft_free_2_linked_list(shell->list);
 	}
