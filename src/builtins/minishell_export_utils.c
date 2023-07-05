@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:45:32 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 17:09:32 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/05 16:56:29 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,15 @@ void	ft_export_errprint(char *arg)
 int	ft_export_concat(char *arg, t_env *env, int i)
 {
 	char	*prev;
+	char	*new;
 
 	if (arg[i] == '+' && arg[i + 1] != '=')
 		return (1);
 	prev = ft_value_by_key(arg, env);
 	if (!prev)
 		prev = "";
-	ft_export_change(ft_ptr_by_key(arg, env), ft_strjoin(prev, (arg + i + 2)));
+	new = ft_strjoin(prev, (arg + i + 2));
+	ft_export_change(ft_ptr_by_key(arg, env), new);
 	return (2);
 }
 
