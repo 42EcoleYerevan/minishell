@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 20:59:28 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/01 20:55:27 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/05 15:19:39 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ static void	ft_set_list_command(t_shell *shell,
 								int n)
 {
 	if (argv[n][0] == '|'
-		|| argv[n][0] == '&'
-		|| argv[n][0] == ';')
+		|| argv[n][0] == '&')
 	{
 		ft_list_add_back(list, ft_list_new(shell, argv, argv[n]));
 		argv[n] = NULL;
