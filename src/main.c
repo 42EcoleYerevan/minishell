@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/07 21:22:46 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 22:01:44 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@ static int	ft_print_error(t_mlist *list)
 		printf("minishell: %s: command not found\n", list->argv[0]);
 		return (127);
 	}
-	else 
-		return ft_redirect_unexpected_error(list->command);
-
+	else
+		return (ft_redirect_unexpected_error(list->command));
 }
 
 void	executor(t_shell *shell)
@@ -39,7 +38,7 @@ void	executor(t_shell *shell)
 			if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
 				exit_status = ft_builtin_handler(shell, tmp);
 			else
-				exit_status = ft_executor(shell, tmp);
+				exit_status = ft_executor(shell, tmp) * 256;
 		}
 		else
 		{
