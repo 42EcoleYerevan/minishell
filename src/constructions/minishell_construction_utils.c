@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:56:11 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 12:49:20 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 20:31:29 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*ft_delete_quotes(char *str)
 
 void	ft_change_element_with_free(t_shell *shell, char **out, int n)
 {
-	char *tmp;
+	char	*tmp;
 
 	if (ft_strchr(out[n], '\'') || ft_strchr(out[n], '\"'))
 	{
