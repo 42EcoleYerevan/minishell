@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:42:44 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/04 17:37:28 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 20:25:03 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,18 @@ void	ft_dup_redirect(t_mlist *list)
 		dup2(list->heredoc[0], 0);
 		ft_close_pipe(list->heredoc);
 	}
+}
+
+int	ft_check_one_redirect_input_argument_utils(t_mlist *list, int n, \
+		struct dirent *f, DIR *d)
+{
+	while (f)
+	{
+		if (ft_strncmp(list->argv[n + 1],
+				f->d_name,
+				ft_strlen(f->d_name) + 1) == 0)
+			return (0);
+		f = readdir(d);
+	}
+	return (1);
 }

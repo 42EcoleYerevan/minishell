@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:45:04 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 17:39:00 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 20:24:47 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,10 @@ int	ft_check_one_redirect_input_argument(t_mlist *list, int n)
 			return (0);
 		d = opendir("./");
 		f = readdir(d);
-		while (f)
-		{
-			if (ft_strncmp(list->argv[n + 1],
-					f->d_name,
-					ft_strlen(f->d_name) + 1) == 0)
-				return (0);
-			f = readdir(d);
-		}
+		check = ft_check_one_redirect_input_argument_utils(list, n, f, d);
+		closedir(d);
+		if (check == 0)
+			return (0);
 		printf("minishell: %s: No such file or directory\n", list->argv[n + 1]);
 		rl_on_new_line();
 		return (1);

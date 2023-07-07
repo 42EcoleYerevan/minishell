@@ -179,6 +179,8 @@ int		ft_redirect_input(t_shell *shell, t_mlist *list, int n);
 // redirect utils
 void	ft_remove_redirect(char ***argv, int n);
 void	ft_dup_redirect(t_mlist *list);
+int		ft_check_one_redirect_input_argument_utils(t_mlist *list, int n, \
+		struct dirent *f, DIR *d);
 
 // redirect
 int		ft_handle_redirect(t_shell *shell, t_mlist *list);

@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 18:34:03 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 20:18:31 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,11 @@ int	ft_executor(t_shell *shell, t_mlist *list)
 	status = ft_handle_redirect(shell, list);
 	ft_define_signals();
 	if (status != 0)
+	{
+		ft_free_2d_array_with_null(env);
+		free(env);
 		return (status);
+	}
 	if (fork() == 0)
 	{
 		ft_dup_pipe(list);

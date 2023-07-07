@@ -6,12 +6,11 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:43:26 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:44:54 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/07 20:12:13 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <sys/fcntl.h>
 
 int	ft_redirect_two_output(t_mlist *list, int n)
 {
