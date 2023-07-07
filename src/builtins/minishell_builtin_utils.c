@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 19:45:15 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 20:56:51 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ int	ft_isbuiltin(char *path)
 	int		n_command;
 
 	n_command = 0;
-	if (!path)
-		return (0);
 	command = ft_get_command_from_path(path);
 	if (!command)
 		n_command = 0;
@@ -111,8 +109,6 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 		ft_close_fd(list);
 		status = ft_builtin_bin(shell, list, command);
 	}
-	if (list->isheredoc || list->isinput || list->isoutput)
-		ft_close_pipe(list->heredoc);
 	return (status);
 }
 
