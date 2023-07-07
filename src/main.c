@@ -6,11 +6,17 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/07 17:10:16 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 19:52:32 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	ft_print_error(t_mlist *list)
+{
+	if (list->argv[0] || list->bin)
+		printf("minishell: %s: command not found\n", list->argv[0]);
+}
 
 void	executor(t_shell *shell)
 {
@@ -20,7 +26,7 @@ void	executor(t_shell *shell)
 	while (tmp)
 	{
 		if (tmp->bin || ft_isbuiltin(tmp->argv[0]) || \
-				tmp->argv[0][0] == '<' || tmp->argv[0][0] == '>')
+		(tmp->argv[0] && (tmp->argv[0][0] == '<' || tmp->argv[0][0] == '>')))
 		{
 			if (tmp->next)
 				pipe(tmp->fd);
@@ -28,11 +34,9 @@ void	executor(t_shell *shell)
 				exit_status = ft_builtin_handler(shell, tmp);
 			else
 				exit_status = ft_executor(shell, tmp);
-			if (exit_status != 0)
-				return ;
 		}
 		else
-			printf("minishell: %s: command not found\n", tmp->argv[0]);
+			ft_print_error(tmp);
 		tmp = tmp->next;
 	}
 	while (waitpid(-1, &exit_status, 0) != -1)

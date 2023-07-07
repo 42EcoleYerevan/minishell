@@ -6,12 +6,11 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 17:40:32 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 18:34:03 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <unistd.h>
 
 int	ft_executor(t_shell *shell, t_mlist *list)
 {

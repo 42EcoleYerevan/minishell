@@ -6,11 +6,12 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 17:40:56 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 19:45:15 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
 int	ft_isbuiltin(char *path)
 {
@@ -18,6 +19,8 @@ int	ft_isbuiltin(char *path)
 	int		n_command;
 
 	n_command = 0;
+	if (!path)
+		return (0);
 	command = ft_get_command_from_path(path);
 	if (!command)
 		n_command = 0;

@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:57:53 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:57:57 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/07 18:43:35 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ int	ft_len_separator(char *str)
 		|| str[n] == '<'
 		|| str[n] == ';')
 		sep = str[n];
+	if (str[n] == '|')
+		return (1);
 	while (str[n] && str[n] == sep && n < 2)
 		n++;
 	return (n);
