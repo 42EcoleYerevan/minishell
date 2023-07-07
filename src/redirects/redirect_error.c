@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:50:06 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:51:13 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:10:11 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,9 @@ int	ft_redirect_error_argument(t_mlist *list, int n)
 	if (list->argv[n + 1])
 		return (ft_redirect_unexpected_error(list->argv[n + 1]));
 	else
+	{
+		if (list->command)
+			return (ft_redirect_unexpected_error(list->command));
 		return (ft_redirect_unexpected_error("newline"));
+	}
 }

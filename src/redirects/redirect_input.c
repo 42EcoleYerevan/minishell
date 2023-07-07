@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:45:04 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/04 17:36:45 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:11:06 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,11 @@ int	ft_check_next_redirect_input_argument(t_mlist *list, int n)
 	if (list->argv[n + 1] && ft_strchr("<>|;&", list->argv[n + 1][0]) == NULL)
 		return (0);
 	if (list->argv[n + 1] == NULL)
+	{
+		if (list->command)
+			return (ft_redirect_unexpected_error(list->command));
 		return (ft_redirect_unexpected_error("newline"));
+	}
 	else
 		return (ft_redirect_unexpected_error(list->argv[n + 1]));
 }
