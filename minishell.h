@@ -89,6 +89,7 @@ char	*ft_set_env(t_shell *shell, char *str);
 // construction utils
 int	ft_num_quotes(char *str);
 char	*ft_delete_quotes(char *str);
+void	ft_change_element_with_free(t_shell *shell, char **out, int n);
 
 // parse utils
 int		ft_len_before_quote(char *str);

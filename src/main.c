@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/05 16:54:10 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 13:58:26 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_event_loop(t_shell *shell)
 
 	while (1)
 	{
-		ft_init_action();
+		/* ft_init_action(); */
 		str = readline("minishell>$ ");
 		if (str && *str == '\0')
 		{

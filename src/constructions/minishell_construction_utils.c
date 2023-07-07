@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:56:11 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:56:13 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/07 12:49:20 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,22 @@ char	*ft_delete_quotes(char *str)
 	out[indx] = 0;
 	free(tmp);
 	return (out);
+}
+
+void	ft_change_element_with_free(t_shell *shell, char **out, int n)
+{
+	char *tmp;
+
+	if (ft_strchr(out[n], '\'') || ft_strchr(out[n], '\"'))
+	{
+		tmp = ft_parse_quotes(shell, out[n]);
+		free(out[n]);
+		out[n] = tmp;
+	}
+	else
+	{
+		tmp = ft_set_env(shell, out[n]);
+		free(out[n]);
+		out[n] = tmp;
+	}
 }
