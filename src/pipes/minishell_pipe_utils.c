@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:52:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/04 17:48:15 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:33:16 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	ft_dup_pipe(t_mlist *list)
 	if (list->prev)
 	{
 		dup2(list->prev->fd[0], 0);
-		ft_close_pipe(list->prev->fd);
+		if (list->prev->bin || ft_isbuiltin(list->prev->argv[0]))
+		{
+			ft_close_pipe(list->prev->fd);
+		}
 	}
 }
 
@@ -38,9 +41,12 @@ void	ft_close_fd(t_mlist *list)
 		close(list->fd[1]);
 	if (list->prev)
 	{
-		if (ft_isbuiltin(list->prev->bin) || ft_isbuiltin(list->prev->argv[0]))
-			ft_close_pipe(list->prev->fd);
-		else
-			close(list->prev->fd[0]);
+		if (list->prev->bin || ft_isbuiltin(list->prev->argv[0]))
+		{
+			if (ft_isbuiltin(list->prev->bin) || ft_isbuiltin(list->prev->argv[0]))
+				ft_close_pipe(list->prev->fd);
+			else
+				close(list->prev->fd[0]);
+		}
 	}
 }
