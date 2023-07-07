@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 15:20:57 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:40:32 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_executor(t_shell *shell, t_mlist *list)
 	int		status;
 
 	env = ft_env_to_arr(shell->env, 0, -1);
-	status = ft_handle_redirect(list);
+	status = ft_handle_redirect(shell, list);
 	ft_define_signals();
 	if (status != 0)
 		return (status);

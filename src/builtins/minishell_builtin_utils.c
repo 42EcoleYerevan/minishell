@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/04 17:48:32 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:40:56 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 {
 	int	status;
 
-	status = ft_handle_redirect(list);
+	status = ft_handle_redirect(shell, list);
 	ft_define_signals();
 	if (list->isinput || list->isoutput || list->next || list->prev)
 	{

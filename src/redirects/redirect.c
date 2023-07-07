@@ -6,13 +6,13 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:51:27 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/05 12:13:30 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:40:08 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_handle_redirect(t_mlist *list)
+int	ft_handle_redirect(t_shell *shell, t_mlist *list)
 {
 	int	n;
 	int	out;
@@ -22,7 +22,7 @@ int	ft_handle_redirect(t_mlist *list)
 	while (list->argv[n])
 	{
 		if (list->argv[n][0] == '<')
-			out = ft_redirect_input(list, n);
+			out = ft_redirect_input(shell, list, n);
 		else if (list->argv[n][0] == '>')
 			out = ft_redirect_output(list, n);
 		else

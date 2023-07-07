@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:45:04 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 15:11:06 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:39:00 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	ft_check_next_redirect_input_argument(t_mlist *list, int n)
 		return (ft_redirect_unexpected_error(list->argv[n + 1]));
 }
 
-int	ft_two_redirect_input(t_mlist *list, int n)
+int	ft_two_redirect_input(t_shell *shell, t_mlist *list, int n)
 {
 	int		check;
 	int		lenkey;
@@ -79,6 +79,7 @@ int	ft_two_redirect_input(t_mlist *list, int n)
 		string = readline(">");
 		while (ft_strncmp(string, list->argv[n + 1], lenkey) != 0)
 		{
+			ft_change_element_with_free(shell, &string, 0);
 			write(list->heredoc[1], string, ft_strlen(string));
 			write(list->heredoc[1], "\n", 1);
 			free(string);
@@ -90,14 +91,14 @@ int	ft_two_redirect_input(t_mlist *list, int n)
 	return (check);
 }
 
-int	ft_redirect_input(t_mlist *list, int n)
+int	ft_redirect_input(t_shell *shell, t_mlist *list, int n)
 {
 	int	out;
 
 	if (ft_strncmp(list->argv[n], "<", 2) == 0)
 		out = ft_one_redirect_input(list, n);
 	else
-		out = ft_two_redirect_input(list, n);
+		out = ft_two_redirect_input(shell, list, n);
 	ft_remove_redirect(&list->argv, n);
 	if (out == 0)
 		list->isinput = 1;
