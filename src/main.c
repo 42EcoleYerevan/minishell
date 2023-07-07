@@ -6,16 +6,22 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/07 20:31:14 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/07 21:22:46 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_print_error(t_mlist *list)
+static int	ft_print_error(t_mlist *list)
 {
 	if (list->argv[0] || list->bin)
+	{
 		printf("minishell: %s: command not found\n", list->argv[0]);
+		return (127);
+	}
+	else 
+		return ft_redirect_unexpected_error(list->command);
+
 }
 
 void	executor(t_shell *shell)
@@ -36,7 +42,10 @@ void	executor(t_shell *shell)
 				exit_status = ft_executor(shell, tmp);
 		}
 		else
-			ft_print_error(tmp);
+		{
+			exit_status = ft_print_error(tmp);
+			return ;
+		}
 		tmp = tmp->next;
 	}
 	while (waitpid(-1, &exit_status, 0) != -1)
@@ -63,7 +72,7 @@ void	ft_event_loop(t_shell *shell)
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
 		if (!list->argv[0] && !list->bin && list->command)
-			ft_redirect_unexpected_error(list->command);
+			exit_status = ft_redirect_unexpected_error(list->command);
 		else
 			executor(shell);
 		free(str);
