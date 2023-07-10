@@ -198,6 +198,7 @@ int		ft_check_n_flag(char **arr);
 int		ft_builtin_bin(t_shell *shell, t_mlist *list, int command);
 int		ft_builtin_executor(t_shell *shell, t_mlist *list, int command);
 int		ft_builtin_handler(t_shell *shell, t_mlist *list);
+char	*ft_lowercase(char *str);
 
 // minishell pipe utils
 void	ft_close_pipe(int fd[2]);

@@ -6,12 +6,11 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 20:56:51 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:51:45 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 
 int	ft_isbuiltin(char *path)
 {
@@ -28,11 +27,11 @@ int	ft_isbuiltin(char *path)
 		n_command = 2;
 	else if (ft_strncmp(command, "cd", 3) == 0)
 		n_command = 3;
-	else if (ft_strncmp(command, "pwd", 4) == 0)
+	else if (ft_strncmp(ft_lowercase(command), "pwd", 4) == 0)
 		n_command = 4;
-	else if (ft_strncmp(command, "echo", 5) == 0)
+	else if (ft_strncmp(ft_lowercase(command), "echo", 5) == 0)
 		n_command = 5;
-	else if (ft_strncmp(command, "env", 4) == 0)
+	else if (ft_strncmp(ft_lowercase(command), "env", 4) == 0)
 		n_command = 6;
 	else if (ft_strncmp(command, "unset", 6) == 0)
 		n_command = 7;
