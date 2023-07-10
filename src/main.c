@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/10 16:33:13 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:33:22 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ void	executor(t_shell *shell)
 			pipe(tmp->fd);
 		if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
 			exit_status = ft_builtin_handler(shell, tmp);
+		else if (tmp && !tmp->argv[0] && !tmp->bin && tmp->command)
+		{
+			exit_status = ft_redirect_unexpected_error(tmp->command);
+			return ;
+		}
 		else
 			exit_status = ft_executor(shell, tmp);
 		tmp = tmp->next;
