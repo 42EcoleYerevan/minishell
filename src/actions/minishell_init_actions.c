@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 17:31:45 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/10 12:59:07 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 18:20:39 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	ft_sigquit(int sig)
 {
 	(void) sig;
 	printf("Quit\n");
-	exit_status = 0;
+	exit_status = 130;
+	exit(130);
 }
 
 void	ft_quit(int sig)
