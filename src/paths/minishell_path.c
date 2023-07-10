@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:54:18 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:54:20 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:54:16 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,14 @@ char	*ft_get_absolute_path(t_shell *shell, char *command)
 {
 	char	*path;
 	char	*tmp;
+	DIR		*d;
 
+	d = opendir(command);
+	if (d)
+	{
+		closedir(d);
+		return (NULL);
+	}
 	if (access(command, X_OK) == 0)
 		return (ft_strdup(command));
 	tmp = ft_find_path(shell, command);

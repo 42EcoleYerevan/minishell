@@ -6,13 +6,13 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/10 15:45:32 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:33:13 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_wait_pid()
+void	ft_wait_pid(void)
 {
 	pid_t	wpid;
 	pid_t	tmp;
@@ -78,7 +78,7 @@ void	ft_event_loop(t_shell *shell)
 		add_history(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		if (!list->argv[0] && !list->bin && list->command)
+		if (list && !list->argv[0] && !list->bin && list->command)
 			exit_status = ft_redirect_unexpected_error(list->command);
 		else
 			executor(shell);

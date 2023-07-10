@@ -6,26 +6,38 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/10 15:45:27 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:47:49 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <dirent.h>
 
-void ft_free_env(char **env)
+void	ft_free_env(char **env)
 {
 	ft_free_2d_array_with_null(env);
 	free(env);
 }
 
-static int ft_check_argument(t_mlist *list)
+static int	ft_check_argument(t_mlist *list)
 {
+	DIR *d;
+
 	if (!list->bin)
+	{
+		d = opendir(list->argv[0]);
+		if (list->argv && d)
+		{
+			closedir(d);
+			printf("minishell: %s: is a directory\n", list->argv[0]);
+			return (126);
+		}
 		return (ft_print_error(list));
+	}
 	return (0);
 }
 
-void ft_check(int status, int check, char **env)
+void	ft_check(int status, int check, char **env)
 {
 	if (status != 0 || check != 0)
 	{
