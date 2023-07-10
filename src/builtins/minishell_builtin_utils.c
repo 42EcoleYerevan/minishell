@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/10 17:51:45 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 19:22:56 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ int	ft_builtin_executor(t_shell *shell, t_mlist *list, int command)
 		ft_close_fd(list);
 		status = ft_builtin_bin(shell, list, command);
 	}
+	ft_close_fd(list);
 	return (status);
 }
 

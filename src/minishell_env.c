@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:58:18 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 20:59:12 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/10 20:21:48 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ char	**ft_env_to_arr(t_env *env, int len, int i)
 	len = 0;
 	return (arr);
 }
-// while (arr[len])
-// printf("%s\n", arr[len++]);
 
 int	ft_env(t_env *env)
 {

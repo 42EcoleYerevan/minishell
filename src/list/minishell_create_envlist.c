@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 20:27:42 by almeliky          #+#    #+#             */
-/*   Updated: 2023/06/11 20:27:47 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/10 20:23:28 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_env	*ft_create_envlist(char	**arr)
 	start = ft_env_add(*arr);
 	arr++;
 	newenv = start;
-	while (*arr)
+	while (*arr && ft_strncmp(*arr, "OLDPWD", ft_strlen("OLDPWD") + 1) != 0)
 	{
 		newenv->next = ft_env_add(*arr);
 		newenv = newenv->next;

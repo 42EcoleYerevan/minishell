@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/10 18:12:40 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 20:47:56 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static int	ft_check_argument(t_mlist *list)
 			printf("minishell: %s: is a directory\n", list->argv[0]);
 			return (126);
 		}
-		return (ft_print_error(list));
+		else if (list->argv && list->argv[0])
+			return (ft_print_error(list));
 	}
 	return (0);
 }
@@ -55,8 +56,8 @@ int	ft_executor(t_shell *shell, t_mlist *list)
 
 	env = ft_env_to_arr(shell->env, 0, -1);
 	status = ft_handle_redirect(shell, list);
-	ft_define_signals();
 	check = ft_check_argument(list);
+	ft_define_signals();
 	if (fork() == 0)
 	{
 		ft_check(status, check, env);

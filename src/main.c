@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/10 18:07:23 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 20:44:27 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	ft_wait_pid(void)
 	{
 		if (wpid > tmp)
 		{
-			exit_status = status / 256;
+			if (status >= 256)
+				exit_status = status / 256;
 			tmp = wpid;
 		}
 		wpid = waitpid(-1, &status, 0);
