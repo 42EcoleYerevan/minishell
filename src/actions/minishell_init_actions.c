@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 17:31:45 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/04 17:32:09 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 12:59:07 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	ft_quit(int sig)
 {
 	(void) sig;
 	rl_redisplay();
+	exit_status = 0;
 }
 
 void	ctrl_d_handler(char *str)

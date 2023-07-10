@@ -6,13 +6,32 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/07 22:01:44 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:45:32 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_print_error(t_mlist *list)
+void ft_wait_pid()
+{
+	pid_t	wpid;
+	pid_t	tmp;
+	int		status;
+
+	tmp = 0;
+	wpid = waitpid(-1, &status, 0);
+	while (wpid > 0)
+	{
+		if (wpid > tmp)
+		{
+			exit_status = status / 256;
+			tmp = wpid;
+		}
+		wpid = waitpid(-1, &status, 0);
+	}
+}
+
+int	ft_print_error(t_mlist *list)
 {
 	if (list->argv[0] || list->bin)
 	{
@@ -30,26 +49,15 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
-		if (tmp->bin || ft_isbuiltin(tmp->argv[0]) || \
-		(tmp->argv[0] && (tmp->argv[0][0] == '<' || tmp->argv[0][0] == '>')))
-		{
-			if (tmp->next)
-				pipe(tmp->fd);
-			if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
-				exit_status = ft_builtin_handler(shell, tmp);
-			else
-				exit_status = ft_executor(shell, tmp) * 256;
-		}
+		if (tmp->next)
+			pipe(tmp->fd);
+		if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
+			exit_status = ft_builtin_handler(shell, tmp);
 		else
-		{
-			exit_status = ft_print_error(tmp);
-			return ;
-		}
+			exit_status = ft_executor(shell, tmp);
 		tmp = tmp->next;
 	}
-	while (waitpid(-1, &exit_status, 0) != -1)
-		;
-	exit_status = exit_status / 256;
+	ft_wait_pid();
 }
 
 void	ft_event_loop(t_shell *shell)

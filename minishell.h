@@ -207,5 +207,7 @@ void	ft_close_fd(t_mlist *list);
 // minishell executor
 int		ft_executor(t_shell *shell, t_mlist *list);
 
+// main
+int	ft_print_error(t_mlist *list);
 
 #endif
