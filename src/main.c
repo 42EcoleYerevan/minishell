@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/10 17:33:22 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/10 18:07:23 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void	ft_event_loop(t_shell *shell)
 		add_history(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		if (list && !list->argv[0] && !list->bin && list->command)
+		if ((list && !list->argv[0] && !list->bin && list->command) || \
+				ft_check_pipe_error(str))
 			exit_status = ft_redirect_unexpected_error(list->command);
 		else
 			executor(shell);
