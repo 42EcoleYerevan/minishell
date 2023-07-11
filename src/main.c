@@ -6,11 +6,12 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/11 19:30:06 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 20:12:36 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
 void	ft_wait_pid(void)
 {
@@ -99,6 +100,11 @@ int	main(int argc, char **argv, char **menv)
 	(void) argv;
 	if (argc == 1)
 	{
+		printf("\nWelcome to minishell project\n");
+		printf("****************************\n");
+		printf("Created by: almeliky       *\n");
+		printf("Created by: agladkov       *\n");
+		printf("****************************\n\n");
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		shell->env = ft_create_envlist(menv);
 		rl_catch_signals = 0;
