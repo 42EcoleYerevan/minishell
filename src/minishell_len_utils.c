@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:57:53 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 18:43:35 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 18:51:56 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,7 @@ int	ft_len_quote(char *str, char quote)
 	while (*str && *str != quote)
 		str++;
 	if (*str == '\0')
-	{
-		printf("Error\n");
-		exit(1);
-	}
+		return (-1);
 	str++;
 	return (str - tmp);
 }

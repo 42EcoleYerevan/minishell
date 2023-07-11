@@ -6,12 +6,11 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:56:39 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 14:45:38 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:51:10 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-#include "libft/libft.h"
+#include "minishell.h"
 
 int	ft_len_before_quote(char *str)
 {
