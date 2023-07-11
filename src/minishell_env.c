@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:58:18 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/10 20:21:48 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:12:33 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_get_env_value_by_name(t_shell *shell, char *name)
 	char	*tmp;
 	char	*out;
 
+	if (*name == '\0')
+		return (ft_strdup("$"));
 	if (*name == '?')
 		return (ft_itoa(exit_status));
 	tmp = ft_substr(name, 0, ft_len_env_key(name));

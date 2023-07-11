@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:56:05 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 12:48:30 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:12:55 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static void	ft_insert_str(t_shell *shell, char *dst, char *src)
 
 	while (*src)
 	{
-		if (*src == '$' && *(src + 1) != '\0' && *(src + 1) != '\'')
+		if (*src == '$' && *(src + 1) != '\0' && *(src + 1) != '\'' && \
+				*(src + 1) != '\"')
 		{
 			value = ft_get_env_value_by_name(shell, src + 1);
 			if (!value)

@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 17:07:21 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/10 19:22:56 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 16:46:50 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,10 +73,10 @@ int	ft_builtin_bin(t_shell *shell, t_mlist *list, int command)
 		out = ft_pwd();
 	else if (command == 5)
 	{
-		if (ft_check_n_flag(list->argv))
-			out = ft_echo(list->argv + 1, 0);
+		if (ft_check_n_flag(list->argv) == 0)
+			out = ft_echo(ft_echo_skip_flags(list->argv + 1), 1);
 		else
-			out = ft_echo(list->argv + 2, 1);
+			out = ft_echo(ft_echo_skip_flags(list->argv + 1), 0);
 	}
 	else if (command == 6)
 		out = ft_env(shell->env);
