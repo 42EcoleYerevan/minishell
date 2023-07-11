@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/10 20:47:56 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:10:56 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_free_env(char **env)
 
 static int	ft_check_argument(t_mlist *list)
 {
-	DIR *d;
+	DIR	*d;
 
 	if (!list->bin)
 	{
@@ -70,5 +70,5 @@ int	ft_executor(t_shell *shell, t_mlist *list)
 	}
 	ft_close_fd(list);
 	ft_free_env(env);
-	return (1);
+	return (0);
 }

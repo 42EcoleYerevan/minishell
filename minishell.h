@@ -212,6 +212,6 @@ int		ft_executor(t_shell *shell, t_mlist *list);
 int		ft_print_error(t_mlist *list);
 
 // utils
-int		ft_check_pipe_error(char *str);
+int		ft_is_valid_linked_list(t_mlist *list);
 
 #endif

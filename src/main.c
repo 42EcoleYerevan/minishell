@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/10 20:44:27 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:08:20 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,8 @@ void	ft_event_loop(t_shell *shell)
 		add_history(str);
 		list = ft_fill_list(shell, str);
 		shell->list = &list;
-		if ((list && !list->argv[0] && !list->bin && list->command) || \
-				ft_check_pipe_error(str))
-			exit_status = ft_redirect_unexpected_error(list->command);
-		else
+		exit_status = ft_is_valid_linked_list(list);
+		if (exit_status == 0)
 			executor(shell);
 		free(str);
 		ft_free_2_linked_list(shell->list);
