@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:42:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 17:10:38 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/11 19:51:35 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@ void	ft_cd_change(char *arg, t_env **env)
 
 	last = *env;
 	if (ft_find_env(arg, *env))
+	{
+		free(arg);
 		return ;
+	}
 	while (last->next)
 		last = last->next;
 	ft_export_add(arg, &last);
+	free(arg);
 }
 
 int	ft_cd_key(char	**args, t_env **env, char *str)
