@@ -6,12 +6,11 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:58:18 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/11 17:12:33 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:14:50 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-#include "libft/libft.h"
+#include "minishell.h"
 
 char	*ft_get_env_value_by_name(t_shell *shell, char *name)
 {
