@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/11 19:30:06 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/15 21:46:29 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,47 @@ void	ft_event_loop(t_shell *shell)
 int	main(int argc, char **argv, char **menv)
 {
 	t_shell	*shell;
+	t_mlist *list;
 
+	shell = (t_shell *)malloc(sizeof(t_shell));
+	shell->env = ft_create_envlist(menv);
 	(void) argv;
+	(void) menv;
 	if (argc == 1)
 	{
-		shell = (t_shell *)malloc(sizeof(t_shell));
-		shell->env = ft_create_envlist(menv);
-		rl_catch_signals = 0;
-		using_history();
-		ft_event_loop(shell);
+		/* list = ft_parser(shell, "ls -al | echo leha"); */
+		list = ft_parser(shell, "echo $PATH$PATH|grep $PATH");
+		shell->list = &list;
+		while (list)
+		{
+			printf("bin: %s\n", list->bin);
+			while (*list->argv)
+				printf("argv: %s\n", *list->argv++);
+			printf("command: %s\n", list->command);
+			list = list->next;
+		}
+		/* list = ft_parser(shell, "ls-al|echoleha"); */
+		/* while (list) */
+		/* { */
+		/* 	printf("%s\n", list->bin); */
+		/* 	while (list->argv) */
+		/* 		printf("%s\n", *list->argv++); */
+		/* 	printf("%s\n", list->command); */
+		/* } */
+		/* list = ft_parser(shell, "echo $PATH$PATH|grep $PATH"); */
+		/* while (list) */
+		/* { */
+		/* 	printf( "%s\n", list->bin); */
+		/* 	while (list->argv) */
+		/* 		printf("%s\n", *list->argv++); */
+		/* 	printf("%s\n", list->command); */
+		/* } */
+
+		/* shell = (t_shell *)malloc(sizeof(t_shell)); */
+		/* shell->env = ft_create_envlist(menv); */
+		/* rl_catch_signals = 0; */
+		/* using_history(); */
+		/* ft_event_loop(shell); */
 	}
 	return (exit_status);
 }

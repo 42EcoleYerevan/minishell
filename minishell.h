@@ -216,4 +216,24 @@ int		ft_print_error(t_mlist *list);
 // utils
 int		ft_is_valid_linked_list(t_mlist *list);
 
+// parser
+t_mlist *ft_parser(t_shell *shell, char *str);
+char	**ft_tokenizer(char *str);
+
+// tokenizer utils
+int		ft_len_token(char *str);
+int		ft_is_separator(char *str);
+int		ft_token_count(char *str);
+void	ft_split_token(char **tokens, char *str);
+
+// constructor
+t_mlist	*ft_constructor(t_shell *shell, char **tokens);
+
+// constructor utils
+t_mlist	*ft_create_list(t_shell *shell, char **tokens);
+int		ft_token_count_in_construction(char **tokens);
+char	*ft_find_token(char **tokens, char *token);
+void	ft_set_env_token(t_shell *shell, char **tokens);
+char	**ft_slice_arr(char **arr, int start, int end);
+
 #endif

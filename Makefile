@@ -1,15 +1,8 @@
 NAME = minishell
 SRCDIR = ./src/
 OBJDIR = ./obj/
-SRCS = $(wildcard $(SRCDIR)*.c)
-SRCS += $(wildcard $(SRCDIR)redirects/*.c)
-SRCS += $(wildcard $(SRCDIR)builtins/*.c)
-SRCS += $(wildcard $(SRCDIR)paths/*.c)
-SRCS += $(wildcard $(SRCDIR)constructions/*.c)
-SRCS += $(wildcard $(SRCDIR)list/*.c)
-SRCS += $(wildcard $(SRCDIR)pipes/*.c)
-SRCS += $(wildcard $(SRCDIR)actions/*.c)
-
+SRCS = $(wildcard $(SRCDIR)**/*.c)
+SRCS += $(wildcard $(SRCDIR)*.c)
 OBJS = $(SRCS:$(SRCDIR)%.c=$(OBJDIR)%.o)
 HEADERDIR = ./
 HEADER = $(HEADERDIR)minishell.h
@@ -20,7 +13,7 @@ LIBFT_A = $(LIBFT)/libft.a
 RLDIR = ./readline
 RL_A = $(RLDIR)/libreadline.a
 
-CFLAGS = -Wall -Werror -Wextra -I$(RLDIR) -I$(HEADERDIR) -g #-fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -I$(RLDIR) -I$(HEADERDIR) -g -fsanitize=address
 LIBS = -lreadline -L$(LIBFT) -lft -lncurses
 LIBS += -L$(RLDIR) 
 
@@ -38,6 +31,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(shell mkdir -p $(OBJDIR)/list)
 	$(shell mkdir -p $(OBJDIR)/pipes)
 	$(shell mkdir -p $(OBJDIR)/actions)
+	$(shell mkdir -p $(OBJDIR)/parser)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT_A):

@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:57:53 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/11 18:51:56 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/15 18:14:28 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,8 @@ int	ft_len_word(char *str)
 	while (*str
 		&& *str != ' '
 		&& *str != '|'
-		&& *str != '&'
 		&& *str != '>'
-		&& *str != '<'
-		&& *str != ';')
+		&& *str != '<')
 	{
 		if (*str == '\"' || *str == '\'')
 			str += ft_len_quote(str, *str);

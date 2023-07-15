@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 17:44:39 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/04 16:18:19 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/15 20:36:38 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@ void	ft_list_add_back(t_mlist **list, t_mlist *new)
 {
 	t_mlist	*tmp;
 
-	if (!list || !new)
-		return ;
 	if (!*list)
 	{
 		*list = new;
