@@ -1,26 +1,33 @@
 #include "minishell.h"
 
+t_mlist *ft_create_list_node(t_shell *shell, char **tokens);
+int		ft_length_construction(char **tokens);
+
 t_mlist *ft_create_list(t_shell *shell, char **tokens)
 {
 	int	n;
-	int len;
-	char **argv;
-	t_mlist *new;
 	t_mlist	*list;
 
 	n = 0;
 	list = NULL;
 	while (tokens[n])
 	{
-		len = ft_token_count_in_construction(tokens + n);
-		argv = ft_slice_arr(tokens, n, n + len);
-		new = ft_list_new(shell, argv, ft_find_token(tokens + n, "|"));
-		ft_list_add_back(&list, new);
-		if (!tokens[n + len])
-			break ;
-		n += len + 1;
+		ft_list_add_back(&list, ft_create_list_node(shell, tokens + n));
+		n += ft_length_construction(tokens + n);
 	}
 	return (list);
+}
+
+t_mlist *ft_create_list_node(t_shell *shell, char **tokens)
+{
+	t_mlist *new;
+	char **argv;
+	int len;
+
+	len = ft_token_count_in_construction(tokens);
+	argv = ft_slice_arr(tokens, 0, len);
+	new = ft_list_new(shell, argv, ft_find_token(tokens, "|"));
+	return (new);
 }
 
 char **ft_slice_arr(char **arr, int start, int end)
@@ -49,6 +56,16 @@ char *ft_find_token(char **tokens, char *token)
 			ft_strncmp(tokens[n], token, ft_strlen(token) + 1) != 0)
 		n++;
 	return (tokens[n]);
+}
+
+int ft_length_construction(char **tokens)
+{
+	int	n;
+
+	n = ft_token_count_in_construction(tokens);
+	if (tokens[n])
+		n++;
+	return (n);
 }
 
 int		ft_token_count_in_construction(char **tokens)
