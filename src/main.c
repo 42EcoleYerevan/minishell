@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/17 19:25:02 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/17 20:05:47 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,21 @@ int	ft_print_error(t_mlist *list)
 		return (ft_redirect_unexpected_error(list->command));
 }
 
+void ft_delete_qoute_in_argv(char **argv)
+{
+	int		n;
+	char	*tmp;
+
+	n = 0;
+	while (argv[n])
+	{
+		tmp = argv[n];
+		argv[n] = ft_delete_quotes(argv[n]);
+		free(tmp);
+		argv++;
+	}
+}
+
 void	executor(t_shell *shell)
 {
 	t_mlist	*tmp;
@@ -51,6 +66,7 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
+		ft_delete_qoute_in_argv(tmp->argv);
 		if (tmp->next)
 			pipe(tmp->fd);
 		if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
