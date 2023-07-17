@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/17 16:47:34 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/17 19:25:02 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int	main(int argc, char **argv, char **menv)
 	t_shell	*shell;
 
 	(void) argv;
+	/* (void) menv; */
 	if (argc == 1)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));

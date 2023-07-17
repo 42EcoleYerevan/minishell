@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 18:08:48 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/11 19:35:25 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/17 17:10:38 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	ft_check_pipe_error(t_mlist *list)
 int	ft_is_valid_linked_list(t_mlist *list)
 {
 	int	n;
-	int	redirect_error;
 	int	pipe_error;
 
 	if (!list)
@@ -51,13 +50,6 @@ int	ft_is_valid_linked_list(t_mlist *list)
 		pipe_error = ft_check_pipe_error(list);
 		if (pipe_error)
 			return (pipe_error);
-		while (list->argv[n])
-		{
-			redirect_error = ft_check_redirect_error(list, n);
-			if (redirect_error)
-				return (redirect_error);
-			n++;
-		}
 		list = list->next;
 	}
 	return (0);
