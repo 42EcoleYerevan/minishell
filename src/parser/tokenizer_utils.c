@@ -6,13 +6,13 @@ void	ft_split_token(char **tokens, char *str)
 	int len_token;
 
 	n = 0;
+	str += ft_len_spaces(str);
 	while (*str)
 	{
-		len_token = 0;
-		str += ft_len_spaces(str);
 		len_token = ft_len_token(str);
 		tokens[n] = ft_substr(str, 0, len_token);
 		str += len_token;
+		str += ft_len_spaces(str);
 		n++;
 	}
 	tokens[n] = NULL;

@@ -14,12 +14,10 @@ void	ft_change_element_with_free(t_shell *shell, char **out, int n)
 int	ft_len_without_quotes(char *str)
 {
 	int	n;
-	int	len;
 
 	n = 0;
 	while (*str)
 	{
-		len = 0;
 		if (*str == '\'' || *str == '\"')
 		{
 			n += ft_len_between_quotes(str);
@@ -62,7 +60,6 @@ char	*ft_delete_quotes(char *str)
 	int		len;
 
 	len = ft_len_without_quotes(str);
-	printf("%d\n", len);
 	out = (char *)malloc(sizeof(char) * (len + 1));
 	if (!out)
 	{

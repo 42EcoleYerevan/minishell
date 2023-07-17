@@ -6,12 +6,11 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/17 20:05:47 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/18 00:56:40 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 
 void	ft_wait_pid(void)
 {
@@ -121,9 +120,25 @@ int	main(int argc, char **argv, char **menv)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		shell->env = ft_create_envlist(menv);
-		rl_catch_signals = 0;
-		using_history();
-		ft_event_loop(shell);
+
+		t_mlist *list = ft_parser(shell, "echo \"<");
+		exit_status = ft_is_valid_linked_list(list);
+		if (exit_status != 0)
+			exit(1);
+		while (list)
+		{
+			if (list->bin)
+				printf("%s\n", list->bin);
+			while (*list->argv)
+				puts(*list->argv++);
+			if (list->command)
+				printf("%s\n", list->command);
+			list = list->next;
+		}
+
+		/* rl_catch_signals = 0; */
+		/* using_history(); */
+		/* ft_event_loop(shell); */
 	}
 	return (exit_status);
 }

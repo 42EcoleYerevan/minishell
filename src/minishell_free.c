@@ -6,23 +6,23 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:58:06 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/04 16:16:53 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/18 00:04:11 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 void	ft_free_2d_array_with_null(char **array)
 {
-	char	**tmp;
+	int	n;
 
 	if (!array)
 		return ;
-	tmp = array;
-	while (*tmp)
+	n = 0;
+	while (array[n])
 	{
-		free(*tmp);
-		tmp++;
+		free(array[n]);
+		n++;
 	}
 }
 
