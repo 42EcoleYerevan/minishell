@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/17 12:53:16 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/17 16:47:34 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	ft_event_loop(t_shell *shell)
 		if (exit_status == 0)
 			executor(shell);
 		free(str);
-		ft_free_2_linked_list(shell->list);
+		ft_free_2_linked_list(&list);
 	}
 }
 
@@ -99,10 +99,7 @@ int	main(int argc, char **argv, char **menv)
 {
 	t_shell	*shell;
 
-	shell = (t_shell *)malloc(sizeof(t_shell));
-	shell->env = ft_create_envlist(menv);
 	(void) argv;
-	(void) menv;
 	if (argc == 1)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
