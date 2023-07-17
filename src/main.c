@@ -6,11 +6,12 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/15 21:46:29 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/17 12:53:16 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
 void	ft_wait_pid(void)
 {
@@ -66,6 +67,8 @@ void	executor(t_shell *shell)
 	ft_wait_pid();
 }
 
+int exit_status;
+
 void	ft_event_loop(t_shell *shell)
 {
 	char	*str;
@@ -73,7 +76,7 @@ void	ft_event_loop(t_shell *shell)
 
 	while (1)
 	{
-		ft_init_action();
+		/* ft_init_action(); */
 		str = readline("minishell>$ ");
 		if (str && *str == '\0')
 		{
@@ -82,7 +85,7 @@ void	ft_event_loop(t_shell *shell)
 		}
 		ctrl_d_handler(str);
 		add_history(str);
-		list = ft_fill_list(shell, str);
+		list = ft_parser(shell, str);
 		shell->list = &list;
 		exit_status = ft_is_valid_linked_list(list);
 		if (exit_status == 0)
@@ -95,7 +98,6 @@ void	ft_event_loop(t_shell *shell)
 int	main(int argc, char **argv, char **menv)
 {
 	t_shell	*shell;
-	t_mlist *list;
 
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	shell->env = ft_create_envlist(menv);
@@ -103,39 +105,11 @@ int	main(int argc, char **argv, char **menv)
 	(void) menv;
 	if (argc == 1)
 	{
-		/* list = ft_parser(shell, "ls -al | echo leha"); */
-		list = ft_parser(shell, "echo $PATH$PATH|grep $PATH");
-		shell->list = &list;
-		while (list)
-		{
-			printf("bin: %s\n", list->bin);
-			while (*list->argv)
-				printf("argv: %s\n", *list->argv++);
-			printf("command: %s\n", list->command);
-			list = list->next;
-		}
-		/* list = ft_parser(shell, "ls-al|echoleha"); */
-		/* while (list) */
-		/* { */
-		/* 	printf("%s\n", list->bin); */
-		/* 	while (list->argv) */
-		/* 		printf("%s\n", *list->argv++); */
-		/* 	printf("%s\n", list->command); */
-		/* } */
-		/* list = ft_parser(shell, "echo $PATH$PATH|grep $PATH"); */
-		/* while (list) */
-		/* { */
-		/* 	printf( "%s\n", list->bin); */
-		/* 	while (list->argv) */
-		/* 		printf("%s\n", *list->argv++); */
-		/* 	printf("%s\n", list->command); */
-		/* } */
-
-		/* shell = (t_shell *)malloc(sizeof(t_shell)); */
-		/* shell->env = ft_create_envlist(menv); */
-		/* rl_catch_signals = 0; */
-		/* using_history(); */
-		/* ft_event_loop(shell); */
+		shell = (t_shell *)malloc(sizeof(t_shell));
+		shell->env = ft_create_envlist(menv);
+		rl_catch_signals = 0;
+		using_history();
+		ft_event_loop(shell);
 	}
 	return (exit_status);
 }

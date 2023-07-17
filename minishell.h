@@ -45,7 +45,7 @@ typedef struct s_shell
 } t_shell;
 
 // global variable
-int exit_status;
+extern int exit_status;
 
 // len_utils
 int	ft_len_spaces(char *str);
@@ -231,9 +231,11 @@ t_mlist	*ft_constructor(t_shell *shell, char **tokens);
 
 // constructor utils
 t_mlist	*ft_create_list(t_shell *shell, char **tokens);
+t_mlist	*ft_create_list_node(t_shell *shell, char **tokens);
 int		ft_token_count_in_construction(char **tokens);
 char	*ft_find_token(char **tokens, char *token);
 void	ft_set_env_token(t_shell *shell, char **tokens);
 char	**ft_slice_arr(char **arr, int start, int end);
+int		ft_length_construction(char **tokens);
 
 #endif
