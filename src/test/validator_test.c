@@ -1,8 +1,9 @@
 #include "minishell.h"
+#include <unistd.h>
 
 void ft_validator_test(t_shell *shell, char *str, int answer);
 
-void	ft_validator_run_test(t_shell *shell)
+void	ft_validator_test_run(t_shell *shell)
 {
 	fprintf(stderr, "\n\033[31mVALIDATOR TESTING\033[0m\n");
 
@@ -45,10 +46,16 @@ void	ft_validator_run_test(t_shell *shell)
 
 void ft_validator_test(t_shell *shell, char *str, int answer)
 {
-	t_mlist *list = ft_parser(shell, str);
-	exit_status = ft_is_valid_linked_list(list);
-	if (answer == exit_status)
-		fprintf(stderr, "\033[32mOK %d\033[0m\n", exit_status);
-	else
-		fprintf(stderr, "\033[31mKO %d\033[0m\n", exit_status);
+	if (fork() == 0)
+	{
+		close(1);
+		t_mlist *list = ft_parser(shell, str);
+		exit_status = ft_is_valid_linked_list(list);
+		if (answer == exit_status)
+			fprintf(stderr, "\033[32mOK %d\033[0m\n", exit_status);
+		else
+			fprintf(stderr, "\033[31mKO %d\033[0m\n", exit_status);
+		exit(exit_status);
+	}
+	waitpid(-1, NULL, 0);
 }

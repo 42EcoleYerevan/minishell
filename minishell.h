@@ -212,6 +212,7 @@ int		ft_executor(t_shell *shell, t_mlist *list);
 
 // main
 int		ft_print_error(t_mlist *list);
+void	executor(t_shell *shell);
 
 // utils
 void	ft_delete_qoute_in_argv(char **argv);
@@ -243,6 +244,7 @@ char	**ft_slice_arr(char **arr, int start, int end);
 int		ft_length_construction(char **tokens);
 
 // test
-void	ft_validator_run_test(t_shell *shell);
+void	ft_validator_test_run(t_shell *shell);
+void	ft_executor_test_run(t_shell *shell);
 
 #endif
