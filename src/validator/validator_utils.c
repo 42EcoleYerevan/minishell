@@ -21,6 +21,11 @@ int	ft_check_pipe_error(t_mlist *list)
 			return (ft_redirect_unexpected_error(list->command));
 		else if (list->next && list->next->argv[0])
 			return (ft_redirect_unexpected_error(list->next->argv[0]));
+		else
+			return (ft_redirect_unexpected_error(list->command));
 	}
+	else if (list->command && !list->next)
+		return (ft_redirect_unexpected_error(list->command));
+
 	return (0);
 }

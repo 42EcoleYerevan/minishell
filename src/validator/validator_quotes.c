@@ -39,7 +39,10 @@ int	ft_check_unclosed_quotes_in_argv(char **argv)
 	while (argv[n])
 	{
 		if (ft_check_quotes_in_string(argv[n]))
+		{
+			printf("minishell: syntax error: unclosed quotes\n");
 			return (1);
+		}
 		n++;
 	}
 	return (0);

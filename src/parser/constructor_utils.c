@@ -24,7 +24,7 @@ t_mlist *ft_create_list_node(t_shell *shell, char **tokens)
 	len = ft_token_count_in_construction(tokens);
 	argv = ft_slice_arr(tokens, 0, len);
 	ft_set_env_token(shell, argv);
-	new = ft_list_new(shell, argv, ft_find_token(tokens, "|"));
+	new = ft_list_new(shell, argv, ft_strdup(ft_find_token(tokens, "|")));
 	return (new);
 }
 

@@ -6,11 +6,13 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/18 14:03:40 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:47:48 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int exit_status;
 
 void	ft_wait_pid(void)
 {
@@ -43,21 +45,6 @@ int	ft_print_error(t_mlist *list)
 		return (ft_redirect_unexpected_error(list->command));
 }
 
-void ft_delete_qoute_in_argv(char **argv)
-{
-	int		n;
-	char	*tmp;
-
-	n = 0;
-	while (argv[n])
-	{
-		tmp = argv[n];
-		argv[n] = ft_delete_quotes(argv[n]);
-		free(tmp);
-		argv++;
-	}
-}
-
 void	executor(t_shell *shell)
 {
 	t_mlist	*tmp;
@@ -65,7 +52,6 @@ void	executor(t_shell *shell)
 	tmp = *shell->list;
 	while (tmp)
 	{
-		ft_delete_qoute_in_argv(tmp->argv);
 		if (tmp->next)
 			pipe(tmp->fd);
 		if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
@@ -82,8 +68,6 @@ void	executor(t_shell *shell)
 	ft_wait_pid();
 }
 
-int exit_status;
-
 void	ft_event_loop(t_shell *shell)
 {
 	char	*str;
@@ -91,7 +75,7 @@ void	ft_event_loop(t_shell *shell)
 
 	while (1)
 	{
-		/* ft_init_action(); */
+		ft_init_action();
 		str = readline("minishell>$ ");
 		if (str && *str == '\0')
 		{
@@ -115,33 +99,13 @@ int	main(int argc, char **argv, char **menv)
 	t_shell	*shell;
 
 	(void) argv;
-	/* (void) menv; */
 	if (argc == 1)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		shell->env = ft_create_envlist(menv);
-
-		close(1);
-		ft_validator_run_test(shell);
-
-		/* t_mlist *list = ft_parser(shell, "leha |"); */
-		/* exit_status = ft_is_valid_linked_list(list); */
-		/* if (exit_status) */
-		/* 	exit(1); */
-		/* while (list) */
-		/* { */
-		/* 	if (list->bin) */
-		/* 		printf("%s\n", list->bin); */
-		/* 	while (*list->argv) */
-		/* 		puts(*list->argv++); */
-		/* 	if (list->command) */
-		/* 		printf("%s\n", list->command); */
-		/* 	list = list->next; */
-		/* } */
-
-		/* rl_catch_signals = 0; */
-		/* using_history(); */
-		/* ft_event_loop(shell); */
+		rl_catch_signals = 0;
+		using_history();
+		ft_event_loop(shell);
 	}
 	return (exit_status);
 }

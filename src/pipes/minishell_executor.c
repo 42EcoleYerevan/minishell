@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:53:14 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/11 13:10:56 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:32:58 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	ft_executor(t_shell *shell, t_mlist *list)
 	status = ft_handle_redirect(shell, list);
 	check = ft_check_argument(list);
 	ft_define_signals();
+	ft_delete_qoute_in_argv(list->argv);
 	if (fork() == 0)
 	{
 		ft_check(status, check, env);
