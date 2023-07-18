@@ -215,6 +215,9 @@ int		ft_print_error(t_mlist *list);
 
 // utils
 int		ft_is_valid_linked_list(t_mlist *list);
+int		ft_check_redirect_error(t_mlist *list, int n);
+int		ft_is_valid_argv(t_mlist *list);
+int		ft_check_pipe_error(t_mlist *list);
 
 // parser
 t_mlist *ft_parser(t_shell *shell, char *str);
@@ -237,5 +240,8 @@ char	*ft_find_token(char **tokens, char *token);
 void	ft_set_env_token(t_shell *shell, char **tokens);
 char	**ft_slice_arr(char **arr, int start, int end);
 int		ft_length_construction(char **tokens);
+
+// test
+void	ft_validator_run_test(t_shell *shell);
 
 #endif

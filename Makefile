@@ -32,6 +32,8 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(shell mkdir -p $(OBJDIR)/pipes)
 	$(shell mkdir -p $(OBJDIR)/actions)
 	$(shell mkdir -p $(OBJDIR)/parser)
+	$(shell mkdir -p $(OBJDIR)/validator)
+	$(shell mkdir -p $(OBJDIR)/test)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT_A):

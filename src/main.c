@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/18 00:56:40 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/18 14:03:40 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,20 +121,23 @@ int	main(int argc, char **argv, char **menv)
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		shell->env = ft_create_envlist(menv);
 
-		t_mlist *list = ft_parser(shell, "echo \"<");
-		exit_status = ft_is_valid_linked_list(list);
-		if (exit_status != 0)
-			exit(1);
-		while (list)
-		{
-			if (list->bin)
-				printf("%s\n", list->bin);
-			while (*list->argv)
-				puts(*list->argv++);
-			if (list->command)
-				printf("%s\n", list->command);
-			list = list->next;
-		}
+		close(1);
+		ft_validator_run_test(shell);
+
+		/* t_mlist *list = ft_parser(shell, "leha |"); */
+		/* exit_status = ft_is_valid_linked_list(list); */
+		/* if (exit_status) */
+		/* 	exit(1); */
+		/* while (list) */
+		/* { */
+		/* 	if (list->bin) */
+		/* 		printf("%s\n", list->bin); */
+		/* 	while (*list->argv) */
+		/* 		puts(*list->argv++); */
+		/* 	if (list->command) */
+		/* 		printf("%s\n", list->command); */
+		/* 	list = list->next; */
+		/* } */
 
 		/* rl_catch_signals = 0; */
 		/* using_history(); */
