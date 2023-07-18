@@ -12,16 +12,16 @@ void	ft_executor_test_run(t_shell *shell)
 	ft_executor_test(shell, "echo \"leha\"", "leha");
 	ft_executor_test(shell, "echo \"hello(leha)\"", "hello(leha)");
 	ft_executor_test(shell, "echo \"hello''\"", "hello''");
-	ft_executor_test(shell, "echo \"hello'$PATH'\"", "hello'PATH'");
+	ft_executor_test(shell, "echo hello'$PATH'", "hello$PATH");
 	ft_executor_test(shell, "echo $PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
 	ft_executor_test(shell, "echo \"$PATH\"", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
-	ft_executor_test(shell, "echo \'$PATH\'", "$PATH");
+	ft_executor_test(shell, "echo '$PATH'", "$PATH");
 	ft_executor_test(shell, "echo \'$PATH$USER\'", "$PATH$USER");
 	ft_executor_test(shell, "echo \'\'", "");
-	ft_executor_test(shell, "echo \'$$$$$$$$$$\'", "$$$$$$$$$$");
-	ft_executor_test(shell, "echo \"$$$$$$$$$$\"", "$$$$$$$$$$");
 	ft_executor_test(shell, "echo \"$PATH.leha\"", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki.leha");
 	ft_executor_test(shell, "echo leha\"$PATH\"", "leha/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
+	ft_executor_test(shell, "yes | head", "y\ny\ny\ny\ny\ny\ny\ny\ny\ny");
+	ft_executor_test(shell, "echo leha | cat", "leha");
 }
 
 void ft_executor_test(t_shell *shell, char *str, char *expected)

@@ -1,3 +1,4 @@
+#include "libft/libft.h"
 #include "minishell.h"
 
 int ft_len_between_quotes(char *str);
@@ -6,9 +7,12 @@ void	ft_change_element_with_free(t_shell *shell, char **out, int n)
 {
 	char	*tmp;
 
-	tmp = ft_set_env(shell, out[n]);
-	free(out[n]);
-	out[n] = tmp;
+	if (ft_strchr(out[n], '\"') || !ft_strchr(out[n], '\''))
+	{
+		tmp = ft_set_env(shell, out[n]);
+		free(out[n]);
+		out[n] = tmp;
+	}
 }
 
 int	ft_len_without_quotes(char *str)
