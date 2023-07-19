@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 17:27:54 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/19 17:33:26 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/19 18:17:11 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ int		ft_length_construction(char **tokens);
 int		ft_len_between_quotes(char *str);
 
 // test
-/* void	ft_validator_test_run(t_shell *shell); */
-/* void	ft_executor_test_run(t_shell *shell); */
+void	ft_validator_test_run(t_shell *shell);
+void	ft_executor_test_run(t_shell *shell);
 
 #endif

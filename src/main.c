@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/19 17:12:48 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/19 18:23:01 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int	main(int argc, char **argv, char **menv)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		shell->env = ft_create_envlist(menv);
+		/* ft_validator_test_run(shell); */
+		/* ft_executor_test_run(shell); */
 		rl_catch_signals = 0;
 		using_history();
 		ft_event_loop(shell);
