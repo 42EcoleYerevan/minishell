@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validator_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/19 17:25:26 by agladkov          #+#    #+#             */
+/*   Updated: 2023/07/19 17:25:33 by agladkov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_check_redirect_error(t_mlist *list, int n)
@@ -26,6 +38,5 @@ int	ft_check_pipe_error(t_mlist *list)
 	}
 	else if (list->command && !list->next)
 		return (ft_redirect_unexpected_error(list->command));
-
 	return (0);
 }

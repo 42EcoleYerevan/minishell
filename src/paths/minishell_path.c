@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:54:18 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/17 12:52:10 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/19 17:23:50 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ char	*ft_get_path(t_shell *shell, char *command)
 		path = ft_check_file_in_current_directory(shell, command);
 	else
 		path = ft_pathjoin(tmp_path, command);
-	if (tmp_path) 
+	if (tmp_path)
 		free(tmp_path);
 	return (path);
 }
 
-int ft_is_dir(char *path)
+int	ft_is_dir(char *path)
 {
 	DIR	*d;
 
@@ -40,7 +40,7 @@ int ft_is_dir(char *path)
 	return (0);
 }
 
-int ft_is_executable(char *path)
+int	ft_is_executable(char *path)
 {
 	if (access(path, X_OK) == 0)
 		return (1);

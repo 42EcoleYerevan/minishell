@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 20:59:28 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/18 00:32:14 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/19 17:13:34 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ t_mlist	*ft_fill_list(t_shell *shell, char *str)
 	list = NULL;
 	while (*str)
 	{
-		/* if (ft_check_unclosed_quotes(str)) */
-		/* 	return (NULL); */
 		construction = ft_substr(str, 0, ft_len_construction(str));
 		argv = ft_parse_construction(shell, construction);
 		n = ft_amount_commands(construction) - 1;

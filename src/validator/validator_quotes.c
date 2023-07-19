@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validator_quotes.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/19 17:25:05 by agladkov          #+#    #+#             */
+/*   Updated: 2023/07/19 17:25:18 by agladkov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static int ft_len_next_quote(char *str)
+static int	ft_len_next_quote(char *str)
 {
 	char	current_quote;
 	int		n;
@@ -12,10 +24,9 @@ static int ft_len_next_quote(char *str)
 	return (n);
 }
 
-int ft_check_quotes_in_string(char *str)
+int	ft_check_quotes_in_string(char *str)
 {
-	int i;
-	/* int	len; */
+	int	i;
 
 	i = 0;
 	while (str[i])

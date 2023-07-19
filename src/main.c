@@ -6,13 +6,13 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:13:56 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/18 17:26:53 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/19 17:12:48 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int exit_status;
+int	g_exit_status;
 
 void	ft_wait_pid(void)
 {
@@ -27,7 +27,7 @@ void	ft_wait_pid(void)
 		if (wpid > tmp)
 		{
 			if (status >= 256)
-				exit_status = status / 256;
+				g_exit_status = status / 256;
 			tmp = wpid;
 		}
 		wpid = waitpid(-1, &status, 0);
@@ -55,14 +55,14 @@ void	executor(t_shell *shell)
 		if (tmp->next)
 			pipe(tmp->fd);
 		if (ft_isbuiltin(tmp->bin) || ft_isbuiltin(tmp->argv[0]))
-			exit_status = ft_builtin_handler(shell, tmp);
+			g_exit_status = ft_builtin_handler(shell, tmp);
 		else if (tmp && !tmp->argv[0] && !tmp->bin && tmp->command)
 		{
-			exit_status = ft_redirect_unexpected_error(tmp->command);
+			g_exit_status = ft_redirect_unexpected_error(tmp->command);
 			return ;
 		}
 		else
-			exit_status = ft_executor(shell, tmp);
+			g_exit_status = ft_executor(shell, tmp);
 		tmp = tmp->next;
 	}
 	ft_wait_pid();
@@ -86,8 +86,8 @@ void	ft_event_loop(t_shell *shell)
 		add_history(str);
 		list = ft_parser(shell, str);
 		shell->list = &list;
-		exit_status = ft_is_valid_linked_list(list);
-		if (exit_status == 0)
+		g_exit_status = ft_is_valid_linked_list(list);
+		if (g_exit_status == 0)
 			executor(shell);
 		free(str);
 		ft_free_2_linked_list(&list);
@@ -103,13 +103,9 @@ int	main(int argc, char **argv, char **menv)
 	{
 		shell = (t_shell *)malloc(sizeof(t_shell));
 		shell->env = ft_create_envlist(menv);
-
-		ft_validator_test_run(shell);
-		ft_executor_test_run(shell);
-
-		/* rl_catch_signals = 0; */
-		/* using_history(); */
-		/* ft_event_loop(shell); */
+		rl_catch_signals = 0;
+		using_history();
+		ft_event_loop(shell);
 	}
-	return (exit_status);
+	return (g_exit_status);
 }

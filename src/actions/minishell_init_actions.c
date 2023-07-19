@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 17:31:45 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/11 11:55:06 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/19 17:09:37 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,28 @@ void	ft_action(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	exit_status = 1;
+	g_exit_status = 1;
 }
 
 void	ft_sigint(int signum)
 {
 	(void) signum;
 	printf("\n");
-	exit_status = 130;
+	g_exit_status = 130;
 }
 
 void	ft_sigquit(int sig)
 {
 	(void) sig;
 	printf("Quit\n");
-	exit_status = 0;
+	g_exit_status = 0;
 }
 
 void	ft_quit(int sig)
 {
 	(void) sig;
 	rl_redisplay();
-	exit_status = 0;
+	g_exit_status = 0;
 }
 
 void	ctrl_d_handler(char *str)

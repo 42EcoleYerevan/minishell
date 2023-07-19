@@ -15,6 +15,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+// global variable
+extern int g_exit_status;
+
 //Types
 typedef struct s_mlist
 {
@@ -43,9 +46,6 @@ typedef struct s_shell
 	struct s_env	*env;
 	int 			err_status;
 } t_shell;
-
-// global variable
-extern int exit_status;
 
 // len_utils
 int	ft_len_spaces(char *str);
@@ -242,6 +242,8 @@ char	*ft_find_token(char **tokens, char *token);
 void	ft_set_env_token(t_shell *shell, char **tokens);
 char	**ft_slice_arr(char **arr, int start, int end);
 int		ft_length_construction(char **tokens);
+int		ft_len_between_quotes(char *str);
+
 
 // test
 void	ft_validator_test_run(t_shell *shell);

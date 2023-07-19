@@ -26,7 +26,7 @@ void	ft_validator_test_run(t_shell *shell)
 	ft_validator_test(shell, "'echo leha \'$PATH\'leha|'", 0);
 
 	// redirects
-	fprintf(stderr, "\redirect testing ...\n");
+	fprintf(stderr, "\nedirect testing ...\n");
 	ft_validator_test(shell, "echo <", 258);
 	ft_validator_test(shell, "echo < test", 1);
 	ft_validator_test(shell, "echo < minishell.h", 0);
@@ -50,12 +50,12 @@ void ft_validator_test(t_shell *shell, char *str, int answer)
 	{
 		close(1);
 		t_mlist *list = ft_parser(shell, str);
-		exit_status = ft_is_valid_linked_list(list);
-		if (answer == exit_status)
-			fprintf(stderr, "\033[32mOK %d\033[0m\n", exit_status);
+		g_exit_status = ft_is_valid_linked_list(list);
+		if (answer == g_exit_status)
+			fprintf(stderr, "\033[32mOK %d\033[0m\n", g_exit_status);
 		else
-			fprintf(stderr, "\033[31mKO %d\033[0m\n", exit_status);
-		exit(exit_status);
+			fprintf(stderr, "\033[31mKO %d\033[0m\n", g_exit_status);
+		exit(g_exit_status);
 	}
 	waitpid(-1, NULL, 0);
 }

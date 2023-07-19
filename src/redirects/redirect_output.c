@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:43:26 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/07 20:12:13 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/19 16:38:25 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	ft_redirect_two_output(t_mlist *list, int n)
 {
 	int	out;
 
+	list->argv[n + 1] = ft_delete_quotes(list->argv[n + 1]);
 	out = ft_check_next_redirect_input_argument(list, n);
 	if (out == 0)
 		list->heredoc[1] = open(list->argv[n + 1],
@@ -27,6 +28,7 @@ int	ft_redirect_one_output(t_mlist *list, int n)
 {
 	int	out;
 
+	list->argv[n + 1] = ft_delete_quotes(list->argv[n + 1]);
 	out = ft_check_next_redirect_input_argument(list, n);
 	if (out == 0)
 		list->heredoc[1] = open(list->argv[n + 1],
