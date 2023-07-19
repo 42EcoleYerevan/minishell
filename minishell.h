@@ -162,6 +162,7 @@ int		ft_export_valid(char *arg, int *res, t_env *env);
 
 //minishell_unset
 int		ft_unset(char **args, t_env **env, int status);
+int		ft_strcmp(char *s1, char *s2);
 int		ft_unset_valid(char *arg);
 void	ft_unset_errprint(char *arg);
 void	ft_node_del(t_env **node);

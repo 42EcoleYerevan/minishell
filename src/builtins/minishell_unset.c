@@ -59,6 +59,16 @@ int	ft_unset_valid(char *arg)
 	return (status);
 }
 
+int	ft_strcmp(char *s1, char *s2)
+{
+	int i;
+
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
+		i++;
+	return (s1[i] - s2[i]);
+}
+
 int	ft_unset(char **args, t_env **env, int status)
 {
 	t_env	*tmp;
@@ -73,7 +83,7 @@ int	ft_unset(char **args, t_env **env, int status)
 			status = 1;
 		while (node->next)
 		{
-			if (!ft_strncmp(node->next->key, *args, ft_strlen(*args)))
+			if (!ft_strcmp(node->next->key, *args))
 			{
 				tmp = node->next;
 				node->next = tmp->next;
