@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor_test.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/19 17:36:15 by agladkov          #+#    #+#             */
+/*   Updated: 2023/07/19 17:37:25 by agladkov         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*ft_test_reader(int fd);
@@ -12,20 +24,25 @@ void	ft_executor_test_run(t_shell *shell)
 	ft_executor_test(shell, "echo \"hello(leha)\"", "hello(leha)");
 	ft_executor_test(shell, "echo \"hello''\"", "hello''");
 	ft_executor_test(shell, "echo hello'$PATH'", "hello$PATH");
-	ft_executor_test(shell, "echo $PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
-	ft_executor_test(shell, "echo \"$PATH\"'$PATH'", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki$PATH");
-	ft_executor_test(shell, "echo \"$PATH\"", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
+	ft_executor_test(shell, "echo $PATH", \
+			"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
+	ft_executor_test(shell, "echo \"$PATH\"'$PATH'", \
+	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki$PATH");
+	ft_executor_test(shell, "echo \"$PATH\"", \
+	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
 	ft_executor_test(shell, "echo '$PATH'", "$PATH");
 	ft_executor_test(shell, "echo '$PATH\"\"'", "$PATH\"\"");
 	ft_executor_test(shell, "echo \'$PATH$USER\'", "$PATH$USER");
 	ft_executor_test(shell, "echo \'\'", "");
-	ft_executor_test(shell, "echo \"$PATH.leha\"", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki.leha");
-	ft_executor_test(shell, "echo leha\"$PATH\"", "leha/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
+	ft_executor_test(shell, "echo \"$PATH.leha\"", \
+	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki.leha");
+	ft_executor_test(shell, "echo leha\"$PATH\"", \
+	"leha/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
 	ft_executor_test(shell, "yes | head", "y\ny\ny\ny\ny\ny\ny\ny\ny\ny");
 	ft_executor_test(shell, "echo leha | cat", "leha");
 }
 
-void ft_executor_test(t_shell *shell, char *str, char *expected)
+void	ft_executor_test(t_shell *shell, char *str, char *expected)
 {
 	char	*out;
 	int		fd[2];
@@ -33,14 +50,13 @@ void ft_executor_test(t_shell *shell, char *str, char *expected)
 
 	list = ft_parser(shell, str);
 	shell->list = &list;
-
 	pipe(fd);
 	if (fork() == 0)
 	{
 		close(fd[0]);
 		dup2(fd[1], 1);
 		close(fd[1]);
-		executor(shell);	
+		executor(shell);
 		exit(0);
 	}
 	close(fd[1]);
@@ -50,13 +66,12 @@ void ft_executor_test(t_shell *shell, char *str, char *expected)
 	if (ft_strncmp(out, expected, ft_strlen(expected) + 1) == 0)
 		fprintf(stderr, "\033[32mOK\033[0m\n");
 	else
-	{
-		fprintf(stderr, "\033[31mKO\n\tout: %s\n\texpected: %s\033[0m\n", out, expected);
-	}
+		fprintf(stderr, "\033[31mKO\n\tout: %s\n\texpected: \
+				%s\033[0m\n", out, expected);
 	return ;
 }
 
-char *ft_test_reader(int fd)
+char	*ft_test_reader(int fd)
 {
 	char	*out;
 	char	c;
@@ -70,4 +85,3 @@ char *ft_test_reader(int fd)
 	out = ft_strtrim(out, "\n");
 	return (out);
 }
-
