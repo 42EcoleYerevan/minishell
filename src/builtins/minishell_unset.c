@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:56 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/20 13:58:29 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/20 14:03:06 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,6 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-t_env	*ft_del_first(t_env **node)
-{
-	t_env	*tmp;
-	
-	tmp = *node;
-	*node = (*node)->next;
-	ft_node_del(&tmp);
-	return (*node);
-}
-
 int	ft_unset(char **args, t_env **env, int status)
 {
 	t_env	*tmp;
@@ -107,9 +97,3 @@ int	ft_unset(char **args, t_env **env, int status)
 	}
 	return (status);
 }
-
-// 
-// 	tmp = node;
-// 	node = tmp->next;
-// 	ft_node_del(&tmp);
-// 	break ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_builtin_utils2.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 17:51:55 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/11 17:02:51 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/20 14:03:29 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,14 @@ char	**ft_echo_skip_flags(char **arr)
 		arr++;
 	}
 	return (arr);
+}
+
+t_env	*ft_del_first(t_env **node)
+{
+	t_env	*tmp;
+
+	tmp = *node;
+	*node = (*node)->next;
+	ft_node_del(&tmp);
+	return (*node);
 }
