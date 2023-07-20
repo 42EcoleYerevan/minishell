@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:56 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/20 13:16:14 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/20 13:58:29 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,16 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
+t_env	*ft_del_first(t_env **node)
+{
+	t_env	*tmp;
+	
+	tmp = *node;
+	*node = (*node)->next;
+	ft_node_del(&tmp);
+	return (*node);
+}
+
 int	ft_unset(char **args, t_env **env, int status)
 {
 	t_env	*tmp;
@@ -79,14 +89,14 @@ int	ft_unset(char **args, t_env **env, int status)
 	{
 		if (ft_unset_valid(*args))
 			status = 1;
-		while (node)
+		while (node->next)
 		{
-			if (!ft_strcmp(node->key, *args))
+			if (!(ft_strcmp(*args, (*env)->key)))
+					*env = ft_del_first(env);
+			if (!ft_strcmp(node->next->key, *args))
 			{
-				if (!(ft_strcmp(node->key, (*env)->key)))
-					*env = (*env)->next;
-				tmp = node;
-				node = tmp->next;
+				tmp = node->next;
+				node->next = tmp->next;
 				ft_node_del(&tmp);
 				break ;
 			}
@@ -97,3 +107,9 @@ int	ft_unset(char **args, t_env **env, int status)
 	}
 	return (status);
 }
+
+// 
+// 	tmp = node;
+// 	node = tmp->next;
+// 	ft_node_del(&tmp);
+// 	break ;
