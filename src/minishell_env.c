@@ -6,10 +6,11 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:58:18 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/19 17:10:39 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/20 15:39:12 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft/libft.h"
 #include "minishell.h"
 
 char	*ft_get_env_value_by_name(t_shell *shell, char *name)
@@ -54,12 +55,13 @@ char	**ft_env_to_arr(t_env *env, int len, int i)
 	arr[len] = NULL;
 	while (start && ++i >= 0)
 	{
-		arr[i] = NULL;
+		arr[i] = "";
 		if (start->value)
 			arr[i] = ft_strjoin("=", start->value);
 		tmp = arr[i];
 		arr[i] = ft_strjoin(start->key, arr[i]);
-		free(tmp);
+		if (*tmp)
+			free(tmp);
 		start = start->next;
 	}
 	len = 0;
