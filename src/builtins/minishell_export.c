@@ -6,11 +6,12 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:12 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/01 17:10:08 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/20 12:47:07 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stddef.h>
 
 void	ft_export_change(t_env *env, char *str)
 {
@@ -32,7 +33,7 @@ void	ft_export_change(t_env *env, char *str)
 
 int	ft_find_env(char *str, t_env *env)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i] && str[i] != '=')
@@ -41,7 +42,7 @@ int	ft_find_env(char *str, t_env *env)
 		return (0);
 	while (env)
 	{
-		if (!ft_strncmp(str, env->key, i))
+		if (!ft_strncmp(str, env->key, i) && ft_strlen(env->key) == i)
 		{
 			ft_export_change(env, str + i);
 			return (1);
@@ -53,7 +54,7 @@ int	ft_find_env(char *str, t_env *env)
 
 char	*ft_value_by_key(char *key, t_env *env)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (key[i] && key[i] != '=')
@@ -62,7 +63,7 @@ char	*ft_value_by_key(char *key, t_env *env)
 		i--;
 	while (env)
 	{
-		if (!ft_strncmp(key, env->key, i))
+		if (!ft_strncmp(key, env->key, i) && ft_strlen(env->key) == i)
 			return (env->value);
 		env = env->next;
 	}
@@ -71,7 +72,7 @@ char	*ft_value_by_key(char *key, t_env *env)
 
 t_env	*ft_ptr_by_key(char *key, t_env *env)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (key[i] && key[i] != '=')
@@ -80,7 +81,7 @@ t_env	*ft_ptr_by_key(char *key, t_env *env)
 		i--;
 	while (env)
 	{
-		if (!ft_strncmp(key, env->key, i))
+		if (!ft_strncmp(key, env->key, i) && ft_strlen(env->key) == i)
 			return (env);
 		env = env->next;
 	}
