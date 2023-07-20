@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 19:00:56 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/20 12:47:27 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/20 13:16:14 by almeliky         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,19 @@ int	ft_unset(char **args, t_env **env, int status)
 	t_env	*tmp;
 	t_env	*node;
 
-	if (!(*args))
-		return (0);
 	node = *env;
 	while (*args)
 	{
 		if (ft_unset_valid(*args))
 			status = 1;
-		while (node->next)
+		while (node)
 		{
-			if (!ft_strcmp(node->next->key, *args))
+			if (!ft_strcmp(node->key, *args))
 			{
-				tmp = node->next;
-				node->next = tmp->next;
+				if (!(ft_strcmp(node->key, (*env)->key)))
+					*env = (*env)->next;
+				tmp = node;
+				node = tmp->next;
 				ft_node_del(&tmp);
 				break ;
 			}
