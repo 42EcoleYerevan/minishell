@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 20:52:30 by almeliky          #+#    #+#             */
-/*   Updated: 2023/07/19 18:22:04 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/20 12:34:45 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	ft_dup_pipe(t_mlist *list)
 		dup2(list->prev->fd[0], 0);
 		if (list->prev->bin || ft_isbuiltin(list->prev->argv[0]))
 			close(list->prev->fd[0]);
-			/* ft_close_pipe(list->prev->fd); */
 	}
 }
 

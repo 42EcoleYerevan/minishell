@@ -6,7 +6,7 @@
 /*   By: agladkov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 17:36:15 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/19 17:37:25 by agladkov         ###   ########.fr       */
+/*   Updated: 2023/07/20 12:42:13 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 char	*ft_test_reader(int fd);
 void	ft_executor_test(t_shell *shell, char *str, char *expected);
+void	ft_executor_env_test(t_shell *shell);
+void	ft_executor_pipe_test(t_shell *shell);
 
 void	ft_executor_test_run(t_shell *shell)
 {
@@ -23,6 +25,20 @@ void	ft_executor_test_run(t_shell *shell)
 	ft_executor_test(shell, "echo \"leha\"", "leha");
 	ft_executor_test(shell, "echo \"hello(leha)\"", "hello(leha)");
 	ft_executor_test(shell, "echo \"hello''\"", "hello''");
+	ft_executor_pipe_test(shell);
+	ft_executor_env_test(shell);
+}
+
+void	ft_executor_pipe_test(t_shell *shell)
+{
+	ft_executor_test(shell, "yes | head", "y\ny\ny\ny\ny\ny\ny\ny\ny\ny");
+	ft_executor_test(shell, "echo leha | cat", "leha");
+	ft_executor_test(shell, "echo leha > file.txt | cat < file.txt", "leha");
+	ft_executor_test(shell, "< file.txt cat | grep leha", "leha");
+}
+
+void	ft_executor_env_test(t_shell *shell)
+{
 	ft_executor_test(shell, "echo hello'$PATH'", "hello$PATH");
 	ft_executor_test(shell, "echo $PATH", \
 			"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
@@ -38,8 +54,6 @@ void	ft_executor_test_run(t_shell *shell)
 	"/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki.leha");
 	ft_executor_test(shell, "echo leha\"$PATH\"", \
 	"leha/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki");
-	ft_executor_test(shell, "yes | head", "y\ny\ny\ny\ny\ny\ny\ny\ny\ny");
-	ft_executor_test(shell, "echo leha | cat", "leha");
 }
 
 void	ft_executor_test(t_shell *shell, char *str, char *expected)
