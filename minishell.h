@@ -6,7 +6,7 @@
 /*   By: almeliky <almeliky@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 17:27:54 by agladkov          #+#    #+#             */
-/*   Updated: 2023/07/20 14:02:31 by almeliky         ###   ########.fr       */
+/*   Updated: 2023/07/20 15:44:02 by agladkov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,6 @@ int		ft_builtin_handler(t_shell *shell, t_mlist *list);
 char	*ft_lowercase(char *str);
 char	**ft_echo_skip_flags(char **arr);
 t_env	*ft_del_first(t_env **node);
-
 
 // minishell pipe utils
 void	ft_close_pipe(int fd[2]);
