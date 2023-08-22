@@ -31,7 +31,7 @@ PACKAGE_TARNAME = readline
 srcdir = .
 
 top_srcdir = .
-BUILD_DIR = /Users/agladkov/minishell_intra/readline
+BUILD_DIR = /home/adamsonbor/Repositories/minishell/readline
 
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
@@ -81,7 +81,7 @@ CPPFLAGS =
 DEFS = -DHAVE_CONFIG_H 
 LOCAL_DEFS = 
 
-TERMCAP_LIB = -ltermcap
+TERMCAP_LIB = -ltinfo
 
 # For libraries which include headers from other libraries.
 INCLUDES = -I. -I$(srcdir)

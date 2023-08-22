@@ -1,4 +1,6 @@
 *.a
 *.o
 *.txt
+*.so*
+a.out
 minishell
